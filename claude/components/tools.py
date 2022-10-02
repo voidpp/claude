@@ -1,59 +1,45 @@
-from io import StringIO
 import logging
 import re
 from xml.etree.ElementTree import ElementTree
-from httpx import AsyncClient
-from lxml import etree
 from lxml.cssselect import CSSSelector
 
-from claude.components.exceptions import CannotParseTemperature, SelectorNotFoundInTree
+from claude.components.exceptions import CannotParseNumber, SelectorNotFoundInTree
 
 
 logger = logging.getLogger(__name__)
 
-TEMP_PATTERN = re.compile(r"([\d+\-]+)")
-
-html_parser = etree.HTMLParser()
+NUMBER_PATTERN = re.compile(r"([\d+\-]+)")
 
 
-def parse_temp(temp: str) -> int | None:
+def parse_number(number: str) -> int | None:
     """
-    >>> parse_temp("-1")
+    >>> parse_number("-1")
     -1
-    >>> parse_temp("+42°F")
+    >>> parse_number("+42°F")
     42
-    >>> parse_temp(" -42 ° C ")
+    >>> parse_number(" -42 ° C ")
     -42
-    >>> parse_temp("ddsadas")
+    >>> parse_number("ddsadas")
     None
     """
 
-    logger.debug("parse temp: '%s'", temp)
+    logger.debug("parse number: '%s'", number)
 
-    match = TEMP_PATTERN.search(temp)
+    match = NUMBER_PATTERN.search(number)
 
     if match is None:
-        raise CannotParseTemperature(f"Cannot parse temp: '{temp}'")
+        raise CannotParseNumber(f"Cannot parse number: '{number}'")
 
     return int(match.group(1))
 
 
-async def fetch_url(url: str) -> str:
-    logger.debug("fetch url: %s", url)
-    async with AsyncClient() as client:
-        response = await client.get(url)
-        return response.content.decode()
-
-
-async def fetch_xml(url: str) -> ElementTree:
-    content = await fetch_url(url)
-    return etree.parse(StringIO(content), html_parser)
-
-
-# TODO: remove return_first
-def tree_search(selector: str, tree: ElementTree, *, return_first=True):
+def tree_search_list(selector: str, tree: ElementTree) -> list:
     sel = CSSSelector(selector)
     res = sel(tree)
     if not len(res):
         raise SelectorNotFoundInTree(f"Selector '{selector}' not found.")
-    return res[0] if return_first else res
+    return res
+
+
+def tree_search(selector: str, tree: ElementTree):
+    return tree_search_list(selector, tree)[0]

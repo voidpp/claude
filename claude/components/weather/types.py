@@ -12,7 +12,19 @@ class Range(BaseModel):
 
 
 class DayForecast(BaseModel):
-    image: str
     day: int
     date: str
+    image: str
     temperature: Range
+
+
+class Precipitation(BaseModel):
+    value: int
+    probability: int
+
+
+class HourForecast(BaseModel):
+    hour: int
+    image: str
+    temperature: int
+    precipitation: Precipitation

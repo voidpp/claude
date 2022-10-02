@@ -17,3 +17,11 @@ class IdokepDaysParserConfig(BaseModel):
     cell: str
     image: str
     temperature: RangeParserConfig
+
+
+class IdokepHoursParserConfig(BaseModel):
+    columns: str
+    rain_chance_prob: str
+    hour: str
+    image: str
+    temperature: str

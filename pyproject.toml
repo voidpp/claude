@@ -12,7 +12,7 @@ starlette = "^0.21.0"
 graphene = "^3.1.1"
 starlette-graphene3 = "^0.6.0"
 pydantic = "^1.10.2"
-uvicorn = "^0.18.3"
+uvicorn = {extras = ["standard"], version = "^0.18.3"}
 aioredis = "^2.0.1"
 httpx = "^0.23.0"
 lxml = "^4.9.1"

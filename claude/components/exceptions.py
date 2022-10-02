@@ -6,5 +6,5 @@ class SelectorNotFoundInTree(QueryProcessingError):
     pass
 
 
-class CannotParseTemperature(QueryProcessingError):
+class CannotParseNumber(QueryProcessingError):
     pass

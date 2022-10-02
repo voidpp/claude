@@ -1,10 +1,12 @@
 from datetime import date, timedelta
 import logging
 from urllib.parse import quote
+from claude.components.exceptions import SelectorNotFoundInTree
+from claude.components.fetcher import Fetcher
 
-from claude.components.tools import fetch_xml, parse_temp, tree_search
-from .config import IdokepCurrentParserConfig, IdokepDaysParserConfig
-from ..types import CurrentWeather, DayForecast
+from claude.components.tools import parse_number, tree_search, tree_search_list
+from .config import IdokepCurrentParserConfig, IdokepDaysParserConfig, IdokepHoursParserConfig
+from ..types import CurrentWeather, DayForecast, HourForecast
 
 logger = logging.getLogger(__name__)
 
@@ -12,20 +14,20 @@ base_url = "https://www.idokep.hu"
 
 
 async def get_current(city: str, config: IdokepCurrentParserConfig) -> CurrentWeather:
-    tree = await fetch_xml(f"{base_url}/idojaras/{quote(city)}")
+    tree = await Fetcher.fetch_xml(f"{base_url}/idojaras/{quote(city)}")
 
     current_container = tree_search(config.container, tree)
 
     return CurrentWeather(
         image=base_url + tree_search(config.image, current_container).attrib["src"],
-        temperature=parse_temp(tree_search(config.temperature, current_container).text),
+        temperature=parse_number(tree_search(config.temperature, current_container).text),
     )
 
 
 async def get_days(city: str, config: IdokepDaysParserConfig) -> list[DayForecast]:
-    tree = await fetch_xml(f"{base_url}/elorejelzes/{quote(city)}")
+    tree = await Fetcher.fetch_xml(f"{base_url}/elorejelzes/{quote(city)}")
 
-    day_columns = tree_search(config.columns, tree, return_first=False)
+    day_columns = tree_search_list(config.columns, tree)
 
     res = []
 
@@ -52,12 +54,47 @@ async def get_days(city: str, config: IdokepDaysParserConfig) -> list[DayForecas
             "day": day,
             "date": str(col_date),
             "temperature": {
-                "min": parse_temp(tree_search(config.temperature.min, day_column).text),
-                "max": parse_temp(tree_search(config.temperature.max, day_column).text),
+                "min": parse_number(tree_search(config.temperature.min, day_column).text),
+                "max": parse_number(tree_search(config.temperature.max, day_column).text),
             },
         }
         res.append(DayForecast(**day_data))
 
         col_date = col_date + timedelta(days=1)
+
+    return res
+
+
+async def get_hours(city: str, config: IdokepHoursParserConfig) -> list[HourForecast]:
+    tree = await Fetcher.fetch_xml(f"{base_url}/elorejelzes/{quote(city)}")
+
+    hour_columns = tree_search_list(config.columns, tree)
+
+    res = []
+
+    for hour_column in hour_columns:
+
+        precipitation_val = 0
+        precipitation_prob = 0
+
+        try:
+            rain_chance = tree_search(config.rain_chance_prob, hour_column)
+            precipitation_prob = parse_number(rain_chance.text)
+        except SelectorNotFoundInTree:
+            pass
+
+        # TODO: wind
+
+        hour_data = {
+            "hour": int(tree_search(config.hour, hour_column).text.split(":")[0]),
+            "image": base_url + tree_search(config.image, hour_column).attrib["src"],
+            "temperature": parse_number(tree_search(config.temperature, hour_column).text),
+            "precipitation": {
+                "value": precipitation_val,
+                "probability": precipitation_prob,
+            },
+        }
+
+        res.append(HourForecast(**hour_data))
 
     return res
