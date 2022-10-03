@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>zsomapell klod</title>
+</head>
+
+<body>
+    <style>
+        @font-face {
+            font-family: Digital7;
+            src: url('/static/fonts/digital7.otf');
+        }
+
+        @font-face {
+            font-family: Futura;
+            src: url('/static/fonts/hfutura2.otf');
+        }
+
+        html,
+        body,
+        #body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Futura;
+        }
+    </style>
+    <div id="body"></div>
+
+    {% for desc in javascript_libraries %}
+    <script src="{{desc['url']}}" crossorigin="anonymous" integrity="{{desc['hash']}}"></script>
+    {% endfor %}
+
+    <script>
+        window['initalData'] = {{ initial_data | tojson | safe }};
+    </script>
+
+    <script src="/static/bundle.js?v={{version}}"></script>
+
+    {% if dev_mode: %}
+    <script src="http://localhost:35729/livereload.js"></script>
+    {% endif %}
+</body>
+
+</html>

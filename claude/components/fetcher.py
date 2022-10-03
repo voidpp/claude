@@ -12,7 +12,6 @@ html_parser = etree.HTMLParser()
 class Fetcher:
     @classmethod
     async def fetch_url(cls, url: str) -> str:
-        print("=" * 100)
         logger.debug("fetch url: %s", url)
         async with AsyncClient() as client:
             response = await client.get(url)

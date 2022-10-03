@@ -3,7 +3,6 @@ from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
-from starlette.requests import Request
 
 
 from claude.api.schema import create_api_schema
@@ -11,12 +10,10 @@ from starlette_graphene3 import GraphQLApp, make_graphiql_handler
 from claude.components.folders import Folders
 
 from claude.components.injection_middleware import InjectionMiddleware
-from claude.components.types import RequestContext, RequestScopeKeys
+from claude.components.request_context import RequestContext
+from claude.components.types import RequestScopeKeys
 from claude.components.config import Config, load_config
-
-
-async def index(request: Request):
-    return ""
+from claude.endpoints import index
 
 
 def get_app(config: Config = None):
@@ -24,7 +21,7 @@ def get_app(config: Config = None):
     if config is None:
         config = load_config()
 
-    request_context = RequestContext(aioredis.from_url("redis://localhost/1"))
+    request_context = RequestContext(aioredis.from_url(config.redis), config)
 
     app = Starlette(
         routes=[
@@ -33,7 +30,7 @@ def get_app(config: Config = None):
             Route("/", index),
         ],
         middleware=[
-            Middleware(InjectionMiddleware, data={RequestScopeKeys: request_context}),
+            Middleware(InjectionMiddleware, data={RequestScopeKeys.CONTEXT: request_context}),
         ],
     )
 

@@ -1,8 +1,8 @@
-from graphene import ObjectType, Field, Float, String
 from pydantic import BaseModel
 
 from claude.components.graphene.node_base import NodeBase
 from claude.components.graphene.pydantic import object_type_from_pydantic
+from claude.components.weather.idokep.parsers import get_current
 from claude.components.weather.types import CurrentWeather
 
 
@@ -15,5 +15,4 @@ class CurrentWeatherNode(NodeBase[CurrentWeatherNodeValidator]):
     input_validator = CurrentWeatherNodeValidator
 
     async def resolve(self):
-        # weather_data = await self.request_context.weather_provider.get_current_weather(self.args.city)
-        return {"image": "", "temperature": 0}
+        return await get_current(self.args.city, self.request_context.config.idokep_parser.current)

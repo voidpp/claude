@@ -4,12 +4,13 @@ from typing import Type, TypeVar, Generic
 from graphene import Field, ResolveInfo
 from graphene.utils.orderedtype import OrderedType
 from pydantic import BaseModel
+from claude.components.request_context import RequestContext
 
-from claude.components.types import RequestScopeKeys, RequestContext
+from claude.components.types import RequestScopeKeys
 
 from .pydantic import create_class_property_dict
 
-InputType = TypeVar("InputType", BaseModel, object)
+InputType = TypeVar("InputType")
 
 
 class NoArgumentsDefinedError(Exception):
