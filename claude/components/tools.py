@@ -1,7 +1,9 @@
 import logging
 import re
 from xml.etree.ElementTree import ElementTree
+from graphene import ObjectType
 from lxml.cssselect import CSSSelector
+from pydantic import BaseModel
 
 from claude.components.exceptions import CannotParseNumber, SelectorNotFoundInTree
 
@@ -43,3 +45,16 @@ def tree_search_list(selector: str, tree: ElementTree) -> list:
 
 def tree_search(selector: str, tree: ElementTree):
     return tree_search_list(selector, tree)[0]
+
+
+def create_json_serializable_data(data):
+    if isinstance(data, list):
+        return [create_json_serializable_data(val) for val in data]
+    elif isinstance(data, dict):
+        return {key: create_json_serializable_data(val) for key, val in data.items()}
+    elif isinstance(data, BaseModel):
+        return data.dict()
+    elif isinstance(data, ObjectType):
+        return data.__dict__
+    else:
+        return data

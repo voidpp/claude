@@ -1,3 +1,4 @@
+from datetime import timedelta
 from graphene import List
 from pydantic import BaseModel
 
@@ -14,6 +15,7 @@ class DaysForecastNodeValidator(BaseModel):
 class DaysForecastWeatherNode(NodeBase[DaysForecastNodeValidator]):
     result_type = List(object_type_from_pydantic(DayForecast))
     input_validator = DaysForecastNodeValidator
+    cache_expiry_time = timedelta(hours=3)
 
     async def resolve(self):
         return await get_days(self.args.city, self.request_context.config.idokep_parser.days)

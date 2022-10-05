@@ -24,6 +24,7 @@ def get_app(config: Config = None):
     request_context = RequestContext(aioredis.from_url(config.redis), config)
 
     app = Starlette(
+        debug=True,  # TODO
         routes=[
             Mount("/static", app=StaticFiles(directory=Folders.static), name="static"),
             Mount("/api", GraphQLApp(create_api_schema(), on_get=make_graphiql_handler())),
