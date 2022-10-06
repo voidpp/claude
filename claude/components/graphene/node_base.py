@@ -1,6 +1,7 @@
 import base64
 import json
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
+from dataclasses import dataclass
 from datetime import timedelta
 from functools import cached_property
 from typing import Generic, Type, TypeVar
@@ -32,11 +33,27 @@ def get_request_context(info: ResolveInfo) -> RequestContext:
     return info.context["request"].scope[RequestScopeKeys.CONTEXT]
 
 
-class NodeBase(ABC, Generic[InputType]):
+@dataclass
+class NodeConfig:
     result_type: OrderedType
     input_validator: Type[BaseModel] = None
     description: str = None
     cache_expiry_time: timedelta = None
+
+
+class _NodeConfigChecker(ABCMeta):
+    def __new__(cls, name, bases, dct):
+        created_class = super().__new__(cls, name, bases, dct)
+        if "NodeBase" in [base.__name__ for base in bases]:
+            if type(dct.get("config")) != NodeConfig:
+                raise Exception(
+                    f"Node configuration is missing from {name}! Add a config attribute with NodeConfig instance."
+                )
+        return created_class
+
+
+class NodeBase(Generic[InputType], metaclass=_NodeConfigChecker):
+    config: NodeConfig
 
     _info: ResolveInfo
     _args: InputType = None
@@ -57,11 +74,11 @@ class NodeBase(ABC, Generic[InputType]):
 
     @property
     def args(self) -> InputType:
-        if not self.input_validator:
+        if not self.config.input_validator:
             raise NoArgumentsDefinedError
         if self._args:
             return self._args
-        self._args = self.input_validator.construct(**self._kwargs)
+        self._args = self.config.input_validator.construct(**self._kwargs)
         return self._args
 
     async def validate(self):
@@ -86,13 +103,15 @@ class NodeBase(ABC, Generic[InputType]):
         return result
 
     async def set_data_to_cache(self, data):
-        if not self.cache_expiry_time:
+        if not self.config.cache_expiry_time:
             return
 
-        await self.request_context.redis.set(self.cache_key, json.dumps(create_json_serializable_data(data)))
+        await self.request_context.redis.set(
+            self.cache_key, json.dumps(create_json_serializable_data(data)), self.config.cache_expiry_time
+        )
 
     async def get_data_from_cache(self):
-        if not self.cache_expiry_time:
+        if not self.config.cache_expiry_time:
             return
 
         if data := await self.request_context.redis.get(self.cache_key):
@@ -109,8 +128,8 @@ class NodeBase(ABC, Generic[InputType]):
     @classmethod
     def field(cls) -> Field:
         return Field(
-            type_=cls.result_type,
-            args=create_class_property_dict(cls.input_validator) if cls.input_validator else None,
+            type_=cls.config.result_type,
+            args=create_class_property_dict(cls.config.input_validator) if cls.config.input_validator else None,
             resolver=cls._resolve,
-            description=cls.description,
+            description=cls.config.description,
         )
