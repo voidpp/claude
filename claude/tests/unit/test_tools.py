@@ -1,8 +1,8 @@
+import pytest
 from graphene import Field, Int, ObjectType, String
 from pydantic import BaseModel
-from claude.components.tools import create_json_serializable_data
 
-import pytest
+from claude.components.tools import create_json_serializable_data
 
 
 class SomeData(BaseModel):

@@ -1,4 +1,4 @@
-from starlette.types import ASGIApp, Scope, Receive, Send
+from starlette.types import ASGIApp, Receive, Scope, Send
 
 
 class InjectionMiddleware:

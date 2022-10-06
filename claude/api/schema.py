@@ -1,4 +1,5 @@
 from graphene import Schema
+
 from claude.api.queries import Query
 
 

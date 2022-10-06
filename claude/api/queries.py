@@ -1,9 +1,10 @@
 from graphene import Field, ObjectType, ResolveInfo, String
 
-from claude.api.nodes.weather.current import CurrentWeatherNode
-from claude.api.nodes.weather.days import DaysForecastWeatherNode
-from claude.api.nodes.weather.hours import HoursForecastWeatherNode
 from claude.components.graphene.tools import create_nested_field
+
+from .nodes.weather.current import CurrentWeatherNode
+from .nodes.weather.days import DaysForecastWeatherNode
+from .nodes.weather.hours import HoursForecastWeatherNode
 
 
 async def ping(root, info: ResolveInfo):

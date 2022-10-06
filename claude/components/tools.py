@@ -1,12 +1,12 @@
 import logging
 import re
 from xml.etree.ElementTree import ElementTree
+
 from graphene import ObjectType
 from lxml.cssselect import CSSSelector
 from pydantic import BaseModel
 
 from claude.components.exceptions import CannotParseNumber, SelectorNotFoundInTree
-
 
 logger = logging.getLogger(__name__)
 

@@ -1,4 +1,5 @@
 from datetime import timedelta
+
 from graphene import List
 from pydantic import BaseModel
 

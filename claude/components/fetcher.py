@@ -1,8 +1,9 @@
-from io import StringIO
 import logging
+from io import StringIO
+from xml.etree.ElementTree import ElementTree
+
 from httpx import AsyncClient
 from lxml import etree
-from xml.etree.ElementTree import ElementTree
 
 logger = logging.getLogger(__name__)
 

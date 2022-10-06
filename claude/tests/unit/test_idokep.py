@@ -1,10 +1,10 @@
 import pytest
+
 from claude.components.weather.idokep.config import (
     IdokepCurrentParserConfig,
     IdokepDaysParserConfig,
     IdokepHoursParserConfig,
 )
-
 from claude.components.weather.idokep.parsers import get_current, get_days, get_hours
 from claude.tests.unit.tools import mock_fetch_url
 

@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
+
 from invoke import task
+
 from claude.components.types import EnvironmentKeys
 
 
@@ -21,3 +23,13 @@ def start(c, port=9042, reload=True):
             cmd_parts += ["--reload-include", str(rel_path)]
 
     c.run(" ".join(cmd_parts))
+
+
+@task
+def test(c, watch=False):
+    c.run("ptw" if watch else "pytest")
+
+
+@task
+def format(c):
+    c.run("pre-commit run --all-files --verbose")

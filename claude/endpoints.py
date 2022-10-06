@@ -1,9 +1,9 @@
-import imp
 from time import time
+
 import pkg_resources
+from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
-from starlette.applications import Starlette
 
 from .components.folders import Folders
 

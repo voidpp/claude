@@ -2,9 +2,20 @@ import enum
 import inspect
 from datetime import datetime
 from ipaddress import IPv4Address
-from typing import Type, get_origin, get_args, Tuple, Union
+from typing import Tuple, Type, Union, get_args, get_origin
 
-from graphene import InputObjectType, List, Int, Float, String, Boolean, DateTime, Enum, ObjectType, Field
+from graphene import (
+    Boolean,
+    DateTime,
+    Enum,
+    Field,
+    Float,
+    InputObjectType,
+    Int,
+    List,
+    ObjectType,
+    String,
+)
 from graphene.types.base import BaseType
 from pydantic import BaseModel
 
