@@ -1,3 +1,4 @@
+import json
 import logging
 from io import StringIO
 from xml.etree.ElementTree import ElementTree
@@ -22,3 +23,8 @@ class Fetcher:
     async def fetch_xml(cls, url: str) -> ElementTree:
         content = await cls.fetch_url(url)
         return etree.parse(StringIO(content), html_parser)
+
+    @classmethod
+    async def fetch_json(cls, url: str):
+        content = await cls.fetch_url(url)
+        return json.loads(content)

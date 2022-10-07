@@ -9,6 +9,7 @@ from claude.api.schema import create_api_schema
 from claude.components.config import Config, load_config
 from claude.components.folders import Folders
 from claude.components.injection_middleware import InjectionMiddleware
+from claude.components.logging import init_logger
 from claude.components.request_context import RequestContext
 from claude.components.types import RequestScopeKeys
 from claude.endpoints import index
@@ -18,6 +19,8 @@ def get_app(config: Config = None):
 
     if config is None:
         config = load_config()
+
+    init_logger(debug=True)
 
     request_context = RequestContext(aioredis.from_url(config.redis), config)
 

@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import re
 from xml.etree.ElementTree import ElementTree
@@ -58,3 +59,19 @@ def create_json_serializable_data(data):
         return data.__dict__
     else:
         return data
+
+
+class CalledProcessorError(Exception):
+    def __init__(self, code, stdout, stderr):
+        self.code = code
+        self.stdout = stdout
+        self.stderr = stderr
+        super().__init__("CalledProcessorError code %s" % code)
+
+
+async def check_output(cmd):
+    proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+    stdout, stderr = await proc.communicate()
+    if proc.returncode != 0:
+        raise CalledProcessorError(proc.returncode, stdout, stderr)
+    return stdout

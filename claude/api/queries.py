@@ -1,5 +1,6 @@
 from graphene import Field, ObjectType, ResolveInfo, String
 
+from claude.api.nodes.server_status import ServerStatusNode
 from claude.components.graphene.tools import create_nested_field
 
 from .nodes.weather.current import CurrentWeatherNode
@@ -21,3 +22,4 @@ class Query(ObjectType):
     ping = Field(String, resolver=ping)
 
     weather = create_nested_field(Weather)
+    server_status = ServerStatusNode.field()
