@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import re
+from typing import Any, Awaitable
 from xml.etree.ElementTree import ElementTree
 
 from graphene import ObjectType
@@ -75,3 +76,21 @@ async def check_output(cmd):
     if proc.returncode != 0:
         raise CalledProcessorError(proc.returncode, stdout, stderr)
     return stdout
+
+
+def is_in_string_list(search: str, data: list[str]) -> bool:
+    return len([i for i in data if search in i]) > 0
+
+
+class TaskGatherer:
+    def __init__(self) -> None:
+        self._names: list[str] = []
+        self._tasks = []
+
+    def append_task(self, task: Awaitable, name: str):
+        self._tasks.append(task)
+        self._names.append(name)
+
+    async def wait(self) -> dict[str, Any]:
+        results = await asyncio.gather(*self._tasks)
+        return {name: results[idx] for idx, name in enumerate(self._names)}

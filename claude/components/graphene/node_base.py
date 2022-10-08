@@ -1,6 +1,6 @@
 import base64
 import json
-from abc import ABC, ABCMeta, abstractmethod
+from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
 from datetime import timedelta
 from functools import cached_property
@@ -10,6 +10,7 @@ from graphene import Field, ResolveInfo
 from graphene.utils.orderedtype import OrderedType
 from pydantic import BaseModel
 
+from claude.components.graphene.tools import get_field_name_list
 from claude.components.request_context import RequestContext
 from claude.components.tools import create_json_serializable_data
 from claude.components.types import RequestScopeKeys
@@ -67,6 +68,17 @@ class NodeBase(Generic[InputType], metaclass=_NodeConfigChecker):
     @abstractmethod
     async def resolve(self):
         pass
+
+    @cached_property
+    def field_names(self):
+        field_names = get_field_name_list(self._info.field_nodes[0])
+        return [fn.split(".") for fn in field_names]
+
+    def is_field_queried(self, node_name):
+        for node_name_list in self.field_names:
+            if node_name in node_name_list:
+                return True
+        return False
 
     @property
     def request_context(self) -> RequestContext:
