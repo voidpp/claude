@@ -1,10 +1,12 @@
 import enum
 import inspect
+import uuid
 from datetime import datetime
 from ipaddress import IPv4Address
 from typing import Tuple, Type, Union, get_args, get_origin
 
 from graphene import (
+    UUID,
     Boolean,
     DateTime,
     Enum,
@@ -12,6 +14,7 @@ from graphene import (
     Float,
     InputObjectType,
     Int,
+    JSONString,
     List,
     ObjectType,
     String,
@@ -20,6 +23,8 @@ from graphene.types.base import BaseType
 from pydantic import BaseModel
 
 VALIDATOR_CLASS_NAME_PREFIX = "Validator"
+
+FORBIDDEN_TYPES = [dict]  # TODO
 
 
 class ConversionError(Exception):
@@ -57,7 +62,9 @@ def object_type_from_pydantic(
 
 
 def create_class_property_dict(
-    model: Type[BaseModel], sub_type: Type[BaseType] = ObjectType, ignored_fields: list[str] = None
+    model: Type[BaseModel],
+    sub_type: Type[BaseType] = ObjectType,
+    ignored_fields: list[str] = None,
 ) -> dict:
     properties = {}
     collector = AnnotationsCollector(model)
@@ -93,7 +100,8 @@ def create_class_property_dict(
             continue
 
         if issubclass(type_, (BaseModel,)):
-            properties[property_name] = Field(object_type_from_pydantic(type_))
+            aaa = object_type_from_pydantic(type_, base_type=sub_type)
+            properties[property_name] = aaa() if sub_type == InputObjectType else Field(aaa)
             continue
 
         raise ConversionError(f"Conversion not implemented for type '{type_}'")
@@ -170,11 +178,12 @@ def get_base_scalar_type(type_) -> type:
 
 
 _TYPE_MAP_SCALARS = {
+    uuid.UUID: UUID,
     int: Int,
     float: Float,
     str: String,
     bool: Boolean,
     datetime: DateTime,
-    dict: String,  # in GraphQL the 'dict' type doesn't exists intentionally
+    dict: JSONString,
     IPv4Address: String,
 }

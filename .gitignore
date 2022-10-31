@@ -19,3 +19,4 @@ __generated__
 schema.graphql
 htmlcov
 config.yaml
+settings.json

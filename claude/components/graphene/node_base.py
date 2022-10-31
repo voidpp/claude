@@ -6,7 +6,7 @@ from datetime import timedelta
 from functools import cached_property
 from typing import Generic, Type, TypeVar
 
-from graphene import Field, ResolveInfo
+from graphene import Field, InputObjectType, ResolveInfo
 from graphene.utils.orderedtype import OrderedType
 from pydantic import BaseModel
 
@@ -141,7 +141,9 @@ class NodeBase(Generic[InputType], metaclass=_NodeConfigChecker):
     def field(cls) -> Field:
         return Field(
             type_=cls.config.result_type,
-            args=create_class_property_dict(cls.config.input_validator) if cls.config.input_validator else None,
+            args=create_class_property_dict(cls.config.input_validator, sub_type=InputObjectType)
+            if cls.config.input_validator
+            else None,
             resolver=cls._resolve,
             description=cls.config.description,
         )

@@ -16,6 +16,7 @@ from claude.components.folders import Folders
 from claude.components.injection_middleware import InjectionMiddleware
 from claude.components.logging import init_logger
 from claude.components.request_context import RequestContext
+from claude.components.settings.manager import SettingsManager
 from claude.components.types import RequestScopeKeys
 from claude.endpoints import index
 
@@ -33,16 +34,19 @@ class LoggedGraphQLApp(GraphQLApp):
 
 
 def get_app(config: Config = None):
+    debug = True  # TODO
 
     if config is None:
         config = load_config()
 
-    init_logger(debug=True)
+    init_logger(debug)
+    redis_client = aioredis.from_url(config.redis)
+    settings_manager = SettingsManager(redis_client)
 
-    request_context = RequestContext(aioredis.from_url(config.redis), config)
+    request_context = RequestContext(redis_client, config, settings_manager)
 
     app = Starlette(
-        debug=True,  # TODO
+        debug,
         routes=[
             Mount("/static", app=StaticFiles(directory=Folders.static), name="static"),
             Mount("/api", LoggedGraphQLApp(create_api_schema(), on_get=make_graphiql_handler())),

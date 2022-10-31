@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import yaml
-from pydantic import BaseModel
+from pydantic import BaseModel, FilePath
 
 from claude.components.types import EnvironmentKeys
 from claude.components.weather.idokep.config import (

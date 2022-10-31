@@ -7,7 +7,7 @@ from claude.components.types import EnvironmentKeys
 
 
 @task
-def start(c, port=9042, reload=True):
+def start(c, port=9042, reload=True, workers=None):
     cmd_parts = [
         "uvicorn",
         "claude.app:get_app",
@@ -21,6 +21,8 @@ def start(c, port=9042, reload=True):
         if config_file := os.environ.get(EnvironmentKeys.CONFIG_FILE):
             rel_path = Path(config_file).relative_to(Path(__file__).parent)
             cmd_parts += ["--reload-include", str(rel_path)]
+    elif workers:
+        cmd_parts.append(f"--workers {workers}")
 
     c.run(" ".join(cmd_parts))
 
