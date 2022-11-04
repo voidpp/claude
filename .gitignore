@@ -20,3 +20,4 @@ schema.graphql
 htmlcov
 config.yaml
 settings.json
+claude/static/bundle.js

@@ -1,0 +1,32 @@
+{
+  "name": "claude",
+  "version": "1.0.0",
+  "description": "Claude ====",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/voidpp/claude-v2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/voidpp/claude-v2/issues"
+  },
+  "homepage": "https://github.com/voidpp/claude-v2#readme",
+  "dependencies": {
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.8.4",
+    "webpack": "^5.74.0",
+    "webpack-livereload-plugin": "^3.0.2"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.10.0"
+  }
+}

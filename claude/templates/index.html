@@ -29,18 +29,10 @@
     </style>
     <div id="body"></div>
 
-    {% for desc in javascript_libraries %}
-    <script src="{{desc['url']}}" crossorigin="anonymous" integrity="{{desc['hash']}}"></script>
-    {% endfor %}
-
-    <script>
-        window['initalData'] = {{ initial_data | tojson | safe }};
-    </script>
-
     <script src="/static/bundle.js?v={{version}}"></script>
 
     {% if dev_mode: %}
-    <script src="http://localhost:35729/livereload.js"></script>
+    <script src="http://{{request.url.hostname}}:35729/livereload.js"></script>
     {% endif %}
 </body>
 

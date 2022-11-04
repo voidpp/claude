@@ -3,11 +3,12 @@ from pathlib import Path
 
 from invoke import task
 
-from claude.components.types import EnvironmentKeys
+from claude.components.folders import Folders
+from claude.components.types import Environment
 
 
 @task
-def start(c, port=9042, reload=True, workers=None):
+def start(c, port=9042, reload=True, workers=None, debug=True):
     cmd_parts = [
         "uvicorn",
         "claude.app:get_app",
@@ -18,11 +19,14 @@ def start(c, port=9042, reload=True, workers=None):
 
     if reload:
         cmd_parts.append("--reload")
-        if config_file := os.environ.get(EnvironmentKeys.CONFIG_FILE):
+        if config_file := Environment.CONFIG_FILE.get():
             rel_path = Path(config_file).relative_to(Path(__file__).parent)
             cmd_parts += ["--reload-include", str(rel_path)]
     elif workers:
         cmd_parts.append(f"--workers {workers}")
+
+    if debug:
+        Environment.DEV_MODE.set("1")
 
     c.run(" ".join(cmd_parts))
 
@@ -35,3 +39,12 @@ def test(c, watch=False):
 @task
 def format(c):
     c.run("pre-commit run --all-files --verbose")
+
+
+@task
+def generate_graphql_schema(c):
+    from claude.api.schema import create_api_schema
+
+    path = Folders.frontend / "schema.graphql"
+    path.write_text(str(create_api_schema()))
+    print(f"{path.relative_to(Folders.project_root)} has been written!")

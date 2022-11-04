@@ -5,6 +5,8 @@ from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 
+from claude.components.types import Environment
+
 from .components.folders import Folders
 
 templates = Jinja2Templates(Folders.templates)
@@ -19,8 +21,6 @@ async def index(request: Request):
         context={
             "request": request,
             "version": version,
-            "dev_mode": True,
-            "initial_data": {},
-            "javascript_libraries": [],
+            "dev_mode": Environment.DEV_MODE.get(),
         },
     )

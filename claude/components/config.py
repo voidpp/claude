@@ -4,7 +4,7 @@ from pathlib import Path
 import yaml
 from pydantic import BaseModel, FilePath
 
-from claude.components.types import EnvironmentKeys
+from claude.components.types import Environment
 from claude.components.weather.idokep.config import (
     IdokepCurrentParserConfig,
     IdokepDaysParserConfig,
@@ -24,15 +24,15 @@ class Config(BaseModel):
 
 
 def load_config() -> Config:
-    filename = os.environ.get(EnvironmentKeys.CONFIG_FILE)
+    filename = Environment.CONFIG_FILE.get()
 
     if filename is None:
-        raise Exception(f"Set {EnvironmentKeys.CONFIG_FILE} for config file")
+        raise Exception(f"Set {Environment.CONFIG_FILE} for config file")
 
     file = Path(filename)
 
     if not file.is_file:
-        raise Exception(f"Config file {file} from env:{EnvironmentKeys.CONFIG_FILE} is not exists or not a file")
+        raise Exception(f"Config file {file} from env:{Environment.CONFIG_FILE} is not exists or not a file")
 
     data = yaml.safe_load(file.read_text())
 
