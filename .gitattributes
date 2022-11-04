@@ -1,1 +1,1 @@
-claude/tests/unit/resources/* -linguist-vendored
+claude/tests/unit/resources/*.html -linguist-detectable
