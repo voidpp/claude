@@ -21,6 +21,9 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'claude/static'),
     },
+    watchOptions: {
+        ignored: /node_modules/,
+    },
     plugins: [
         new LiveReloadPlugin({})
     ]

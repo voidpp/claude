@@ -20,7 +20,7 @@ def start(c, port=9042, reload=True, workers=None, debug=True):
     if reload:
         cmd_parts.append("--reload")
         if config_file := Environment.CONFIG_FILE.get():
-            rel_path = Path(config_file).relative_to(Path(__file__).parent)
+            rel_path = Path(config_file).relative_to(Path(__file__).parent.parent)
             cmd_parts += ["--reload-include", str(rel_path)]
     elif workers:
         cmd_parts.append(f"--workers {workers}")

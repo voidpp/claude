@@ -1,6 +1,7 @@
 import * as React from "react";
 import { createRoot } from 'react-dom/client';
+import { App } from "./components/app";
 
 
 const root = createRoot(document.getElementById('body'));
-root.render(<h1 style={{ marginLeft: 25 }}>Hello, world!</h1>);
+root.render(<App />);
