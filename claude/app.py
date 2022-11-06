@@ -42,6 +42,7 @@ def get_app(config: Config = None):
     init_logger(debug)
 
     logger.info("Environment variables: %s", {key.value: key.get() for key in Environment})
+    logger.info("Config data: %s", config.dict())
 
     redis_client = aioredis.from_url(config.redis)
     settings_manager = SettingsManager(redis_client)

@@ -1,8 +1,9 @@
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
 import MenuIcon from '@mui/icons-material/Menu';
-import { Box, Button, Drawer, IconButton } from '@mui/material';
+import { Box, Drawer, IconButton } from '@mui/material';
 import * as React from "react";
 import { useBoolState } from '../tools';
+import { DashbardButton } from './dashboard-button';
 
 
 
@@ -18,13 +19,10 @@ export const ControlBar = () => {
             </IconButton>
             <Drawer anchor="top" open={openDrawer} onClose={close}>
                 <Box style={{ display: 'flex', alignItems: 'center', padding: 10 }}>
-                    <span>
+                    <span style={{ paddingRight: 10 }}>
                         Zsomapell Klod!
                     </span>
-                    <Button variant="contained" sx={{ marginLeft: 1 }}>
-                        dashboards
-                        <ArrowDropDownIcon />
-                    </Button>
+                    <DashbardButton />
                 </Box>
             </Drawer>
         </div>

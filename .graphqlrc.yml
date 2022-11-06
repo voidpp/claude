@@ -1,0 +1,2 @@
+schema: 'frontend/schema.graphql'
+documents: 'frontend/**/*.{js,ts,jsx,tsx}'

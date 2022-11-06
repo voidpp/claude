@@ -21,3 +21,4 @@ htmlcov
 config.yaml
 settings.json
 claude/static/bundle.js
+types-and-hooks.tsx
