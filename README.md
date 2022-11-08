@@ -7,19 +7,19 @@ Development
 
 install:
 ```bash
-# create virtualenv and activate
+# create virtualenv and activate, install poetry
 poetry install
 ```
-run dev server:
+run backend:
 ```
-inv start
+inv backend.start
 ```
-run test:
+run backend test:
 ```
-inv test
+inv backend.test
 ```
-format code:
+format backend code:
 ```
-inv format
+inv backend.format
 ```
 
