@@ -28,8 +28,8 @@ jobs:
 
       - name: Lint with pre-commit
         run: |
-          invoke format
+          invoke backend.format
 
       - name: Test with pytest
         run: |
-          invoke test
+          invoke backend.test
