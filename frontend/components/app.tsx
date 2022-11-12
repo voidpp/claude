@@ -4,6 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import * as React from "react";
 import { createApolloClient } from "../client";
+import { AppConfigContextProvider } from "../config";
 import { MainFrame } from "./main-frame";
 
 const darkTheme = createTheme({
@@ -18,8 +19,10 @@ export const App = () => {
     return (
         <ApolloProvider client={apolloClient}>
             <ThemeProvider theme={darkTheme}>
-                <CssBaseline />
-                <MainFrame />
+                <AppConfigContextProvider>
+                    <CssBaseline />
+                    <MainFrame />
+                </AppConfigContextProvider>
             </ThemeProvider>
         </ApolloProvider>
     );

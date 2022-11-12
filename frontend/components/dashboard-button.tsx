@@ -1,26 +1,22 @@
-import { gql } from '@apollo/client';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Button, Menu, MenuItem } from "@mui/material";
+import CheckIcon from '@mui/icons-material/Check';
+import { Button, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
 import { useRef } from "react";
+import { useAppConfig } from '../config';
+import { useDashboardListQuery } from '../graphql-types-and-hooks';
 import { useBoolState } from '../tools';
-import { useGetDashboardListQuery } from '../types-and-hooks';
-
-gql`
-    query GetDashboardList {
-        settings {
-          dashboards {
-            id
-            name
-          }
-        }
-    }
-`;
 
 export const DashbardButton = () => {
-    const { data, loading } = useGetDashboardListQuery();
+    const { data, loading } = useDashboardListQuery();
     const [isOpen, open, close] = useBoolState()
     const buttonRef = useRef(null);
+    const config = useAppConfig();
+
+    const onSelectDashboard = (id: string) => {
+        config.selectedDashboard.setValue(id);
+        close();
+    }
 
     return (
         <div>
@@ -40,7 +36,18 @@ export const DashbardButton = () => {
                 onClose={close}
             >
                 {data?.settings.dashboards.map(dasboard => (
-                    <MenuItem key={dasboard.id} onClick={close}>{dasboard.name}</MenuItem>
+                    <MenuItem
+                        key={dasboard.id}
+                        onClick={() => onSelectDashboard(dasboard.id)}
+                        selected={dasboard.id === config.selectedDashboard.value}
+                    >
+                        <ListItemIcon>
+                            {dasboard.id === config.selectedDashboard.value && <CheckIcon />}
+                        </ListItemIcon>
+                        <ListItemText>
+                            {dasboard.name}
+                        </ListItemText>
+                    </MenuItem>
                 ))}
             </Menu>
         </div>
