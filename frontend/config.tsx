@@ -1,7 +1,7 @@
-import * as React from "react";
 import { createContext, useContext, useMemo } from "react";
 import { useForceUpdate } from "./tools";
 import { LocalStorageSchema, LocalStorageValue } from "./types";
+import { createContextProviderComponent } from "./widgets";
 
 function fetchItem(name: string, default_?: any) {
     const res = window.localStorage.getItem(name);
@@ -36,12 +36,4 @@ const AppConfigContext = createContext(undefined);
 
 export const useAppConfig = () => useContext<LocalStorageSchema>(AppConfigContext);
 
-export const AppConfigContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const appConfigData = useAppConfigData();
-
-    return (
-        <AppConfigContext.Provider value={appConfigData}>
-            {children}
-        </AppConfigContext.Provider>
-    )
-}
+export const AppConfigContextProvider = createContextProviderComponent(AppConfigContext, useAppConfigData);

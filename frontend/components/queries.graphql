@@ -1,9 +1,4 @@
 
-query DashboardList {
-    settings {
-        dashboards {
-            id
-            name
-        }
-    }
+mutation SaveDashboard($data: DashboardInput!) {
+    saveDashboard(dashboard: $data)
 }

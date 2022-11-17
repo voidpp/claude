@@ -1,16 +1,12 @@
-
 import MenuIcon from '@mui/icons-material/Menu';
 import { Box, Drawer, IconButton } from '@mui/material';
 import * as React from "react";
-import { useAppConfig } from '../config';
 import { useBoolState } from '../tools';
 import { DashbardButton } from './dashboard-button';
 
 
-
 export const ControlBar = () => {
     const [isOpen, open, close] = useBoolState(true);
-    const config = useAppConfig();
 
     const openDrawer = isOpen;
 
@@ -25,7 +21,6 @@ export const ControlBar = () => {
                         Zsomapell Klod!
                     </span>
                     <DashbardButton />
-                    {config.selectedDashboard.value}
                 </Box>
             </Drawer>
         </div>

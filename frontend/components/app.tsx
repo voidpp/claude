@@ -5,6 +5,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import * as React from "react";
 import { createApolloClient } from "../client";
 import { AppConfigContextProvider } from "../config";
+import { NotificationContextProvider } from "../notifications";
+import { AppSettingsContextProvider } from "../settings";
 import { MainFrame } from "./main-frame";
 
 const darkTheme = createTheme({
@@ -20,8 +22,12 @@ export const App = () => {
         <ApolloProvider client={apolloClient}>
             <ThemeProvider theme={darkTheme}>
                 <AppConfigContextProvider>
-                    <CssBaseline />
-                    <MainFrame />
+                    <AppSettingsContextProvider>
+                        <NotificationContextProvider>
+                            <CssBaseline />
+                            <MainFrame />
+                        </NotificationContextProvider>
+                    </AppSettingsContextProvider>
                 </AppConfigContextProvider>
             </ThemeProvider>
         </ApolloProvider>
