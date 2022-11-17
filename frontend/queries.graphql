@@ -1,0 +1,23 @@
+
+query Settings {
+    settings {
+        dashboards {
+            id
+            name
+            stepSize
+            background
+            theme
+            locale            
+        }
+        widgets {
+            id
+            dashboardId
+            type
+            x
+            y
+            width
+            height
+            settings
+        }
+    }
+}
