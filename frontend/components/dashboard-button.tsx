@@ -7,7 +7,7 @@ import { useRef } from "react";
 import { useAppConfig } from '../config';
 import { useAppSettings } from '../settings';
 import { useBoolState } from '../tools';
-import { DashboardSettingsDialog } from './dashboard-settings-dialog';
+import { DashboardFormDialog } from './dashboard-form-dialog';
 
 
 export const DashbardButton = () => {
@@ -27,9 +27,11 @@ export const DashbardButton = () => {
         closeMenu();
     }
 
+    const sortedDashboards = [...settings?.dashboards ?? []].sort((a, b) => a.name.localeCompare(b.name));
+
     return (
         <div>
-            <DashboardSettingsDialog isOpen={isDialogOpen} close={closeDialog} />
+            <DashboardFormDialog isOpen={isDialogOpen} close={closeDialog} />
             <Button
                 variant="contained"
                 sx={{ marginLeft: 1 }}
@@ -54,7 +56,7 @@ export const DashbardButton = () => {
                     </ListItemText>
                 </MenuItem>
                 <Divider />
-                {settings?.dashboards.map(dasboard => (
+                {sortedDashboards.map(dasboard => (
                     <MenuItem
                         key={dasboard.id}
                         onClick={() => onSelectDashboard(dasboard.id)}

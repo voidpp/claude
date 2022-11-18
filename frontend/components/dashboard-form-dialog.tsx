@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, TextField, Typography } from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { Dashboard, DashboardInput } from '../graphql-types-and-hooks';
 import { useNotifications } from "../notifications";
@@ -12,6 +12,7 @@ import { FormContainer } from "../widgets";
 type Props = {
     isOpen: boolean,
     close: () => void,
+    initialData?: DashboardInput,
 };
 
 const createDefaultValues = (): DashboardInput => ({
@@ -23,10 +24,15 @@ const createDefaultValues = (): DashboardInput => ({
     locale: "hu",
 })
 
-export const DashboardSettingsDialog = ({ isOpen, close }: Props) => {
+export const DashboardFormDialog = ({ isOpen, close, initialData }: Props) => {
     const { saveDashboard } = useAppSettings();
-    const [data, setData] = useState<DashboardInput>(createDefaultValues());
+    const [data, setData] = useState<DashboardInput>(initialData ?? createDefaultValues);
     const { showNotification } = useNotifications();
+
+    useEffect(() => {
+        if (initialData)
+            setData(initialData);
+    }, [initialData?.id])
 
     const dataUpdater =
         (key: keyof Dashboard, converter: (val: string) => any = (val: string) => val) =>
