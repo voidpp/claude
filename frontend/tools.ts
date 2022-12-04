@@ -1,10 +1,6 @@
 import { useState } from "react";
+import { CommonWidgetProps } from "./types";
 
-export const useBoolState = (defaultValue = false): [boolean, () => void, () => void, () => void] => {
-    const [value, setValue] = useState(defaultValue);
-
-    return [value, () => setValue(true), () => setValue(false), () => setValue(!value)]
-}
 
 export function useForceUpdate() {
     const [_, setValue] = useState([]);
@@ -18,4 +14,15 @@ export function copyObject<T extends object>(data: T, excludedFields?: Array<key
         prev[key as keyof T] = value;
         return prev;
     }, {} as T);
+}
+
+type WidgetStyleCallback<T = any> = (props: CommonWidgetProps<{}>) => T;
+
+export namespace WidgetStyle {
+    export function getRelativeSize(ratio: number): { width: WidgetStyleCallback<number>, height: WidgetStyleCallback<number> } {
+        return {
+            width: (props: CommonWidgetProps<{}>) => props.config.width * ratio,
+            height: (props: CommonWidgetProps<{}>) => props.config.height * ratio,
+        }
+    }
 }

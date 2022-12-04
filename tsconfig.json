@@ -9,6 +9,11 @@
         "allowJs": true,
         "allowSyntheticDefaultImports": true,
         "baseUrl": "./frontend",
+        "paths": {
+            "@/*": [
+                "*"
+            ]
+        },
         "moduleResolution": "node"
     }
 }

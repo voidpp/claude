@@ -1,8 +1,8 @@
+import { createContextProviderComponent } from "@/widgets";
 import { Alert, AlertProps, Slide, SlideProps, Snackbar } from "@mui/material";
 import * as React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useBoolState } from "./tools";
-import { createContextProviderComponent } from "./widgets";
+import { useBoolState } from "./hooks";
 
 type NotificationData = {
     severity: AlertProps['severity'],

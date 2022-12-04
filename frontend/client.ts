@@ -4,7 +4,9 @@ export const createApolloClient = () => {
 
   const client = new ApolloClient({
     uri: '/api',
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      addTypename: false
+    })
   });
 
   return client;

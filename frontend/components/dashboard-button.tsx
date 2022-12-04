@@ -5,8 +5,8 @@ import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem } from "@mu
 import * as React from "react";
 import { useRef } from "react";
 import { useAppConfig } from '../config';
+import { useBoolState } from '../hooks';
 import { useAppSettings } from '../settings';
-import { useBoolState } from '../tools';
 import { DashboardFormDialog } from './dashboard-form-dialog';
 
 

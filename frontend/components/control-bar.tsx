@@ -1,35 +1,15 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Box, Button, Divider, Drawer, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { Box, Divider, Drawer, IconButton, Typography } from '@mui/material';
 import * as React from "react";
-import { useRef } from "react";
 import { useAppConfig } from '../config';
+import { useBoolState } from '../hooks';
 import { useAppSettings } from '../settings';
-import { copyObject, useBoolState } from '../tools';
+import { copyObject } from '../tools';
+import { AddWidgetButton } from './add-widget-button';
 import { DashbardButton } from './dashboard-button';
 import { DashboardFormDialog } from './dashboard-form-dialog';
 
-const AddWidgetButton = () => {
-    const [isMenuOpen, openMenu, closeMenu] = useBoolState();
-    const buttonRef = useRef(null);
-
-    return (
-        <>
-            <Button onClick={openMenu} ref={buttonRef}>
-                Add widget
-            </Button>
-            <Menu
-                anchorEl={buttonRef.current}
-                open={isMenuOpen}
-                onClose={closeMenu}
-            >
-                <MenuItem>
-                    yey
-                </MenuItem>
-            </Menu>
-        </>
-    );
-}
 
 const CurrentDashboardItem = () => {
     const { selectedDashboard } = useAppConfig();
@@ -61,15 +41,17 @@ const CurrentDashboardItem = () => {
 }
 
 export const ControlBar = () => {
-    const [isOpen, open, close] = useBoolState(true);
+    const [isOpen, open, close] = useBoolState();
 
     const openDrawer = isOpen;
 
     return (
-        <div>
-            <IconButton sx={{ margin: 1 }} onClick={open}>
-                <MenuIcon />
-            </IconButton>
+        <>
+            <div style={{ position: 'absolute' }}>
+                <IconButton sx={{ margin: 1 }} onClick={open}>
+                    <MenuIcon />
+                </IconButton>
+            </div>
             <Drawer anchor="top" open={openDrawer} onClose={close}>
                 <Box style={{ display: 'flex', alignItems: 'center', padding: 10 }}>
                     <span style={{ paddingRight: 10 }}>
@@ -80,6 +62,6 @@ export const ControlBar = () => {
                     <CurrentDashboardItem />
                 </Box>
             </Drawer>
-        </div>
+        </>
     );
 }
