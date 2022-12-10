@@ -1,7 +1,9 @@
-import { Menu, MenuItem, SxProps } from "@mui/material";
+import { Box, Menu, MenuItem, SxProps } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
-import { FormFieldDescriptor } from "./widget-settings-dialog";
+import { useBoolState } from "../hooks";
+import { useAppSettings } from "../settings";
+import { FormFieldDescriptor, WidgetSettingsDialog } from "./widget-settings-dialog";
 
 
 const bodyStyle: SxProps = {
@@ -25,16 +27,20 @@ export interface WidgetMenuProps<SettingsType> {
 
 export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
     const [menuAnchorEl, setMenuAnchorEl] = useState();
-    const [isSettingsDialogShown, showSettingDialog] = useState(false);
+    const [isSettingsDialogShown, showSettingDialog, hideSettingDialog] = useBoolState();
     const { settingsFormFields = [], settings } = props;
+    const { removeWidget, saveWidget, getWidgetById } = useAppSettings();
 
     const submitSettings = (data: SettingsType) => {
         if (props.onBeforeSubmit)
             props.onBeforeSubmit(data);
-        // store.dispatch(updateWidgetConfig(props.id, {settings: data}));
+        saveWidget({
+            ...getWidgetById(props.id),
+            settings: data,
+        })
     }
 
-    function openMenu(event) {
+    function openMenu(event: any) {
         setMenuAnchorEl(event.currentTarget);
     }
 
@@ -43,13 +49,12 @@ export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
     }
 
     function openDialog() {
-        showSettingDialog(true);
+        showSettingDialog();
         closeMenu();
-        // store.dispatch(setIsDalogOpen(true));
     }
 
     return (
-        <div>
+        <Box sx={bodyStyle}>
             <span onClick={openMenu}>
                 ...
             </span>
@@ -61,9 +66,7 @@ export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
                 onClose={closeMenu}
             >
                 {settingsFormFields.length ? <MenuItem onClick={openDialog}>Settings</MenuItem> : null}
-                <MenuItem
-                // onClick={() => store.dispatch(removeWidget(props.id))}
-                >
+                <MenuItem onClick={() => removeWidget(props.id)}>
                     Remove
                 </MenuItem>
             </Menu>
@@ -71,15 +74,12 @@ export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
             <WidgetSettingsDialog
                 data={settings}
                 show={isSettingsDialogShown}
-                onClose={() => {
-                    showSettingDialog(false);
-                    // store.dispatch(setIsDalogOpen(false));
-                }}
+                onClose={hideSettingDialog}
                 submit={submitSettings}
                 fields={settingsFormFields}
                 title={props.dialogTitle}
                 introText={props.dialogText}
             />
-        </div>
+        </Box>
     );
 }

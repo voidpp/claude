@@ -21,3 +21,7 @@ query Settings {
         }
     }
 }
+
+mutation RemoveWidget($id: UUID!) {
+    removeWidget(id: $id)
+}

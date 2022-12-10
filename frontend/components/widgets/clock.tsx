@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import * as React from "react";
 import { useState } from "react";
 import { RndFrame, useRnd } from "../rnd";
+import { WidgetMenu } from "../widget-menu";
 
 export class ClockSettings {
     showDate: boolean = true;
@@ -66,6 +67,16 @@ export const Clock = (props: ClockProps) => {
                 </Box>
                 {props.config.settings.showDate && <DateDisplay height={height} format={config.settings.dateFormat} />}
             </Box>
+            <WidgetMenu id={config.id} settings={config.settings} dialogText="settings" settingsFormFields={[{
+                name: "timeFormat",
+                label: "Time format",
+            }, {
+                name: "dateFormat",
+                label: "Date format",
+            }, {
+                name: "showDate",
+                label: "Show date",
+            }]} />
         </RndFrame>
     );
 }

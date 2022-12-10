@@ -5,6 +5,10 @@ export function useInterval(callback: () => void, delay: number, enabled: boolea
     const savedCallback = useRef(callback);
 
     useEffect(() => {
+        savedCallback.current = callback;
+    });
+
+    useEffect(() => {
         function tick() {
             if (enabled)
                 savedCallback.current();

@@ -26,6 +26,8 @@ export const useRnd = (config: WidgetConfig, stepSize: number): Props => {
     };
 
     const onDragStop = (e: DraggableEvent, data: DraggableData) => {
+        if (config.x == data.lastX && config.y == data.lastY)
+            return;
         updatePosition({
             x: data.lastX,
             y: data.lastY,
