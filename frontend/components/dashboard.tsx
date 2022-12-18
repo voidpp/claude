@@ -5,9 +5,10 @@ import { useAppSettings } from "../settings";
 import { widgetRegistry } from "./widget-registry";
 
 const containerStyle: SxProps = {
-    height: '100%',
-    width: '100%',
-}
+    height: "100%",
+    width: "100%",
+    backgroundImage: "url(/static/pics/canvas_blue_texture_surface_shadow_44965_1920x1200.jpg)",
+};
 
 export const Dashboard = () => {
     const { settings } = useAppSettings();
@@ -17,14 +18,16 @@ export const Dashboard = () => {
 
     return (
         <Box sx={containerStyle}>
-            {widgets.filter(w => w.dashboardId == selectedDashboard.value).map(widget => {
-                const Widget = widgetRegistry[widget.type].factory;
-                const config = {
-                    ...widget,
-                    settings: JSON.parse(widget.settings),
-                }
-                return <Widget config={config} key={widget.id} />;
-            })}
+            {widgets
+                .filter(w => w.dashboardId == selectedDashboard.value)
+                .map(widget => {
+                    const Widget = widgetRegistry[widget.type].factory;
+                    const config = {
+                        ...widget,
+                        settings: JSON.parse(widget.settings),
+                    };
+                    return <Widget config={config} key={widget.id} />;
+                })}
         </Box>
     );
-}
+};

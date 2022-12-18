@@ -1,13 +1,12 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 export const createApolloClient = () => {
+    const client = new ApolloClient({
+        uri: "/api/",
+        cache: new InMemoryCache({
+            addTypename: false,
+        }),
+    });
 
-  const client = new ApolloClient({
-    uri: '/api/',
-    cache: new InMemoryCache({
-      addTypename: false
-    })
-  });
-
-  return client;
-}
+    return client;
+};

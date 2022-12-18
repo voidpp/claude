@@ -1,18 +1,25 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, TextField, Typography } from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    TextField,
+    Typography,
+} from "@mui/material";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
-import { Dashboard, DashboardInput } from '../graphql-types-and-hooks';
+import { v4 as uuidv4 } from "uuid";
+import { Dashboard, DashboardInput } from "../graphql-types-and-hooks";
 import { useNotifications } from "../notifications";
 import { useAppSettings } from "../settings";
 import { FormContainer } from "../widgets";
 
-
-
 type Props = {
-    isOpen: boolean,
-    close: () => void,
-    initialData?: DashboardInput,
+    isOpen: boolean;
+    close: () => void;
+    initialData?: DashboardInput;
 };
 
 const createDefaultValues = (): DashboardInput => ({
@@ -22,7 +29,7 @@ const createDefaultValues = (): DashboardInput => ({
     stepSize: 10,
     theme: "",
     locale: "hu",
-})
+});
 
 export const DashboardFormDialog = ({ isOpen, close, initialData }: Props) => {
     const { saveDashboard } = useAppSettings();
@@ -30,27 +37,24 @@ export const DashboardFormDialog = ({ isOpen, close, initialData }: Props) => {
     const { showNotification } = useNotifications();
 
     useEffect(() => {
-        if (initialData)
-            setData(initialData);
-    }, [initialData?.id])
+        if (initialData) setData(initialData);
+    }, [initialData?.id]);
 
     const dataUpdater =
         (key: keyof Dashboard, converter: (val: string) => any = (val: string) => val) =>
-            (event: React.ChangeEvent<HTMLInputElement>) => {
-                setData({ ...data, [key]: converter(event.target.value) })
-            }
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            setData({ ...data, [key]: converter(event.target.value) });
+        };
 
     const onSubmit = async () => {
         await saveDashboard(data);
         close();
         showNotification("Dashboard created");
-    }
+    };
 
     return (
         <Dialog open={isOpen} onClose={close}>
-            <DialogTitle>
-                Create dashboard
-            </DialogTitle>
+            <DialogTitle>Create dashboard</DialogTitle>
             <Divider />
             <DialogContent>
                 <FormContainer>
@@ -71,19 +75,9 @@ export const DashboardFormDialog = ({ isOpen, close, initialData }: Props) => {
                         onChange={dataUpdater("stepSize", parseInt)}
                     />
                     <Typography>Theme</Typography>
-                    <TextField
-                        variant="outlined"
-                        size="small"
-                        value={data.theme}
-                        onChange={dataUpdater("theme")}
-                    />
+                    <TextField variant="outlined" size="small" value={data.theme} onChange={dataUpdater("theme")} />
                     <Typography>Locale</Typography>
-                    <TextField
-                        variant="outlined"
-                        size="small"
-                        value={data.locale}
-                        onChange={dataUpdater("locale")}
-                    />
+                    <TextField variant="outlined" size="small" value={data.locale} onChange={dataUpdater("locale")} />
                 </FormContainer>
             </DialogContent>
             <Divider />
@@ -93,4 +87,4 @@ export const DashboardFormDialog = ({ isOpen, close, initialData }: Props) => {
             </DialogActions>
         </Dialog>
     );
-}
+};

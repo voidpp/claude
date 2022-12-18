@@ -4,7 +4,7 @@
   "description": "Claude ====",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "npx prettier --write frontend/"
   },
   "repository": {
     "type": "git",
@@ -46,6 +46,7 @@
     "webpack-livereload-plugin": "^3.0.2"
   },
   "devDependencies": {
+    "prettier": "^2.8.1",
     "webpack-cli": "^4.10.0"
   }
 }

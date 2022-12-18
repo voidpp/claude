@@ -1,4 +1,3 @@
-
 mutation SaveDashboard($data: DashboardInput!) {
     saveDashboard(dashboard: $data)
 }

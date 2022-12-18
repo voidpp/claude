@@ -1,6 +1,6 @@
 import { ApolloProvider } from "@apollo/client";
-import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as React from "react";
 import { createApolloClient } from "../client";
 import { AppConfigContextProvider } from "../config";
@@ -10,7 +10,7 @@ import { MainFrame } from "./main-frame";
 
 const darkTheme = createTheme({
     palette: {
-        mode: 'dark',
+        mode: "dark",
     },
 });
 
@@ -31,4 +31,4 @@ export const App = () => {
             </ThemeProvider>
         </ApolloProvider>
     );
-}
+};

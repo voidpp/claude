@@ -8,29 +8,29 @@ function fetchItem(name: string, default_?: any) {
     return res === null ? default_ : JSON.parse(res);
 }
 
-
 const useAppConfigData = () => {
+    const forceUpdate = useForceUpdate();
 
-    const forceUpdate = useForceUpdate()
-
-    const handler = useMemo(() => ({
-        get: (target: Record<string, any>, name: string) => {
-            return {
-                get value() {
-                    return fetchItem(name, target[name]);
-                },
-                setValue: (value: any) => {
-                    if (fetchItem(name) == value)
-                        return
-                    window.localStorage.setItem(name, JSON.stringify(value));
-                    forceUpdate();
-                }
-            } as LocalStorageValue<any>;
-        },
-    }), []);
+    const handler = useMemo(
+        () => ({
+            get: (target: Record<string, any>, name: string) => {
+                return {
+                    get value() {
+                        return fetchItem(name, target[name]);
+                    },
+                    setValue: (value: any) => {
+                        if (fetchItem(name) == value) return;
+                        window.localStorage.setItem(name, JSON.stringify(value));
+                        forceUpdate();
+                    },
+                } as LocalStorageValue<any>;
+            },
+        }),
+        []
+    );
 
     return new Proxy<LocalStorageSchema>({} as LocalStorageSchema, handler);
-}
+};
 
 const AppConfigContext = createContext(undefined);
 

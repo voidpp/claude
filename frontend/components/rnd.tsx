@@ -1,11 +1,11 @@
-import { Box, SxProps } from '@mui/material';
-import deepEqual from 'deep-equal';
+import { Box, SxProps } from "@mui/material";
+import deepEqual from "deep-equal";
 import { ResizeDirection } from "re-resizable";
 import * as React from "react";
 import { useState } from "react";
 import { DraggableEvent } from "react-draggable";
 import { DraggableData, Position, Props, ResizableDelta, Rnd } from "react-rnd";
-import { useAppSettings } from '../settings';
+import { useAppSettings } from "../settings";
 import { WidgetConfig } from "../types";
 
 export const useRnd = (config: WidgetConfig, stepSize: number): Props => {
@@ -20,14 +20,12 @@ export const useRnd = (config: WidgetConfig, stepSize: number): Props => {
     });
 
     const updatePosition = (newData: typeof position) => {
-        if (deepEqual(newData, position))
-            return;
+        if (deepEqual(newData, position)) return;
         setPosition(newData);
     };
 
     const onDragStop = (e: DraggableEvent, data: DraggableData) => {
-        if (config.x == data.lastX && config.y == data.lastY)
-            return;
+        if (config.x == data.lastX && config.y == data.lastY) return;
         updatePosition({
             x: data.lastX,
             y: data.lastY,
@@ -46,7 +44,13 @@ export const useRnd = (config: WidgetConfig, stepSize: number): Props => {
         });
     };
 
-    const onResizeStop = (e: MouseEvent, dir: ResizeDirection, elementRef: HTMLDivElement, delta: ResizableDelta, newPosition: Position) => {
+    const onResizeStop = (
+        e: MouseEvent,
+        dir: ResizeDirection,
+        elementRef: HTMLDivElement,
+        delta: ResizableDelta,
+        newPosition: Position
+    ) => {
         onResize(e, dir, elementRef, delta, newPosition);
         saveWidget({
             ...config,
@@ -55,15 +59,20 @@ export const useRnd = (config: WidgetConfig, stepSize: number): Props => {
         });
     };
 
-    const onResize = (e: MouseEvent, dir: ResizeDirection, elementRef: HTMLDivElement, delta: ResizableDelta, newPosition: Position) => {
+    const onResize = (
+        e: MouseEvent,
+        dir: ResizeDirection,
+        elementRef: HTMLDivElement,
+        delta: ResizableDelta,
+        newPosition: Position
+    ) => {
         const newData = {
             x: newPosition.x,
             y: newPosition.y,
             width: elementRef.offsetWidth,
             height: elementRef.offsetHeight,
         };
-        if (deepEqual(newData, { ...position, ...size }))
-            return;
+        if (deepEqual(newData, { ...position, ...size })) return;
 
         setPosition({ ...newData });
         setSize({ ...newData });
@@ -72,7 +81,7 @@ export const useRnd = (config: WidgetConfig, stepSize: number): Props => {
     return {
         position: {
             x: position.x,
-            y: position.y
+            y: position.y,
         },
         size: {
             width: size.width,
@@ -84,36 +93,30 @@ export const useRnd = (config: WidgetConfig, stepSize: number): Props => {
         onResizeStop,
         onDrag,
         onResize,
-        style: { userSelect: 'none' },
+        style: { userSelect: "none" },
         enableUserSelectHack: false,
-    }
-}
+    };
+};
 
 const bodyStyle: SxProps = {
     borderRadius: 2,
-    height: '100%',
-    position: 'relative',
-    overflow: 'hidden',
-    backdropFilter: 'blur(3px)',
-    // '&:hover .widget-menu': {
-    //     opacity: 1,
-    // },    
-}
+    height: "100%",
+    position: "relative",
+    overflow: "hidden",
+    backdropFilter: "blur(3px)",
+    backgroundColor: "rgba(0,0,0,0.4)",
+};
 
 export type RndFrameProps = {
-    rndProps: Props,
-    children: React.ReactNode,
-    style?: React.CSSProperties,
-}
+    rndProps: Props;
+    children: React.ReactNode;
+    style?: React.CSSProperties;
+};
 
-export const RndFrame = ({ rndProps: rnd, children, style }: RndFrameProps) => (
-    <Rnd {...rnd}>
-        <Box
-            // className={classNames(classes.body, props.className, { [classes.hiddenMenuIcon]: isIdle })}
-            style={{ ...style }}
-            sx={bodyStyle}
-        >
+export const RndFrame = ({ rndProps, children, style }: RndFrameProps) => (
+    <Rnd {...rndProps}>
+        <Box style={{ ...style }} sx={bodyStyle}>
             {children}
         </Box>
     </Rnd>
-)
+);

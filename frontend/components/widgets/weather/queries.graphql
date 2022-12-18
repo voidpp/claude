@@ -1,0 +1,8 @@
+query CurrentWeather($city: String!) {
+    weather {
+        current(city: $city) {
+            image
+            temperature
+        }
+    }
+}

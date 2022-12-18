@@ -1,14 +1,13 @@
-import AddIcon from '@mui/icons-material/Add';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import CheckIcon from '@mui/icons-material/Check';
+import AddIcon from "@mui/icons-material/Add";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import CheckIcon from "@mui/icons-material/Check";
 import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
 import { useRef } from "react";
-import { useAppConfig } from '../config';
-import { useBoolState } from '../hooks';
-import { useAppSettings } from '../settings';
-import { DashboardFormDialog } from './dashboard-form-dialog';
-
+import { useAppConfig } from "../config";
+import { useBoolState } from "../hooks";
+import { useAppSettings } from "../settings";
+import { DashboardFormDialog } from "./dashboard-form-dialog";
 
 export const DashbardButton = () => {
     const [isMenuOpen, openMenu, closeMenu] = useBoolState();
@@ -20,14 +19,14 @@ export const DashbardButton = () => {
     const onSelectDashboard = (id: string) => {
         config.selectedDashboard.setValue(id);
         closeMenu();
-    }
+    };
 
     const onClickOpenDialog = () => {
         openDialog();
         closeMenu();
-    }
+    };
 
-    const sortedDashboards = [...settings?.dashboards ?? []].sort((a, b) => a.name.localeCompare(b.name));
+    const sortedDashboards = [...(settings?.dashboards ?? [])].sort((a, b) => a.name.localeCompare(b.name));
 
     return (
         <div>
@@ -42,18 +41,12 @@ export const DashbardButton = () => {
                 dashboards
                 <ArrowDropDownIcon style={{ marginRight: -10 }} />
             </Button>
-            <Menu
-                anchorEl={buttonRef.current}
-                open={isMenuOpen}
-                onClose={closeMenu}
-            >
+            <Menu anchorEl={buttonRef.current} open={isMenuOpen} onClose={closeMenu}>
                 <MenuItem onClick={onClickOpenDialog}>
                     <ListItemIcon>
                         <AddIcon />
                     </ListItemIcon>
-                    <ListItemText>
-                        Create
-                    </ListItemText>
+                    <ListItemText>Create</ListItemText>
                 </MenuItem>
                 <Divider />
                 {sortedDashboards.map(dasboard => (
@@ -62,12 +55,8 @@ export const DashbardButton = () => {
                         onClick={() => onSelectDashboard(dasboard.id)}
                         selected={dasboard.id === config.selectedDashboard.value}
                     >
-                        <ListItemIcon>
-                            {dasboard.id === config.selectedDashboard.value && <CheckIcon />}
-                        </ListItemIcon>
-                        <ListItemText>
-                            {dasboard.name}
-                        </ListItemText>
+                        <ListItemIcon>{dasboard.id === config.selectedDashboard.value && <CheckIcon />}</ListItemIcon>
+                        <ListItemText>{dasboard.name}</ListItemText>
                     </MenuItem>
                 ))}
             </Menu>

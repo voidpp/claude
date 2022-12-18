@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-
 export function useInterval(callback: () => void, delay: number, enabled: boolean = true) {
     const savedCallback = useRef(callback);
 
@@ -10,8 +9,7 @@ export function useInterval(callback: () => void, delay: number, enabled: boolea
 
     useEffect(() => {
         function tick() {
-            if (enabled)
-                savedCallback.current();
+            if (enabled) savedCallback.current();
         }
 
         const id = setInterval(tick, delay);
@@ -25,5 +23,5 @@ export function useInterval(callback: () => void, delay: number, enabled: boolea
 export const useBoolState = (defaultValue = false): [boolean, () => void, () => void, () => void] => {
     const [value, setValue] = useState(defaultValue);
 
-    return [value, () => setValue(true), () => setValue(false), () => setValue(!value)]
-}
+    return [value, () => setValue(true), () => setValue(false), () => setValue(!value)];
+};
