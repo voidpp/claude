@@ -11,16 +11,17 @@ class Range(BaseModel):
     max: int
 
 
+class Precipitation(BaseModel):
+    value: int
+    probability: int = None
+
+
 class DayForecast(BaseModel):
     day: int
     date: str
     image: str
     temperature: Range
-
-
-class Precipitation(BaseModel):
-    value: int
-    probability: int
+    precipitation: Precipitation
 
 
 class HourForecast(BaseModel):

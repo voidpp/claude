@@ -7,16 +7,12 @@ class IdokepCurrentParserConfig(BaseModel):
     temperature: str
 
 
-class RangeParserConfig(BaseModel):
-    min: str
-    max: str
-
-
 class IdokepDaysParserConfig(BaseModel):
     columns: str
     cell: str
     image: str
-    temperature: RangeParserConfig
+    temperature: str
+    rainlevel: str
 
 
 class IdokepHoursParserConfig(BaseModel):

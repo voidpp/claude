@@ -43,11 +43,16 @@ async def get_days(city: str, config: IdokepDaysParserConfig) -> list[DayForecas
         if day_cell is None:
             continue
 
-        # TODO: implement
         precipitation_val = 0
-        precipitation_probability = 0
+
+        if rainlevel_container := tree_search_list(config.rainlevel, day_column, fail_on_not_found=False):
+            precipitation_text = rainlevel_container[0].text
+            if precipitation_text != ".":
+                precipitation_val = parse_number(precipitation_text)
 
         day = int(day_cell.text)
+
+        [max, min] = [parse_number(element.text) for element in tree_search_list(config.temperature, day_column)]
 
         if col_date is None:
             col_date = date.today()
@@ -59,8 +64,12 @@ async def get_days(city: str, config: IdokepDaysParserConfig) -> list[DayForecas
             "day": day,
             "date": str(col_date),
             "temperature": {
-                "min": parse_number(tree_search(config.temperature.min, day_column).text),
-                "max": parse_number(tree_search(config.temperature.max, day_column).text),
+                "min": min,
+                "max": max,
+            },
+            "precipitation": {
+                "value": precipitation_val,
+                "probability": None,
             },
         }
         res.append(DayForecast(**day_data))

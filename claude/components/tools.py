@@ -37,10 +37,10 @@ def parse_number(number: str) -> int | None:
     return int(match.group(1))
 
 
-def tree_search_list(selector: str, tree: ElementTree) -> list:
+def tree_search_list(selector: str, tree: ElementTree, fail_on_not_found=True) -> list:
     sel = CSSSelector(selector)
     res = sel(tree)
-    if not len(res):
+    if not len(res) and fail_on_not_found:
         raise SelectorNotFoundInTree(f"Selector '{selector}' not found.")
     return res
 

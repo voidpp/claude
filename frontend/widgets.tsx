@@ -15,3 +15,7 @@ export function createContextProviderComponent<T>(context: Context<T>, useValue:
 export const FormContainer = ({ children }: { children: React.ReactNode }) => (
     <Box sx={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 2, alignItems: "center" }}>{children}</Box>
 );
+
+export function IfComp(props: { cond: any; children: React.ReactNode }) {
+    return <>{props.cond ? props.children : null}</>;
+}

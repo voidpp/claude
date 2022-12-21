@@ -18,7 +18,7 @@ export const CurrentWeather = (props: CurrentWeatherProps) => {
     const { config } = props;
     const rndProps = useRnd(config, 10);
 
-    const { data, refetch } = useCurrentWeatherQuery({ variables: { city: "" } });
+    const { data, refetch } = useCurrentWeatherQuery({ variables: { city: config.settings.city } });
 
     function onBeforeSettingsSubmit(settings: CurrentWeatherSettings) {
         if (settings.city != config.settings.city) refetch();

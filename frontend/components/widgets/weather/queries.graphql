@@ -6,3 +6,20 @@ query CurrentWeather($city: String!) {
         }
     }
 }
+
+query DaysWeather($city: String!) {
+    weather {
+        days(city: $city) {
+            day
+            date
+            image
+            precipitation {
+                value
+            }
+            temperature {
+                min
+                max
+            }
+        }
+    }
+}
