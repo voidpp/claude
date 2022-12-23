@@ -4,11 +4,11 @@ import re
 from typing import Any, Awaitable
 from xml.etree.ElementTree import Element, ElementTree
 
-from claude.components.exceptions import CannotParseNumber, SelectorNotFoundInTree
+from graphene import ObjectType
 from lxml.cssselect import CSSSelector
 from pydantic import BaseModel
 
-from graphene import ObjectType
+from claude.components.exceptions import CannotParseNumber, SelectorNotFoundInTree
 
 logger = logging.getLogger(__name__)
 
