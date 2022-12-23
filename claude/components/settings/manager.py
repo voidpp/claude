@@ -1,13 +1,12 @@
-import json
-from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable, Generic, TypeVar
 
 import orjson
 from aioredis import Redis
+from pydantic import BaseModel
 
-from claude.components.settings.types import Dashboard, Settings, Widget
+from claude.components.settings.types import Dashboard, Plugin, Settings, Widget
 
 GENERAL_KEYS_PREFIX = "claude_settings"
 
@@ -33,6 +32,12 @@ class SettingsKey:
 SettingsItemType = TypeVar("SettingsItemType")
 
 
+def default(obj):
+    if isinstance(obj, BaseModel):
+        return obj.dict()
+    raise TypeError
+
+
 @dataclass
 class MultiSettingsKey(SettingsKey, Generic[SettingsItemType]):
     load: Callable[[str], SettingsItemType]
@@ -46,7 +51,7 @@ class MultiSettingsKey(SettingsKey, Generic[SettingsItemType]):
         return [self.load(**orjson.loads(item)) for item in items if item]
 
     async def save_data(self, redis: Redis, items: list[SettingsItemType]):
-        data = {f"{self.key}_{self.get_item_key_postfix(item)}": orjson.dumps(item) for item in items}
+        data = {f"{self.key}_{self.get_item_key_postfix(item)}": orjson.dumps(item, default) for item in items}
         await redis.mset(data)
 
     async def delete_data(self, redis: Redis, items: list[str]):
@@ -57,6 +62,7 @@ class MultiSettingsKey(SettingsKey, Generic[SettingsItemType]):
 class SettingsKeys(Enum):
     dashboards = MultiSettingsKey("dashboard", Dashboard, lambda item: item.id)
     widgets = MultiSettingsKey("widget", Widget, lambda item: item.id)
+    plugins = MultiSettingsKey("plugin", Plugin, lambda item: item.id)
 
 
 class SettingsManager:

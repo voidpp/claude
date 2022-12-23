@@ -2,13 +2,13 @@ import asyncio
 import logging
 import re
 from typing import Any, Awaitable
-from xml.etree.ElementTree import ElementTree
+from xml.etree.ElementTree import Element, ElementTree
 
-from graphene import ObjectType
+from claude.components.exceptions import CannotParseNumber, SelectorNotFoundInTree
 from lxml.cssselect import CSSSelector
 from pydantic import BaseModel
 
-from claude.components.exceptions import CannotParseNumber, SelectorNotFoundInTree
+from graphene import ObjectType
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ def tree_search_list(selector: str, tree: ElementTree, fail_on_not_found=True) -
     return res
 
 
-def tree_search(selector: str, tree: ElementTree):
+def tree_search(selector: str, tree: ElementTree) -> Element:
     return tree_search_list(selector, tree)[0]
 
 

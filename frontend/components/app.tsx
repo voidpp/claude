@@ -12,6 +12,15 @@ const darkTheme = createTheme({
     palette: {
         mode: "dark",
     },
+    components: {
+        MuiLink: {
+            styleOverrides: {
+                root: {
+                    textDecoration: "none",
+                },
+            },
+        },
+    },
 });
 
 const apolloClient = createApolloClient();

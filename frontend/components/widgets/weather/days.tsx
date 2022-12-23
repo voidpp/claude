@@ -1,5 +1,5 @@
-import { DayForecast, useDaysWeatherQuery } from "@/graphql-types-and-hooks";
-import { useInterval } from "@/hooks";
+import { DayForecast, PluginType, useDaysWeatherQuery } from "@/graphql-types-and-hooks";
+import { useInterval, usePluginOptions } from "@/hooks";
 import { entries } from "@/tools";
 import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
 import { IfComp } from "@/widgets";
@@ -10,7 +10,7 @@ import * as React from "react";
 import { LabelProps, Line, LineChart, YAxis } from "recharts";
 import { RndFrame, useRnd } from "../../rnd";
 import { WidgetMenu } from "../../widget-menu";
-import { FormCheckboxListFieldDescriptor } from "../../widget-settings-dialog";
+import { FormCheckboxListFieldDescriptor, FormSelectFieldDescriptor } from "../../widget-settings-dialog";
 
 // TODO: color saturdays, sundays, special days, etc
 
@@ -43,6 +43,7 @@ export class DaysWeatherSettings extends BaseWidgetSettings {
     city: string = "Budapest";
     pollInterval: number = 60 * 10;
     days: number = 7;
+    providerId: string = "";
     rowsToShow: { [key in ShowableRows]: boolean } = {
         dayNumber: true,
         dayText: true,
@@ -97,8 +98,11 @@ export const DaysWeather = (props: DaysWeatherProps) => {
     const { config } = props;
     const { rowsToShow } = config.settings;
     const rndProps = useRnd(config, 10);
+    const providerOptions = usePluginOptions(PluginType.Weather);
 
-    const { data, refetch } = useDaysWeatherQuery({ variables: { city: config.settings.city } });
+    const { data, refetch } = useDaysWeatherQuery({
+        variables: { city: config.settings.city, providerId: config.settings.providerId },
+    });
 
     function onBeforeSettingsSubmit(settings: DaysWeatherSettings) {
         if (settings.city != config.settings.city) refetch();
@@ -106,9 +110,7 @@ export const DaysWeather = (props: DaysWeatherProps) => {
 
     useInterval(refetch, config.settings.pollInterval * 1000);
 
-    if (!data) return null;
-
-    const displayData = data.weather.days.slice(0, config.settings.days);
+    const displayData = data?.weather.days.slice(0, config.settings.days) ?? [];
 
     const baseForMargin = config.height * getRowShownRatio(0.06, props);
     const vertMargin = config.width / config.settings.days / 2;
@@ -116,34 +118,44 @@ export const DaysWeather = (props: DaysWeatherProps) => {
     return (
         <RndFrame rndProps={rndProps}>
             <Box>
-                <Box sx={headerStyle}>
-                    {displayData.map(day => (
-                        <DayInfoCell key={day.date} day={day} rowsToShow={rowsToShow} />
-                    ))}
-                </Box>
-                <IfComp cond={rowsToShow.temperatureChart}>
-                    <LineChart
-                        data={displayData.map(day => day.temperature)}
-                        width={config.width}
-                        height={config.height * getRowShownRatio(0.54, props)}
-                        margin={{
-                            top: baseForMargin * 1.3,
-                            right: vertMargin,
-                            bottom: baseForMargin * 0.2,
-                            left: vertMargin,
-                        }}
-                    >
-                        <YAxis type="number" domain={["dataMin", "dataMax"]} hide />
-                        <Line type="monotone" dataKey="max" stroke="red" strokeWidth={3} label={CustomizedLabel} />
-                        <Line type="monotone" dataKey="min" stroke="blue" strokeWidth={3} label={CustomizedLabel} />
-                    </LineChart>
+                <IfComp cond={data && providerOptions.length}>
+                    <Box sx={headerStyle}>
+                        {displayData.map(day => (
+                            <DayInfoCell key={day.date} day={day} rowsToShow={rowsToShow} />
+                        ))}
+                    </Box>
+                    <IfComp cond={rowsToShow.temperatureChart}>
+                        <LineChart
+                            data={displayData.map(day => day.temperature)}
+                            width={config.width}
+                            height={config.height * getRowShownRatio(0.54, props)}
+                            margin={{
+                                top: baseForMargin * 1.3,
+                                right: vertMargin,
+                                bottom: baseForMargin * 0.2,
+                                left: vertMargin,
+                            }}
+                        >
+                            <YAxis type="number" domain={["dataMin", "dataMax"]} hide />
+                            <Line type="monotone" dataKey="max" stroke="red" strokeWidth={3} label={CustomizedLabel} />
+                            <Line type="monotone" dataKey="min" stroke="blue" strokeWidth={3} label={CustomizedLabel} />
+                        </LineChart>
+                    </IfComp>
                 </IfComp>
             </Box>
             <WidgetMenu
                 id={config.id}
                 onBeforeSubmit={onBeforeSettingsSubmit}
                 settings={config.settings}
+                defaultOpen={!config.settings.providerId}
                 settingsFormFields={[
+                    {
+                        name: "providerId",
+                        label: "Provider",
+                        type: "select",
+                        default: "",
+                        options: providerOptions,
+                    } as FormSelectFieldDescriptor,
                     {
                         name: "city",
                         label: "City",

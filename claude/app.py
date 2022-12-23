@@ -15,6 +15,7 @@ from claude.components.config import Config, load_config
 from claude.components.folders import Folders
 from claude.components.injection_middleware import InjectionMiddleware
 from claude.components.logging import init_logger
+from claude.components.plugins import PluginManager
 from claude.components.request_context import RequestContext
 from claude.components.settings.manager import SettingsManager
 from claude.components.types import Environment, RequestScopeKeys
@@ -46,15 +47,16 @@ def get_app(config: Config = None):
 
     redis_client = aioredis.from_url(config.redis)
     settings_manager = SettingsManager(redis_client)
+    plugin_manager = PluginManager(config)
 
-    request_context = RequestContext(redis_client, config, settings_manager)
+    request_context = RequestContext(redis_client, config, settings_manager, plugin_manager)
 
     app = Starlette(
         debug,
         routes=[
             Mount("/static", app=StaticFiles(directory=Folders.static), name="static"),
             Mount("/api", LoggedGraphQLApp(create_api_schema(), on_get=make_graphiql_handler())),
-            Route("/", index),
+            Route("/{path:path}", index),
         ],
         middleware=[
             Middleware(InjectionMiddleware, data={RequestScopeKeys.CONTEXT: request_context}),

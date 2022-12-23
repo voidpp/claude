@@ -6,6 +6,7 @@ import { useAppConfig } from "../config";
 import { useBoolState } from "../hooks";
 import { useAppSettings } from "../settings";
 import { copyObject } from "../tools";
+import { Link } from "../widgets";
 import { AddWidgetButton } from "./add-widget-button";
 import { DashbardButton } from "./dashboard-button";
 import { DashboardFormDialog } from "./dashboard-form-dialog";
@@ -55,6 +56,9 @@ export const ControlBar = () => {
                     <DashbardButton />
                     <Divider orientation="vertical" flexItem sx={{ marginLeft: 2, marginRight: 2 }} />
                     <CurrentDashboardItem />
+                    <Box sx={{ flex: 1, textAlign: "right" }}>
+                        <Link to="/admin">Admin</Link>
+                    </Box>
                 </Box>
             </Drawer>
         </>

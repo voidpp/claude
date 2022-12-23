@@ -1,7 +1,0 @@
-mutation SaveDashboard($data: DashboardInput!) {
-    saveDashboard(dashboard: $data)
-}
-
-mutation SaveWidget($data: WidgetInput) {
-    saveWidget(widget: $data)
-}

@@ -1,17 +1,19 @@
 import base64
-import json
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
 from datetime import timedelta
 from functools import cached_property
 from typing import Generic, Type, TypeVar
+from uuid import UUID
 
+import orjson
 from graphene import Field, InputObjectType, ResolveInfo
 from graphene.utils.orderedtype import OrderedType
 from pydantic import BaseModel
 
 from claude.components.graphene.tools import get_field_name_list
 from claude.components.request_context import RequestContext
+from claude.components.settings.types import Plugin
 from claude.components.tools import create_json_serializable_data
 from claude.components.types import RequestScopeKeys
 
@@ -80,6 +82,19 @@ class NodeBase(Generic[InputType], metaclass=_NodeConfigChecker):
                 return True
         return False
 
+    async def find_plugin(self, id: UUID) -> Plugin:
+        settings = await self.request_context.settings_manager.get_settings()
+        for plugin in settings.plugins:
+            if plugin.id == id:
+                return plugin
+
+    async def load_plugin(self, id: UUID):
+        plugin = await self.find_plugin(id)
+        if not plugin:
+            raise Exception("Unknown plugin id")
+
+        return self.request_context.plugin_manager.load_plugin_class(id, plugin.class_name)()
+
     @property
     def request_context(self) -> RequestContext:
         return get_request_context(self._info)
@@ -119,7 +134,7 @@ class NodeBase(Generic[InputType], metaclass=_NodeConfigChecker):
             return
 
         await self.request_context.redis.set(
-            self.cache_key, json.dumps(create_json_serializable_data(data)), self.config.cache_expiry_time
+            self.cache_key, orjson.dumps(create_json_serializable_data(data)), self.config.cache_expiry_time
         )
 
     async def get_data_from_cache(self):
@@ -127,14 +142,14 @@ class NodeBase(Generic[InputType], metaclass=_NodeConfigChecker):
             return
 
         if data := await self.request_context.redis.get(self.cache_key):
-            return json.loads(data)
+            return orjson.loads(data)
 
     @cached_property
     def cache_key(self) -> str:
         key = self.__class__.__name__
         if self._kwargs:
             sorted_args = dict(sorted(self._kwargs.items()))
-            key += "_" + base64.encodebytes(json.dumps(sorted_args).encode()).decode()
+            key += "_" + base64.encodebytes(orjson.dumps(sorted_args)).decode()
         return key
 
     @classmethod

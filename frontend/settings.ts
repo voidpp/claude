@@ -1,12 +1,14 @@
 import { createContext, useContext } from "react";
 import {
     DashboardInput,
+    PluginType,
     useRemoveWidgetMutation,
     useSaveDashboardMutation,
+    useSavePluginMutation,
     useSaveWidgetMutation,
     useSettingsQuery,
     Widget,
-    WidgetInput,
+    WidgetInput
 } from "./graphql-types-and-hooks";
 import { createContextProviderComponent } from "./widgets";
 
@@ -15,6 +17,7 @@ const useAppSettingsData = () => {
     const [saveDashboard] = useSaveDashboardMutation();
     const [saveWidget] = useSaveWidgetMutation();
     const [removeWidget] = useRemoveWidgetMutation();
+    const [savePlugin] = useSavePluginMutation();
 
     return {
         settings: data?.settings,
@@ -36,6 +39,13 @@ const useAppSettingsData = () => {
             if (refetchSettings) refetch();
             return result.data.saveWidget;
         },
+        savePlugin: async (file: string, name: string, type: PluginType, className: string, refetchSettings = true) => {
+            const result = await savePlugin({
+                variables: { file, name, type, className },
+            });
+            if (refetchSettings) refetch();
+            return result.data.savePlugin;
+        },        
         getWidgetById: (id: string): Widget => {
             return data.settings.widgets.filter(widget => widget.id === id)[0];
         },

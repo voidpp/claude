@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { FormSelectFieldDescriptor } from "./components/widget-settings-dialog";
+import { PluginType } from "./graphql-types-and-hooks";
+import { useAppSettings } from "./settings";
 
 export function useInterval(callback: () => void, delay: number, enabled: boolean = true) {
     const savedCallback = useRef(callback);
@@ -24,4 +27,12 @@ export const useBoolState = (defaultValue = false): [boolean, () => void, () => 
     const [value, setValue] = useState(defaultValue);
 
     return [value, () => setValue(true), () => setValue(false), () => setValue(!value)];
+};
+
+export const usePluginOptions = (type: PluginType): FormSelectFieldDescriptor["options"] => {
+    const { settings } = useAppSettings();
+
+    const plugins = settings.plugins?.filter(plugin => plugin.type === type) ?? [];
+
+    return plugins.map(plugin => ({ value: plugin.id, label: plugin.title }));
 };

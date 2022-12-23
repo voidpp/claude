@@ -5,22 +5,11 @@ import yaml
 from pydantic import BaseModel, FilePath
 
 from claude.components.types import Environment
-from claude.components.weather.idokep.config import (
-    IdokepCurrentParserConfig,
-    IdokepDaysParserConfig,
-    IdokepHoursParserConfig,
-)
-
-
-class IdokepParserConfig(BaseModel):
-    hours: IdokepHoursParserConfig
-    days: IdokepDaysParserConfig
-    current: IdokepCurrentParserConfig
 
 
 class Config(BaseModel):
     redis: str
-    idokep_parser: IdokepParserConfig
+    plugins_folder: str
 
 
 def load_config() -> Config:

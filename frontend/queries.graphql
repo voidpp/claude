@@ -1,3 +1,29 @@
+query CurrentWeather($city: String!, $providerId: UUID!) {
+    weather {
+        current(city: $city, providerId: $providerId) {
+            image
+            temperature
+        }
+    }
+}
+
+query DaysWeather($city: String!, $providerId: UUID!) {
+    weather {
+        days(city: $city, providerId: $providerId) {
+            day
+            date
+            image
+            precipitation {
+                value
+            }
+            temperature {
+                min
+                max
+            }
+        }
+    }
+}
+
 query Settings {
     settings {
         dashboards {
@@ -18,9 +44,28 @@ query Settings {
             height
             settings
         }
+        plugins {
+            id
+            title
+            type
+        }
     }
 }
 
 mutation RemoveWidget($id: UUID!) {
     removeWidget(id: $id)
+}
+
+mutation SaveDashboard($data: DashboardInput!) {
+    saveDashboard(dashboard: $data)
+}
+
+mutation SaveWidget($data: WidgetInput) {
+    saveWidget(widget: $data)
+}
+
+mutation SavePlugin($file: String!, $name: String!, $type: PluginType!, $className: String!) {
+    savePlugin(file: $file, name: $name, type: $type, className: $className) {
+        error
+    }
 }

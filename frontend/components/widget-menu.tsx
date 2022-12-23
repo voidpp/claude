@@ -23,11 +23,12 @@ export interface WidgetMenuProps<SettingsType> {
     dialogTitle?: string;
     dialogText?: React.ReactNode;
     onBeforeSubmit?: (data: SettingsType) => void;
+    defaultOpen?: boolean;
 }
 
 export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
     const [menuAnchorEl, setMenuAnchorEl] = useState();
-    const [isSettingsDialogShown, showSettingDialog, hideSettingDialog] = useBoolState();
+    const [isSettingsDialogShown, showSettingDialog, hideSettingDialog] = useBoolState(props.defaultOpen);
     const { settingsFormFields = [], settings } = props;
     const { removeWidget, saveWidget, getWidgetById } = useAppSettings();
 

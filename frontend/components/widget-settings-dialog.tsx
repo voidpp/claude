@@ -174,7 +174,7 @@ const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
         return (
             <FormControl fullWidth key={desc.name}>
                 <InputLabel>{desc.label}</InputLabel>
-                <Select value={value} onChange={v => onChange(v.target.value as string)}>
+                <Select value={value} onChange={v => onChange(v.target.value as string)} label={desc.label}>
                     {desc.options.map(op => (
                         <MenuItem key={op.value} value={op.value}>
                             {op.label}
@@ -271,7 +271,7 @@ export const WidgetSettingsDialog = (props: Props) => {
         <Dialog open={show} onClose={closeDialog} maxWidth="xs">
             <DialogTitle>{title}</DialogTitle>
             <form onSubmit={onSubmit}>
-                <DialogContent>
+                <DialogContent sx={{ "& > div": { mb: 2 } }}>
                     {introText ? <DialogContentText>{introText}</DialogContentText> : null}
                     {props.fields.map(renderField)}
                 </DialogContent>

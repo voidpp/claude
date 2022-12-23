@@ -1,15 +1,17 @@
-import { useCurrentWeatherQuery } from "@/graphql-types-and-hooks";
-import { useInterval } from "@/hooks";
+import { PluginType, useCurrentWeatherQuery } from "@/graphql-types-and-hooks";
+import { useInterval, usePluginOptions } from "@/hooks";
 import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
 import { Box } from "@mui/material";
 import * as React from "react";
 import { RndFrame, useRnd } from "../../rnd";
 import { WidgetMenu } from "../../widget-menu";
+import { FormSelectFieldDescriptor } from "../../widget-settings-dialog";
 
 export class CurrentWeatherSettings extends BaseWidgetSettings {
     city: string = "Budapest";
     pollInterval: number = 60 * 10;
     showCity: boolean = false;
+    providerId: string = "";
 }
 
 export type CurrentWeatherProps = CommonWidgetProps<CurrentWeatherSettings>;
@@ -17,21 +19,24 @@ export type CurrentWeatherProps = CommonWidgetProps<CurrentWeatherSettings>;
 export const CurrentWeather = (props: CurrentWeatherProps) => {
     const { config } = props;
     const rndProps = useRnd(config, 10);
+    const providerOptions = usePluginOptions(PluginType.Weather);
 
-    const { data, refetch } = useCurrentWeatherQuery({ variables: { city: config.settings.city } });
+    const { data, refetch } = useCurrentWeatherQuery({
+        variables: { city: config.settings.city, providerId: config.settings.providerId },
+    });
+
+    useInterval(refetch, config.settings.pollInterval * 1000);
 
     function onBeforeSettingsSubmit(settings: CurrentWeatherSettings) {
         if (settings.city != config.settings.city) refetch();
     }
-
-    useInterval(refetch, config.settings.pollInterval * 1000);
 
     const width = rndProps.size.width as number;
 
     return (
         <RndFrame rndProps={rndProps}>
             <Box sx={{ fontSize: width * 0.3 }}>
-                {data && (
+                {data && providerOptions.length && (
                     <>
                         {config.settings.showCity && (
                             <Box sx={{ fontSize: width * 0.1, textAlign: "center" }}>{config.settings.city}</Box>
@@ -47,7 +52,15 @@ export const CurrentWeather = (props: CurrentWeatherProps) => {
                 id={config.id}
                 onBeforeSubmit={onBeforeSettingsSubmit}
                 settings={config.settings}
+                defaultOpen={!config.settings.providerId}
                 settingsFormFields={[
+                    {
+                        name: "providerId",
+                        label: "Provider",
+                        type: "select",
+                        default: "",
+                        options: providerOptions,
+                    } as FormSelectFieldDescriptor,
                     {
                         name: "city",
                         label: "City",

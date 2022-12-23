@@ -2,6 +2,7 @@ import { Box, SxProps } from "@mui/material";
 import * as React from "react";
 import { useAppConfig } from "../config";
 import { useAppSettings } from "../settings";
+import { ControlBar } from "./control-bar";
 import { widgetRegistry } from "./widget-registry";
 
 const containerStyle: SxProps = {
@@ -17,17 +18,20 @@ export const Dashboard = () => {
     const widgets = settings?.widgets ?? [];
 
     return (
-        <Box sx={containerStyle}>
-            {widgets
-                .filter(w => w.dashboardId == selectedDashboard.value)
-                .map(widget => {
-                    const Widget = widgetRegistry[widget.type].factory;
-                    const config = {
-                        ...widget,
-                        settings: JSON.parse(widget.settings),
-                    };
-                    return <Widget config={config} key={widget.id} />;
-                })}
-        </Box>
+        <>
+            <ControlBar />
+            <Box sx={containerStyle}>
+                {widgets
+                    .filter(w => w.dashboardId == selectedDashboard.value)
+                    .map(widget => {
+                        const Widget = widgetRegistry[widget.type].factory;
+                        const config = {
+                            ...widget,
+                            settings: JSON.parse(widget.settings),
+                        };
+                        return <Widget config={config} key={widget.id} />;
+                    })}
+            </Box>
+        </>
     );
 };

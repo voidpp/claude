@@ -1,14 +1,12 @@
-import os
-from pathlib import Path
-
 from invoke import task
-
-from claude.components.folders import Folders
-from claude.components.types import Environment
 
 
 @task
 def start(c, port=9042, reload=True, workers=None, debug=True):
+    from pathlib import Path
+
+    from claude.components.types import Environment
+
     cmd_parts = [
         "uvicorn",
         "claude.app:get_app",
@@ -44,7 +42,26 @@ def format(c):
 @task
 def generate_graphql_schema(c):
     from claude.api.schema import create_api_schema
+    from claude.components.folders import Folders
 
     path = Folders.frontend / "schema.graphql"
     path.write_text(str(create_api_schema()))
     print(f"{path.relative_to(Folders.project_root)} has been written!")
+
+
+@task
+def redis_list(c):
+    import asyncio
+
+    import aioredis
+
+    from claude.components.config import load_config
+
+    config = load_config()
+    redis_client = aioredis.from_url(config.redis)
+
+    async def execute():
+        keys = await redis_client.keys()
+        print("\n".join(k.decode() for k in keys))
+
+    asyncio.run(execute())
