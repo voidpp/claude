@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 import {
     DashboardInput,
     PluginType,
+    useRemoveDashboardMutation,
     useRemoveWidgetMutation,
     useSaveDashboardMutation,
     useSavePluginMutation,
@@ -18,6 +19,7 @@ const useAppSettingsData = () => {
     const [saveWidget] = useSaveWidgetMutation();
     const [removeWidget] = useRemoveWidgetMutation();
     const [savePlugin] = useSavePluginMutation();
+    const [removeDashboard] = useRemoveDashboardMutation();
 
     return {
         settings: data?.settings,
@@ -27,6 +29,11 @@ const useAppSettingsData = () => {
             if (refetchSettings) refetch();
             return result.data.removeWidget;
         },
+        removeDashboard: async (id: string, refetchSettings = true) => {
+            const result = await removeDashboard({ variables: { id } });
+            if (refetchSettings) refetch();
+            return result.data.removeDashboard;
+        },        
         saveDashboard: async (data: DashboardInput, refetchSettings = true) => {
             const result = await saveDashboard({ variables: { data } });
             if (refetchSettings) refetch();
@@ -45,7 +52,7 @@ const useAppSettingsData = () => {
             });
             if (refetchSettings) refetch();
             return result.data.savePlugin;
-        },        
+        },
         getWidgetById: (id: string): Widget => {
             return data.settings.widgets.filter(widget => widget.id === id)[0];
         },

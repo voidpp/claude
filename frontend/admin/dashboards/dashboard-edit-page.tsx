@@ -1,6 +1,10 @@
+import { DashboardFormDialog } from "@/components/dashboard-form-dialog";
 import { widgetRegistry } from "@/components/widget-registry";
+import { useBoolState } from "@/hooks";
 import { useAppSettings } from "@/settings";
+import { IfComp } from "@/widgets";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
     Box,
     Button,
@@ -13,12 +17,11 @@ import {
     TableCell,
     TableHead,
     TableRow,
+    Tooltip,
     Typography,
 } from "@mui/material";
 import * as React from "react";
-import { useParams } from "react-router-dom";
-import { useBoolState } from "../../hooks";
-import { IfComp } from "../../widgets";
+import { useNavigate, useParams } from "react-router-dom";
 import { PageTitle } from "../widgets";
 
 const WidgetSettingsViewer = ({ data }: { data: string }) => {
@@ -43,17 +46,37 @@ const WidgetSettingsViewer = ({ data }: { data: string }) => {
 
 export const DashboardEditPage = () => {
     const { dashboardId } = useParams<{ dashboardId: string }>();
-    const { settings, removeWidget } = useAppSettings();
+    const { settings, removeWidget, removeDashboard } = useAppSettings();
+    const [isDialogOpen, openDialog, closeDialog] = useBoolState();
+    const navigate = useNavigate();
 
     const dashboardData = settings?.dashboards.filter(d => d.id === dashboardId)[0];
     const widgets = settings?.widgets.filter(w => w.dashboardId === dashboardId) ?? [];
 
     return (
         <Box>
-            <PageTitle title={`Dashboard: ${dashboardData?.name}`} />
+            <PageTitle title={`Dashboard: ${dashboardData?.name}`}>
+                <IconButton onClick={openDialog}>
+                    <Tooltip title="Edit">
+                        <SettingsIcon />
+                    </Tooltip>
+                </IconButton>
+
+                <IconButton
+                    onClick={async () => {
+                        await removeDashboard(dashboardData.id);
+                        navigate("/admin/dashboards");
+                    }}
+                >
+                    <Tooltip title="Delete">
+                        <DeleteIcon />
+                    </Tooltip>
+                </IconButton>
+            </PageTitle>
             <IfComp cond={!widgets.length}>
                 <Typography sx={{ fontStyle: "italic" }}>No widgets</Typography>
             </IfComp>
+            <DashboardFormDialog isOpen={isDialogOpen} close={closeDialog} initialData={dashboardData} />
             <IfComp cond={widgets.length}>
                 <Table>
                     <TableHead>
@@ -72,7 +95,9 @@ export const DashboardEditPage = () => {
                                 </TableCell>
                                 <TableCell>
                                     <IconButton onClick={() => removeWidget(widget.id)} size="small">
-                                        <DeleteIcon fontSize="small" />
+                                        <Tooltip title="Delete">
+                                            <DeleteIcon fontSize="small" />
+                                        </Tooltip>
                                     </IconButton>
                                 </TableCell>
                             </TableRow>

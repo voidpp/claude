@@ -1,3 +1,4 @@
+from datetime import date
 from enum import Enum
 from uuid import UUID
 
@@ -35,7 +36,27 @@ class Plugin(BaseModel):
     class_name: str
 
 
+class SpecialDayType(Enum):
+    NON_WORKING_DAY = "non_working_day"
+    RELOCATED_REST_DAY = "relocated_rest_day"
+    RELOCATED_WORKING_DAY = "relocated_working_day"
+
+
+class SpecialDayId(BaseModel):
+    date: date
+    locale: str
+
+
+class SpecialDay(SpecialDayId):
+    type: SpecialDayType
+
+
+def get_special_day_id(data: SpecialDayId):
+    return data.date.isoformat() + data.locale
+
+
 class Settings(BaseModel):
-    dashboards: list[Dashboard]
-    widgets: list[Widget]
-    plugins: list[Plugin]
+    dashboards: list[Dashboard] = None
+    widgets: list[Widget] = None
+    plugins: list[Plugin] = None
+    special_days: list[SpecialDay] = None

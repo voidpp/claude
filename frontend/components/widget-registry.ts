@@ -29,6 +29,6 @@ export const widgetRegistry: WidgetRegistry = {
         factory: DaysWeather,
         title: "Weather / days",
         settingsType: DaysWeatherSettings,
-        defaultSize: {w: 400, h: 200},
-    }
+        defaultSize: { w: 400, h: 200 },
+    },
 };

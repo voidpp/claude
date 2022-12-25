@@ -26,3 +26,8 @@ export interface WidgetConfig extends BaseWidgetConfig {
 export type CommonWidgetProps<T = any> = {
     config: Omit<WidgetConfig, "settings"> & { settings: T };
 };
+
+export enum Locales {
+    Hungarian = "hu",
+    English = "en",
+}

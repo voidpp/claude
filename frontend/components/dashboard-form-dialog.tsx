@@ -5,6 +5,8 @@ import {
     DialogContent,
     DialogTitle,
     Divider,
+    MenuItem,
+    Select,
     TextField,
     Typography,
 } from "@mui/material";
@@ -14,6 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Dashboard, DashboardInput } from "../graphql-types-and-hooks";
 import { useNotifications } from "../notifications";
 import { useAppSettings } from "../settings";
+import { Locales } from "../types";
 import { FormContainer } from "../widgets";
 
 type Props = {
@@ -28,7 +31,7 @@ const createDefaultValues = (): DashboardInput => ({
     background: "",
     stepSize: 10,
     theme: "",
-    locale: "hu",
+    locale: Locales.English,
 });
 
 export const DashboardFormDialog = ({ isOpen, close, initialData }: Props) => {
@@ -49,12 +52,12 @@ export const DashboardFormDialog = ({ isOpen, close, initialData }: Props) => {
     const onSubmit = async () => {
         await saveDashboard(data);
         close();
-        showNotification("Dashboard created");
+        showNotification("Dashboard saved");
     };
 
     return (
         <Dialog open={isOpen} onClose={close}>
-            <DialogTitle>Create dashboard</DialogTitle>
+            <DialogTitle>{initialData ? "Edit" : "Create"} dashboard</DialogTitle>
             <Divider />
             <DialogContent>
                 <FormContainer>
@@ -77,7 +80,13 @@ export const DashboardFormDialog = ({ isOpen, close, initialData }: Props) => {
                     <Typography>Theme</Typography>
                     <TextField variant="outlined" size="small" value={data.theme} onChange={dataUpdater("theme")} />
                     <Typography>Locale</Typography>
-                    <TextField variant="outlined" size="small" value={data.locale} onChange={dataUpdater("locale")} />
+                    <Select variant="outlined" size="small" value={data.locale} onChange={dataUpdater("locale")}>
+                        {Object.entries(Locales).map(([key, value]) => (
+                            <MenuItem key={key} value={value}>
+                                {key}
+                            </MenuItem>
+                        ))}
+                    </Select>
                 </FormContainer>
             </DialogContent>
             <Divider />

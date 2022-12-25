@@ -29,6 +29,7 @@ export const Admin = () => {
                     <List>
                         <ListLink path="/admin/plugins" label="Plugins" />
                         <ListLink path="/admin/dashboards" label="Dashboards" />
+                        <ListLink path="/admin/special-days" label="Special days" />
                         <ListLink path="/admin/cache" label="Cache" />
                     </List>
                 </Paper>

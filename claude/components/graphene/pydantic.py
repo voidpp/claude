@@ -1,13 +1,14 @@
 import enum
 import inspect
 import uuid
-from datetime import datetime
+from datetime import date, datetime
 from ipaddress import IPv4Address
 from typing import Tuple, Type, Union, get_args, get_origin
 
 from graphene import (
     UUID,
     Boolean,
+    Date,
     DateTime,
     Enum,
     Field,
@@ -184,6 +185,7 @@ _TYPE_MAP_SCALARS = {
     str: String,
     bool: Boolean,
     datetime: DateTime,
+    date: Date,
     dict: JSONString,
     IPv4Address: String,
 }

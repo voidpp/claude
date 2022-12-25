@@ -13,6 +13,7 @@ from pydantic import BaseModel
 
 from claude.components.graphene.tools import get_field_name_list
 from claude.components.request_context import RequestContext
+from claude.components.settings.manager import SettingsKeys
 from claude.components.settings.types import Plugin
 from claude.components.tools import create_json_serializable_data
 from claude.components.types import RequestScopeKeys
@@ -76,14 +77,14 @@ class NodeBase(Generic[InputType], metaclass=_NodeConfigChecker):
         field_names = get_field_name_list(self._info.field_nodes[0])
         return [fn.split(".") for fn in field_names]
 
-    def is_field_queried(self, node_name):
+    def is_field_queried(self, node_name: str):
         for node_name_list in self.field_names:
             if node_name in node_name_list:
                 return True
         return False
 
     async def find_plugin(self, id: UUID) -> Plugin:
-        settings = await self.request_context.settings_manager.get_settings()
+        settings = await self.request_context.settings_manager.get_settings(SettingsKeys.plugins)
         for plugin in settings.plugins:
             if plugin.id == id:
                 return plugin

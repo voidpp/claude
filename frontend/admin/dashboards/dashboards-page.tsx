@@ -1,9 +1,9 @@
+import { useAppConfig } from "@/config";
 import { useAppSettings } from "@/settings";
 import { IfComp, Link } from "@/widgets";
 import CheckIcon from "@mui/icons-material/Check";
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import * as React from "react";
-import { useAppConfig } from "../../config";
 import { PageTitle } from "../widgets";
 
 export const DashboardsPage = () => {
@@ -29,7 +29,7 @@ export const DashboardsPage = () => {
                             <TableRow key={dashboard.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                 <TableCell>
                                     <IfComp cond={selectedDashboard.value === dashboard.id}>
-                                        <Tooltip title="Selected dashboard" placement="top" arrow>
+                                        <Tooltip title="Selected dashboard">
                                             <CheckIcon />
                                         </Tooltip>
                                     </IfComp>

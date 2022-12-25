@@ -8,6 +8,7 @@ import { Cache } from "../admin/cache";
 import { DashboardEditPage } from "../admin/dashboards/dashboard-edit-page";
 import { DashboardsPage } from "../admin/dashboards/dashboards-page";
 import { Plugins } from "../admin/plugins/page";
+import { SpecialDaysPage } from "../admin/special-days/special-days-page";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
                 <Route path="cache" element={<Cache />} />
                 <Route path="dashboards" element={<DashboardsPage />} />
                 <Route path="dashboards/:dashboardId" element={<DashboardEditPage />} />
+                <Route path="special-days" element={<SpecialDaysPage />} />
             </Route>
         </Route>
     )

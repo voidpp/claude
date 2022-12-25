@@ -4,7 +4,8 @@
   "description": "Claude ====",
   "main": "index.js",
   "scripts": {
-    "format": "npx prettier --write frontend/"
+    "format": "npx prettier --write frontend/",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -49,7 +50,10 @@
     "webpack-livereload-plugin": "^3.0.2"
   },
   "devDependencies": {
+    "@types/jest": "^29.2.4",
+    "jest": "^29.3.1",
     "prettier": "^2.8.1",
+    "ts-jest": "^29.0.3",
     "webpack-cli": "^4.10.0"
   }
 }

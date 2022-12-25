@@ -557,6 +557,17 @@ graphql-core = ">=3.1,<3.3"
 starlette = ">=0.14.1"
 
 [[package]]
+name = "tabulate"
+version = "0.9.0"
+description = "Pretty-print tabular data"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+widechars = ["wcwidth"]
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -665,7 +676,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "22aa497d887db8f763b9fab7c65a96f4a81cf3273c4eca120100630a39879e81"
+content-hash = "4089073c71a5a0ca19d7c0337ed9f6d0169ea2da06d5d6f96d7d8ebd2a9704d5"
 
 [metadata.files]
 aioredis = [
@@ -1121,6 +1132,10 @@ starlette = [
 starlette-graphene3 = [
     {file = "starlette-graphene3-0.6.0.tar.gz", hash = "sha256:cbe4ca397b24013d5b3161dd4144e9b3e836af0ef01a625bb6113946fc7d36d9"},
     {file = "starlette_graphene3-0.6.0-py3-none-any.whl", hash = "sha256:193ff6e0900a3259ccf76b534cd84eaa2feefcaf92652b3b0f54fc784c80ce14"},
+]
+tabulate = [
+    {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
+    {file = "tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},

@@ -6,7 +6,14 @@ import orjson
 from aioredis import Redis
 from pydantic import BaseModel
 
-from claude.components.settings.types import Dashboard, Plugin, Settings, Widget
+from claude.components.settings.types import (
+    Dashboard,
+    Plugin,
+    Settings,
+    SpecialDay,
+    Widget,
+    get_special_day_id,
+)
 
 GENERAL_KEYS_PREFIX = "claude_settings"
 
@@ -63,15 +70,16 @@ class SettingsKeys(Enum):
     dashboards = MultiSettingsKey("dashboard", Dashboard, lambda item: item.id)
     widgets = MultiSettingsKey("widget", Widget, lambda item: item.id)
     plugins = MultiSettingsKey("plugin", Plugin, lambda item: item.id)
+    special_days = MultiSettingsKey("special_day", SpecialDay, lambda item: get_special_day_id(item))
 
 
 class SettingsManager:
     def __init__(self, redis: Redis):
         self._redis = redis
 
-    async def get_settings(self) -> Settings:
+    async def get_settings(self, *keys: SettingsKeys) -> Settings:
         data = {}
-        for key in SettingsKeys:
+        for key in keys:
             data[key.name] = await key.value.get_data(self._redis)
         return Settings(**data)
 

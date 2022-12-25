@@ -1,5 +1,7 @@
 from invoke import task
 
+from .tools import Collection
+
 
 @task
 def start(c, port=9042, reload=True, workers=None, debug=True):
@@ -49,19 +51,66 @@ def generate_graphql_schema(c):
     print(f"{path.relative_to(Folders.project_root)} has been written!")
 
 
-@task
-def redis_list(c):
-    import asyncio
+redis = Collection("redis")
 
-    import aioredis
 
+def get_redis_client():
     from claude.components.config import load_config
 
     config = load_config()
-    redis_client = aioredis.from_url(config.redis)
+    import aioredis
+
+    return aioredis.from_url(config.redis)
+
+
+@redis.task()
+def list(c, filter="*"):
+    import asyncio
+
+    from tabulate import tabulate
+
+    redis_client = get_redis_client()
+
+    rows = []
 
     async def execute():
-        keys = await redis_client.keys()
-        print("\n".join(k.decode() for k in keys))
+        keys = await redis_client.keys(filter)
+        if not keys:
+            print("no results found")
+            return
+        data = await redis_client.mget(*keys)
+        for [key, value] in zip(keys, data):
+            rows.append([key.decode(), len(value)])
+        print(tabulate(rows, headers=["key", "value length"], tablefmt="psql"))
+
+    asyncio.run(execute())
+
+
+@redis.task()
+def delete(c, key):
+    import asyncio
+
+    redis_client = get_redis_client()
+
+    async def execute():
+        res = await redis_client.delete(key.encode())
+        if res:
+            print(f"'{key}' is deleted")
+        else:
+            print(f"'{key}' not found")
+
+    asyncio.run(execute())
+
+
+@redis.task()
+def show(c, key):
+    import asyncio
+    import json
+
+    redis_client = get_redis_client()
+
+    async def execute():
+        data = await redis_client.get(key)
+        print(json.dumps(json.loads(data), indent=2))
 
     asyncio.run(execute())

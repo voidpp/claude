@@ -52,8 +52,30 @@ query Settings {
     }
 }
 
+query SpecialDays {
+    settings {
+        specialDays {
+            date
+            type
+            locale
+        }
+    }
+}
+
+mutation SaveSpecialDays($specialDays: [SpecialDayInput]!) {
+    saveSpecialDays(specialDays: $specialDays)
+}
+
+mutation RemoveSpecialDays($ids: [SpecialDayId]!) {
+    removeSpeicalDays(ids: $ids)
+}
+
 mutation RemoveWidget($id: UUID!) {
     removeWidget(id: $id)
+}
+
+mutation RemoveDashboard($id: UUID!) {
+    removeDashboard(id: $id)
 }
 
 mutation SaveDashboard($data: DashboardInput!) {
