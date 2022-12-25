@@ -3,7 +3,7 @@ import { Box, SxProps } from "@mui/material";
 import dayjs from "dayjs";
 import * as React from "react";
 import { useMemo } from "react";
-import { generateMonthlyDayMatrix } from "./tools";
+import { generateMonthlyDayMatrix, specialDayTypeColors } from "./tools";
 
 export type MonthViewProps = {
     year: number;
@@ -26,12 +26,6 @@ const dayContainer: SxProps = {
     },
 };
 
-const typeColors: Record<SpecialDayType, string> = {
-    [SpecialDayType.NonWorkingDay]: "red",
-    [SpecialDayType.RelocatedRestDay]: "green",
-    [SpecialDayType.RelocatedWorkingDay]: "white",
-};
-
 export const MonthView = ({ year, month, onSelectDate, specialDays, locale }: MonthViewProps) => {
     const monthDays = useMemo(() => generateMonthlyDayMatrix(year, month, locale).flat(), [year, month, locale]);
     const monthLabel = useMemo(() => dayjs(new Date(year, month)).locale(locale).format("MMMM"), [month, locale]);
@@ -47,7 +41,7 @@ export const MonthView = ({ year, month, onSelectDate, specialDays, locale }: Mo
     const getDayColor = (dayNumber: number) => {
         const type = specialDates[dayNumber];
 
-        if (type) return typeColors[type];
+        if (type) return specialDayTypeColors[type];
 
         const day = dayjs(new Date(year, month, dayNumber));
 

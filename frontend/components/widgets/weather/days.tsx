@@ -1,5 +1,5 @@
-import { DayForecast, PluginType, useDaysWeatherQuery } from "@/graphql-types-and-hooks";
-import { useInterval, usePluginOptions } from "@/hooks";
+import { DayForecast, PluginType, useDaysWeatherQuery, useSpecialDaysQuery } from "@/graphql-types-and-hooks";
+import { useCurrentLocale, useInterval, usePluginOptions } from "@/hooks";
 import { entries } from "@/tools";
 import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
 import { IfComp } from "@/widgets";
@@ -8,6 +8,7 @@ import { Box } from "@mui/system";
 import dayjs from "dayjs";
 import * as React from "react";
 import { LabelProps, Line, LineChart, YAxis } from "recharts";
+import { specialDayTypeColors } from "../../calendar/tools";
 import { RndFrame, useRnd } from "../../rnd";
 import { WidgetMenu } from "../../widget-menu";
 import { FormCheckboxListFieldDescriptor, FormSelectFieldDescriptor } from "../../widget-settings-dialog";
@@ -62,14 +63,31 @@ const CustomizedLabel = ({ x, y, value }: LabelProps) => (
 
 export type DaysWeatherProps = CommonWidgetProps<DaysWeatherSettings>;
 
+const useDayColor = (date: string, locale: string) => {
+    const { data } = useSpecialDaysQuery();
+    const type = React.useMemo(() => {
+        return data?.settings.specialDays.filter(sd => sd.date == date && sd.locale == locale)[0]?.type;
+    }, [data?.settings.specialDays, date]);
+
+    if (type) return specialDayTypeColors[type];
+
+    const day = dayjs(date);
+
+    if (day.day() == 6) return "green";
+    if (day.day() == 0) return "red";
+};
+
 function DayInfoCell({ day, rowsToShow }: { day: DayForecast; rowsToShow: { [key in ShowableRows]: boolean } }) {
+    const locale = useCurrentLocale();
+    const color = useDayColor(day.date, locale);
+
     return (
         <Box>
             <IfComp cond={rowsToShow.dayNumber}>
-                <Box>{day.day}</Box>
+                <Box sx={{ color }}>{day.day}</Box>
             </IfComp>
             <IfComp cond={rowsToShow.dayText}>
-                <Box>{dayjs(day.date).format("dd")}</Box>
+                <Box sx={{ color }}>{dayjs(day.date).locale(locale).format("dd")}</Box>
             </IfComp>
             <IfComp cond={rowsToShow.dayImage}>
                 <Box>

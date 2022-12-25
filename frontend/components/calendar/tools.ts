@@ -1,3 +1,4 @@
+import { SpecialDayType } from "@/graphql-types-and-hooks";
 import dayjs from "dayjs";
 
 export function generateMonthlyDayMatrix(year: number, month: number, locale = "en"): number[][] {
@@ -21,3 +22,10 @@ export function generateMonthlyDayMatrix(year: number, month: number, locale = "
 
     return result;
 }
+
+
+export const specialDayTypeColors: Record<SpecialDayType, string> = {
+    [SpecialDayType.NonWorkingDay]: "red",
+    [SpecialDayType.RelocatedRestDay]: "green",
+    [SpecialDayType.RelocatedWorkingDay]: "white",
+};

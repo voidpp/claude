@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FormSelectFieldDescriptor } from "./components/widget-settings-dialog";
+import { useAppConfig } from "./config";
 import { PluginType } from "./graphql-types-and-hooks";
 import { useAppSettings } from "./settings";
 
@@ -36,3 +37,10 @@ export const usePluginOptions = (type: PluginType): FormSelectFieldDescriptor["o
 
     return plugins.map(plugin => ({ value: plugin.id, label: plugin.name }));
 };
+
+export const useCurrentLocale = () => {
+    const {selectedDashboard} = useAppConfig();
+    const {settings} = useAppSettings();
+
+    return settings.dashboards.filter(d => d.id === selectedDashboard.value)[0]?.locale ?? 'en'; 
+}
