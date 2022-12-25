@@ -1,5 +1,5 @@
 import * as React from "react";
 
-export const Cache = () => {
-    return <div>cache</div>;
+export const Housekeeping = () => {
+    return <div>clear server cache, clear database</div>;
 };

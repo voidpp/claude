@@ -31,7 +31,7 @@ class PluginType(Enum):
 
 class Plugin(BaseModel):
     id: UUID
-    title: str
+    name: str
     type: PluginType
     class_name: str
 

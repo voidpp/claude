@@ -1,7 +1,7 @@
 import logging
 import traceback
 from pathlib import Path
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from pydantic import BaseModel
 
@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class SavePluginValidator(BaseModel):
+    id: UUID
     file: str
     name: str
     type: PluginType
@@ -31,18 +32,17 @@ class SavePluginNode(NodeBase[SavePluginValidator]):
     )
 
     async def resolve(self):
-        id = uuid4()
-        self.request_context.plugin_manager.save_plugin_file(id, self.args.file)
+        self.request_context.plugin_manager.save_plugin_file(self.args.id, self.args.file)
 
         try:
-            self.request_context.plugin_manager.load_plugin_class(id, self.args.class_name)
+            self.request_context.plugin_manager.load_plugin_class(self.args.id, self.args.class_name)
         except Exception as e:
             logger.error(traceback.format_exc())
             return {"error": str(e)}
 
         data = Plugin(
-            id=id,
-            title=self.args.name,
+            id=self.args.id,
+            name=self.args.name,
             type=self.args.type,
             class_name=self.args.class_name,
         )

@@ -16,7 +16,7 @@ export const theme = createTheme({
             defaultProps: {
                 placement: "top",
                 arrow: true,
-            }
+            },
         },
     },
 });

@@ -1,3 +1,8 @@
+import { PluginType } from "@/graphql-types-and-hooks";
+import { useBoolState } from "@/hooks";
+import { useNotifications } from "@/notifications";
+import { useAppSettings } from "@/settings";
+import { FormContainer, IfComp } from "@/widgets";
 import ClearIcon from "@mui/icons-material/Clear";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import {
@@ -14,11 +19,7 @@ import {
     Typography,
 } from "@mui/material";
 import * as React from "react";
-import { PluginType } from "../../graphql-types-and-hooks";
-import { useBoolState } from "../../hooks";
-import { useNotifications } from "../../notifications";
-import { useAppSettings } from "../../settings";
-import { FormContainer, IfComp } from "../../widgets";
+import { v4 as uuidv4 } from "uuid";
 
 type PluginFormData = {
     name: string;
@@ -27,7 +28,7 @@ type PluginFormData = {
     type: PluginType;
 };
 
-const toBase64 = (file: File) =>
+const readFileContent = (file: File) =>
     new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsText(file);
@@ -60,8 +61,8 @@ export const NewPluginButton = () => {
     const submitEnabled = !!(formData.name.length > 1 && formData.file);
 
     const submit = async () => {
-        const fileData = await toBase64(formData.file);
-        const result = await savePlugin(fileData, formData.name, formData.type, formData.className);
+        const fileData = await readFileContent(formData.file);
+        const result = await savePlugin(uuidv4(), fileData, formData.name, formData.type, formData.className);
 
         if (result.error) showNotification(result.error, "error");
         else {

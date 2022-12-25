@@ -1,6 +1,7 @@
 from graphene import ObjectType
 
 from claude.api.nodes.remove_dashboard import RemoveDashboardNode
+from claude.api.nodes.remove_plugin import RemovePluginNode
 from claude.api.nodes.remove_speical_days import RemoveSpeicalDaysNode
 from claude.api.nodes.remove_widget import RemoveWidgetNode
 from claude.api.nodes.save_dashboard import SaveDashboardNode
@@ -15,6 +16,7 @@ class Mutation(ObjectType):
     save_special_days = SaveSpecialDaysNode.field()
     save_widget = SaveWidgetNode.field()
 
-    remove_speical_days = RemoveSpeicalDaysNode.field()
     remove_dashboard = RemoveDashboardNode.field()
+    remove_plugin = RemovePluginNode.field()
+    remove_speical_days = RemoveSpeicalDaysNode.field()
     remove_widget = RemoveWidgetNode.field()

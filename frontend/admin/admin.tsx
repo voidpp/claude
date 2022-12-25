@@ -1,4 +1,4 @@
-import { AppBar, Box, List, ListItemButton, ListItemText, Paper } from "@mui/material";
+import { AppBar, Box, List, ListItemButton, ListItemText, Paper, Typography } from "@mui/material";
 import * as React from "react";
 import { Link as RouterLink, Outlet, useLocation } from "react-router-dom";
 import { Link } from "../widgets";
@@ -16,8 +16,8 @@ export const Admin = () => {
     return (
         <Box sx={{ maxWidth: 1280, mx: "auto", pt: 3 }}>
             <AppBar position="static" sx={{ mb: 1 }}>
-                <Box sx={{ display: "flex", p: 2 }}>
-                    Claude admin panel
+                <Box sx={{ display: "flex", p: 1.5, alignItems: "center" }}>
+                    <Typography variant="h5">Claude admin panel</Typography>
                     <Box sx={{ flex: 1, textAlign: "right" }}>
                         <Link to="/">Dashboard</Link>
                     </Box>
@@ -30,7 +30,7 @@ export const Admin = () => {
                         <ListLink path="/admin/plugins" label="Plugins" />
                         <ListLink path="/admin/dashboards" label="Dashboards" />
                         <ListLink path="/admin/special-days" label="Special days" />
-                        <ListLink path="/admin/cache" label="Cache" />
+                        <ListLink path="/admin/housekeeping" label="Housekeeping" />
                     </List>
                 </Paper>
                 <Paper sx={{ flex: 1, p: 2 }}>

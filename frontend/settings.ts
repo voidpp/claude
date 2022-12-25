@@ -3,13 +3,14 @@ import {
     DashboardInput,
     PluginType,
     useRemoveDashboardMutation,
+    useRemovePluginMutation,
     useRemoveWidgetMutation,
     useSaveDashboardMutation,
     useSavePluginMutation,
     useSaveWidgetMutation,
     useSettingsQuery,
     Widget,
-    WidgetInput
+    WidgetInput,
 } from "./graphql-types-and-hooks";
 import { createContextProviderComponent } from "./widgets";
 
@@ -20,6 +21,7 @@ const useAppSettingsData = () => {
     const [removeWidget] = useRemoveWidgetMutation();
     const [savePlugin] = useSavePluginMutation();
     const [removeDashboard] = useRemoveDashboardMutation();
+    const [removePlugin] = useRemovePluginMutation();
 
     return {
         settings: data?.settings,
@@ -33,7 +35,12 @@ const useAppSettingsData = () => {
             const result = await removeDashboard({ variables: { id } });
             if (refetchSettings) refetch();
             return result.data.removeDashboard;
-        },        
+        },
+        removePlugin: async (id: string, refetchSettings = true) => {
+            const result = await removePlugin({ variables: { id } });
+            if (refetchSettings) refetch();
+            return result.data.removePlugin;
+        },
         saveDashboard: async (data: DashboardInput, refetchSettings = true) => {
             const result = await saveDashboard({ variables: { data } });
             if (refetchSettings) refetch();
@@ -46,9 +53,16 @@ const useAppSettingsData = () => {
             if (refetchSettings) refetch();
             return result.data.saveWidget;
         },
-        savePlugin: async (file: string, name: string, type: PluginType, className: string, refetchSettings = true) => {
+        savePlugin: async (
+            id: string,
+            file: string,
+            name: string,
+            type: PluginType,
+            className: string,
+            refetchSettings = true
+        ) => {
             const result = await savePlugin({
-                variables: { file, name, type, className },
+                variables: { id, file, name, type, className },
             });
             if (refetchSettings) refetch();
             return result.data.savePlugin;

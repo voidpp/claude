@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useNotifications } from "../../notifications";
 import { PageTitle } from "../widgets";
 
 const WidgetSettingsViewer = ({ data }: { data: string }) => {
@@ -49,6 +50,7 @@ export const DashboardEditPage = () => {
     const { settings, removeWidget, removeDashboard } = useAppSettings();
     const [isDialogOpen, openDialog, closeDialog] = useBoolState();
     const navigate = useNavigate();
+    const { showNotification } = useNotifications();
 
     const dashboardData = settings?.dashboards.filter(d => d.id === dashboardId)[0];
     const widgets = settings?.widgets.filter(w => w.dashboardId === dashboardId) ?? [];
@@ -65,6 +67,7 @@ export const DashboardEditPage = () => {
                 <IconButton
                     onClick={async () => {
                         await removeDashboard(dashboardData.id);
+                        showNotification("Dashboard has been removed");
                         navigate("/admin/dashboards");
                     }}
                 >
@@ -94,7 +97,13 @@ export const DashboardEditPage = () => {
                                     <WidgetSettingsViewer data={widget.settings} />
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => removeWidget(widget.id)} size="small">
+                                    <IconButton
+                                        onClick={async () => {
+                                            await removeWidget(widget.id);
+                                            showNotification("Widget has been removed");
+                                        }}
+                                        size="small"
+                                    >
                                         <Tooltip title="Delete">
                                             <DeleteIcon fontSize="small" />
                                         </Tooltip>

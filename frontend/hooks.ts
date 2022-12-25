@@ -34,5 +34,5 @@ export const usePluginOptions = (type: PluginType): FormSelectFieldDescriptor["o
 
     const plugins = settings.plugins?.filter(plugin => plugin.type === type) ?? [];
 
-    return plugins.map(plugin => ({ value: plugin.id, label: plugin.title }));
+    return plugins.map(plugin => ({ value: plugin.id, label: plugin.name }));
 };
