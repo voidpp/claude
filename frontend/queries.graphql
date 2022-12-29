@@ -62,6 +62,22 @@ query SpecialDays {
     }
 }
 
+query ServerStatus($ip: String!, $statusServerPort: Int!) {
+    serverStatus(ip: $ip, statusServerPort: $statusServerPort) {
+        ping
+        status {
+            cpu {
+                cores
+            }
+            load
+            memory {
+                percent
+            }
+            uptime
+        }
+    }
+}
+
 mutation SaveSpecialDays($specialDays: [SpecialDayInput]!) {
     saveSpecialDays(specialDays: $specialDays)
 }

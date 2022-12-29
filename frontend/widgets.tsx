@@ -1,4 +1,4 @@
-import { Box, Link as MUILink, LinkProps as MUILinkProps } from "@mui/material";
+import { Box, Link as MUILink, LinkProps as MUILinkProps, SxProps, Typography } from "@mui/material";
 import * as React from "react";
 import { Context } from "react";
 import { Link as RouterLink } from "react-router-dom";
@@ -27,4 +27,27 @@ export const Link = (props: LinkProps) => (
     <MUILink component={RouterLink} {...props}>
         {props.children}
     </MUILink>
+);
+
+export const FlagIcon = ({ name }: { name: string }) => {
+    let src = "";
+
+    if (name.length > 2) src = `/static/pics/${name}.png`;
+    else src = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/flags/4x3/${name}.svg`;
+
+    return <img style={{ width: 16 }} src={src} />;
+};
+
+export const Fieldset = ({ label, children, sx }: { label: string; children: React.ReactNode; sx?: SxProps }) => (
+    <Box
+        component="fieldset"
+        sx={{ borderRadius: 1, borderWidth: 1, borderColor: "rgba(255, 255, 255, 0.23)", margin: 0, ...sx }}
+    >
+        <Box component="legend">
+            <Typography variant="caption" sx={{ mx: 0.5 }}>
+                {label}
+            </Typography>
+        </Box>
+        {children}
+    </Box>
 );

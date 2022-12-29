@@ -1,5 +1,6 @@
 import { BaseWidgetSettings } from "../types";
 import { Clock, ClockSettings } from "./widgets/clock";
+import { ServerStatus, ServerStatusSettings } from "./widgets/server-status";
 import { CurrentWeather, CurrentWeatherSettings } from "./widgets/weather/current";
 import { DaysWeather, DaysWeatherSettings } from "./widgets/weather/days";
 
@@ -30,5 +31,11 @@ export const widgetRegistry: WidgetRegistry = {
         title: "Weather / days",
         settingsType: DaysWeatherSettings,
         defaultSize: { w: 400, h: 200 },
+    },
+    serverStatus: {
+        factory: ServerStatus,
+        title: 'Server status',
+        settingsType: ServerStatusSettings,
+        defaultSize: {w: 400, h: 200},
     },
 };

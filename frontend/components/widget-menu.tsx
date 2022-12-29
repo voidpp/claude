@@ -4,7 +4,7 @@ import * as React from "react";
 import { useState } from "react";
 import { useBoolState } from "../hooks";
 import { useAppSettings } from "../settings";
-import { FormFieldDescriptor, WidgetSettingsDialog } from "./widget-settings-dialog";
+import { FormFieldDescriptor, WidgetSettingsDialog, WidgetSettingsDialogProps } from "./widget-settings-dialog";
 
 const bodyStyle: SxProps = {
     position: "absolute",
@@ -24,6 +24,7 @@ export interface WidgetMenuProps<SettingsType> {
     dialogText?: React.ReactNode;
     onBeforeSubmit?: (data: SettingsType) => void;
     defaultOpen?: boolean;
+    dialogMaxWidth?: WidgetSettingsDialogProps["maxWidth"];
 }
 
 export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
@@ -71,6 +72,7 @@ export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
                 fields={settingsFormFields}
                 title={props.dialogTitle}
                 introText={props.dialogText}
+                maxWidth={props.dialogMaxWidth}
             />
         </Box>
     );

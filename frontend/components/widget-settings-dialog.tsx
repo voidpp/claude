@@ -1,3 +1,4 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
     Button,
     Checkbox,
@@ -5,19 +6,21 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
+    DialogProps,
     DialogTitle,
     FormControl,
     FormControlLabel,
+    IconButton,
     InputLabel,
     MenuItem,
     Select,
     TextField,
-    Typography,
 } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
 import { copyObject } from "../tools";
+import { Fieldset } from "../widgets";
 
 export type FieldType = "string" | "list" | "boolean" | "select" | "checkboxList";
 
@@ -27,6 +30,7 @@ export interface FormFieldDescriptor {
     type?: FieldType;
     required?: boolean;
     default?: any;
+    small?: boolean;
 }
 
 export interface FormNumberFieldDescriptor extends FormFieldDescriptor {
@@ -44,7 +48,7 @@ export interface FormSelectFieldDescriptor extends FormFieldDescriptor {
 
 export interface FormCheckboxListFieldDescriptor extends FormSelectFieldDescriptor {}
 
-export type Props = {
+export type WidgetSettingsDialogProps = {
     show: boolean;
     onClose: () => void;
     submit: (data: Record<string, any>) => void;
@@ -52,12 +56,13 @@ export type Props = {
     fields: Array<FormFieldDescriptor>;
     title?: React.ReactNode;
     introText?: React.ReactNode;
+    maxWidth?: DialogProps["maxWidth"];
 };
 
 type ListData = {
     id: string;
     rank: number;
-};
+} & Record<string, any>;
 
 type ListDataMap = Record<string, ListData>;
 
@@ -110,18 +115,17 @@ function ListField(props: ListFieldProps) {
         return (
             <tr key={rowData.id}>
                 {fields.map(desc => renderCell(rowData, desc))}
-                <td style={{ padding: "0 5px", fontSize: 18, cursor: "pointer" }}>
-                    <div onClick={delRow(rowData.id)}>x</div>
+                <td>
+                    <IconButton onClick={delRow(rowData.id)} sx={{ mt: 0.5 }}>
+                        <DeleteIcon fontSize="small" />
+                    </IconButton>
                 </td>
             </tr>
         );
     };
 
     return (
-        <div style={{ margin: "10px 0" }}>
-            <Typography component="span" variant="subtitle1" style={{ marginRight: 10 }}>
-                {desc.label}:{" "}
-            </Typography>
+        <Fieldset label={desc.label} sx={{ mb: 2 }}>
             <Button variant="contained" size="small" onClick={addRow}>
                 Add
             </Button>
@@ -132,7 +136,7 @@ function ListField(props: ListFieldProps) {
                         .map(renderRow)}
                 </tbody>
             </table>
-        </div>
+        </Fieldset>
     );
 }
 
@@ -151,8 +155,7 @@ const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
         onChange: (val: CheckboxListValue) => void
     ) => {
         return (
-            <div key={desc.name as string}>
-                <Typography variant="subtitle1">{desc.label}: </Typography>
+            <Fieldset label={desc.label} key={desc.name as string}>
                 {desc.options.map(op => (
                     <FormControlLabel
                         label={op.label}
@@ -167,14 +170,19 @@ const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
                         }
                     />
                 ))}
-            </div>
+            </Fieldset>
         );
     },
     select: (desc: FormSelectFieldDescriptor, value: string, onChange: (val: string) => void) => {
         return (
-            <FormControl fullWidth key={desc.name}>
+            <FormControl fullWidth key={desc.name} size={desc.small ? "small" : "medium"} margin="dense">
                 <InputLabel>{desc.label}</InputLabel>
-                <Select value={value} onChange={v => onChange(v.target.value as string)} label={desc.label}>
+                <Select
+                    value={value}
+                    onChange={v => onChange(v.target.value as string)}
+                    label={desc.label}
+                    size={desc.small ? "small" : "medium"}
+                >
                     {desc.options.map(op => (
                         <MenuItem key={op.value} value={op.value}>
                             {op.label}
@@ -198,6 +206,7 @@ const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
                 required={desc.required}
                 fullWidth
                 value={value}
+                size={desc.small ? "small" : "medium"}
                 onChange={ev => onChange(ev.target.value)}
             />
         );
@@ -230,14 +239,15 @@ const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
                 required={desc.required}
                 fullWidth
                 value={value}
+                size={desc.small ? "small" : "medium"}
                 onChange={ev => onChange(parseInt(ev.target.value))}
             />
         );
     },
 };
 
-export const WidgetSettingsDialog = (props: Props) => {
-    const { show, onClose, title = "Widget settings", submit, data, introText } = props;
+export const WidgetSettingsDialog = (props: WidgetSettingsDialogProps) => {
+    const { show, onClose, title = "Widget settings", submit, data, introText, maxWidth = "xs" } = props;
     const [formData, setFormData] = useState(Object.assign({}, data));
 
     const onSubmit = (ev: React.SyntheticEvent) => {
@@ -268,7 +278,7 @@ export const WidgetSettingsDialog = (props: Props) => {
     };
 
     return (
-        <Dialog open={show} onClose={closeDialog} maxWidth="xs">
+        <Dialog open={show} onClose={closeDialog} maxWidth={maxWidth}>
             <DialogTitle>{title}</DialogTitle>
             <form onSubmit={onSubmit}>
                 <DialogContent sx={{ "& > div": { mb: 2 } }}>
