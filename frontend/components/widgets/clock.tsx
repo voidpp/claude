@@ -64,7 +64,6 @@ export const Clock = (props: ClockProps) => {
             <WidgetMenu
                 id={config.id}
                 settings={config.settings}
-                dialogText="settings"
                 settingsFormFields={[
                     {
                         name: "timeFormat",

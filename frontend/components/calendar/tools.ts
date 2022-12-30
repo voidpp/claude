@@ -23,7 +23,6 @@ export function generateMonthlyDayMatrix(year: number, month: number, locale = "
     return result;
 }
 
-
 export const specialDayTypeColors: Record<SpecialDayType, string> = {
     [SpecialDayType.NonWorkingDay]: "red",
     [SpecialDayType.RelocatedRestDay]: "green",

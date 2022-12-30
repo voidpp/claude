@@ -1,4 +1,5 @@
 import { BaseWidgetSettings } from "../types";
+import { Buck, BuckSettings } from "./widgets/buck/buck";
 import { Clock, ClockSettings } from "./widgets/clock";
 import { ServerStatus, ServerStatusSettings } from "./widgets/server-status";
 import { CurrentWeather, CurrentWeatherSettings } from "./widgets/weather/current";
@@ -14,6 +15,12 @@ export type WidgetRegistry = {
 };
 
 export const widgetRegistry: WidgetRegistry = {
+    buck: {
+        factory: Buck,
+        title: "Buck",
+        settingsType: BuckSettings,
+        defaultSize: { w: 500, h: 200 },
+    },
     clock: {
         factory: Clock,
         title: "Clock",
@@ -34,8 +41,8 @@ export const widgetRegistry: WidgetRegistry = {
     },
     serverStatus: {
         factory: ServerStatus,
-        title: 'Server status',
+        title: "Server status",
         settingsType: ServerStatusSettings,
-        defaultSize: {w: 400, h: 200},
+        defaultSize: { w: 400, h: 200 },
     },
 };

@@ -39,8 +39,8 @@ export const usePluginOptions = (type: PluginType): FormSelectFieldDescriptor["o
 };
 
 export const useCurrentLocale = () => {
-    const {selectedDashboard} = useAppConfig();
-    const {settings} = useAppSettings();
+    const { selectedDashboard } = useAppConfig();
+    const { settings } = useAppSettings();
 
-    return settings.dashboards.filter(d => d.id === selectedDashboard.value)[0]?.locale ?? 'en'; 
-}
+    return settings.dashboards.filter(d => d.id === selectedDashboard.value)[0]?.locale ?? "en";
+};
