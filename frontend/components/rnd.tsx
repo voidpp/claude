@@ -111,11 +111,12 @@ export type RndFrameProps = {
     rndProps: Props;
     children: React.ReactNode;
     style?: React.CSSProperties;
+    sx?: SxProps;
 };
 
-export const RndFrame = ({ rndProps, children, style }: RndFrameProps) => (
+export const RndFrame = ({ rndProps, children, style, sx }: RndFrameProps) => (
     <Rnd {...rndProps}>
-        <Box style={{ ...style }} sx={bodyStyle}>
+        <Box style={{ ...style }} sx={{ ...bodyStyle, ...sx }}>
             {children}
         </Box>
     </Rnd>

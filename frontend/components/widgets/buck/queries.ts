@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 
 export enum TimerEventType {
     ALARM = "ALARM",
+    CLEAR_ALARM = "CLEAR_ALARM",
     PAUSE = "PAUSE",
     START = "START",
     STOP = "STOP",
@@ -73,6 +74,42 @@ export const runningTimersSubscription = gql`
             lengths
             remainingTimes
             origLength
+        }
+    }
+`;
+
+export enum TimerOperation {
+    PAUSE = "PAUSE",
+    STOP = "STOP",
+    UNPAUSE = "UNPAUSE",
+    CLEAR_ALARM = "CLEAR_ALARM",
+}
+
+export interface TimerOperationMutation_operateTimer_errors {
+    __typename: "Error";
+    type: string | null;
+}
+
+export interface TimerOperationMutation_operateTimer {
+    __typename: "ValidationResult";
+    errors: (TimerOperationMutation_operateTimer_errors | null)[] | null;
+}
+
+export interface TimerOperationMutation {
+    operateTimer: TimerOperationMutation_operateTimer | null;
+}
+
+export interface TimerOperationMutationVariables {
+    id: number;
+    operation: TimerOperation;
+}
+
+export const timerOperationMutation = gql`
+    mutation TimerOperationMutation($id: Int!, $operation: TimerOperation!) {
+        operateTimer(id: $id, operation: $operation) {
+            errors {
+                type
+            }
         }
     }
 `;
