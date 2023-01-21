@@ -2,7 +2,7 @@ import { Box, SxProps } from "@mui/material";
 import deepEqual from "deep-equal";
 import { ResizeDirection } from "re-resizable";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DraggableEvent } from "react-draggable";
 import { DraggableData, Position, Props, ResizableDelta, Rnd } from "react-rnd";
 import { useAppSettings } from "../settings";
@@ -14,10 +14,22 @@ export const useRnd = (config: WidgetConfig, stepSize: number): Props => {
         x: config.x,
         y: config.y,
     });
+
+    // config vars can be changed from an other client
+    useEffect(() => {
+        if (config.x === position.x && config.y === position.y) return;
+        setPosition({ x: config.x, y: config.y });
+    }, [config.x, config.y]);
+
     const [size, setSize] = useState({
         width: config.width,
         height: config.height,
     });
+
+    useEffect(() => {
+        if (config.width === size.width && config.height === size.height) return;
+        setSize({ width: config.width, height: config.height });
+    }, [config.width, config.height]);
 
     const updatePosition = (newData: typeof position) => {
         if (deepEqual(newData, position)) return;

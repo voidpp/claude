@@ -73,6 +73,9 @@ class SettingsKeys(Enum):
     special_days = MultiSettingsKey("special_day", SpecialDay, lambda item: get_special_day_id(item))
 
 
+channel_name = "channel:1"
+
+
 class SettingsManager:
     def __init__(self, redis: Redis):
         self._redis = redis
@@ -83,8 +86,14 @@ class SettingsManager:
             data[key.name] = await key.value.get_data(self._redis)
         return Settings(**data)
 
+    async def publish_change(self):
+        print("publish_change")
+        await self._redis.publish(channel_name, "*")
+
     async def save_setting(self, key: SettingsKey, data: Any):
+        await self.publish_change()
         await key.value.save_data(self._redis, data)
 
     async def delete_setting(self, key: SettingsKey, data: Any = None):
+        await self.publish_change()
         await key.value.delete_data(self._redis, data)

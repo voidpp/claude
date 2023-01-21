@@ -24,34 +24,6 @@ query DaysWeather($city: String!, $providerId: UUID!) {
     }
 }
 
-query Settings {
-    settings {
-        dashboards {
-            id
-            name
-            stepSize
-            background
-            theme
-            locale
-        }
-        widgets {
-            id
-            dashboardId
-            type
-            x
-            y
-            width
-            height
-            settings
-        }
-        plugins {
-            id
-            name
-            type
-        }
-    }
-}
-
 query SpecialDays {
     settings {
         specialDays {
@@ -109,5 +81,33 @@ mutation SaveWidget($data: WidgetInput) {
 mutation SavePlugin($id: UUID!, $file: String!, $name: String!, $type: PluginType!, $className: String!) {
     savePlugin(id: $id, file: $file, name: $name, type: $type, className: $className) {
         error
+    }
+}
+
+subscription LiveSettings {
+    settings {
+        dashboards {
+            id
+            name
+            stepSize
+            background
+            theme
+            locale
+        }
+        widgets {
+            id
+            dashboardId
+            type
+            x
+            y
+            width
+            height
+            settings
+        }
+        plugins {
+            id
+            name
+            type
+        }
     }
 }

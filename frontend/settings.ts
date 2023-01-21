@@ -1,56 +1,52 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 import {
     DashboardInput,
-    PluginType,
-    useRemoveDashboardMutation,
+    LiveSettingsSubscription,
+    PluginType, useLiveSettingsSubscription, useRemoveDashboardMutation,
     useRemovePluginMutation,
     useRemoveWidgetMutation,
     useSaveDashboardMutation,
     useSavePluginMutation,
-    useSaveWidgetMutation,
-    useSettingsQuery,
-    Widget,
-    WidgetInput,
+    useSaveWidgetMutation, Widget,
+    WidgetInput
 } from "./graphql-types-and-hooks";
 import { createContextProviderComponent } from "./widgets";
 
 const useAppSettingsData = () => {
-    const { data, refetch } = useSettingsQuery();
     const [saveDashboard] = useSaveDashboardMutation();
     const [saveWidget] = useSaveWidgetMutation();
     const [removeWidget] = useRemoveWidgetMutation();
     const [savePlugin] = useSavePluginMutation();
     const [removeDashboard] = useRemoveDashboardMutation();
     const [removePlugin] = useRemovePluginMutation();
+    const [settings, setSettings] = useState<LiveSettingsSubscription["settings"]>(null);
+
+    useLiveSettingsSubscription({onData: (options) => {
+        setSettings(options.data.data.settings);
+    }})
 
     return {
-        settings: data?.settings,
-        refreshSettings: refetch,
-        removeWidget: async (id: string, refetchSettings = true) => {
+        settings,
+        removeWidget: async (id: string) => {
             const result = await removeWidget({ variables: { id } });
-            if (refetchSettings) refetch();
             return result.data.removeWidget;
         },
-        removeDashboard: async (id: string, refetchSettings = true) => {
+        removeDashboard: async (id: string) => {
             const result = await removeDashboard({ variables: { id } });
-            if (refetchSettings) refetch();
             return result.data.removeDashboard;
         },
-        removePlugin: async (id: string, refetchSettings = true) => {
+        removePlugin: async (id: string) => {
             const result = await removePlugin({ variables: { id } });
-            if (refetchSettings) refetch();
             return result.data.removePlugin;
         },
-        saveDashboard: async (data: DashboardInput, refetchSettings = true) => {
+        saveDashboard: async (data: DashboardInput) => {
             const result = await saveDashboard({ variables: { data } });
-            if (refetchSettings) refetch();
             return result.data.saveDashboard;
         },
-        saveWidget: async (data: WidgetInput, refetchSettings = true) => {
+        saveWidget: async (data: WidgetInput) => {
             const result = await saveWidget({
                 variables: { data: { ...data, settings: JSON.stringify(data.settings) } },
             });
-            if (refetchSettings) refetch();
             return result.data.saveWidget;
         },
         savePlugin: async (
@@ -59,16 +55,14 @@ const useAppSettingsData = () => {
             name: string,
             type: PluginType,
             className: string,
-            refetchSettings = true
         ) => {
             const result = await savePlugin({
                 variables: { id, file, name, type, className },
             });
-            if (refetchSettings) refetch();
             return result.data.savePlugin;
         },
         getWidgetById: (id: string): Widget => {
-            return data.settings.widgets.filter(widget => widget.id === id)[0];
+            return settings.widgets.filter(widget => widget.id === id)[0];
         },
     };
 };

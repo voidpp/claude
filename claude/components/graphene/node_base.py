@@ -11,7 +11,7 @@ from graphene import Field, InputObjectType, ResolveInfo
 from graphene.utils.orderedtype import OrderedType
 from pydantic import BaseModel
 
-from claude.components.graphene.tools import get_field_name_list
+from claude.components.graphene.tools import get_field_name_list, get_request_context
 from claude.components.request_context import RequestContext
 from claude.components.settings.manager import SettingsKeys
 from claude.components.settings.types import Plugin
@@ -31,10 +31,6 @@ class ValidationError(Exception):
     def __init__(self, result):
         super().__init__("ValidationError")
         self.result = result
-
-
-def get_request_context(info: ResolveInfo) -> RequestContext:
-    return info.context["request"].scope[RequestScopeKeys.CONTEXT]
 
 
 @dataclass
