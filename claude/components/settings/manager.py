@@ -14,6 +14,7 @@ from claude.components.settings.types import (
     Widget,
     get_special_day_id,
 )
+from claude.constants import SETTINGS_PUBSUB_CHANNEL_NAME
 
 GENERAL_KEYS_PREFIX = "claude_settings"
 
@@ -73,9 +74,6 @@ class SettingsKeys(Enum):
     special_days = MultiSettingsKey("special_day", SpecialDay, lambda item: get_special_day_id(item))
 
 
-channel_name = "channel:1"
-
-
 class SettingsManager:
     def __init__(self, redis: Redis):
         self._redis = redis
@@ -87,8 +85,7 @@ class SettingsManager:
         return Settings(**data)
 
     async def publish_change(self):
-        print("publish_change")
-        await self._redis.publish(channel_name, "*")
+        await self._redis.publish(SETTINGS_PUBSUB_CHANNEL_NAME, "42")
 
     async def save_setting(self, key: SettingsKey, data: Any):
         await self.publish_change()

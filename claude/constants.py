@@ -1,0 +1,1 @@
+SETTINGS_PUBSUB_CHANNEL_NAME = "settings"

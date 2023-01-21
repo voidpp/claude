@@ -1,6 +1,7 @@
 import { BaseWidgetSettings } from "../types";
 import { Buck, BuckSettings } from "./widgets/buck/buck";
 import { Clock, ClockSettings } from "./widgets/clock";
+import { InfluxTable, InfluxTableSettings } from "./widgets/influx-table";
 import { ServerStatus, ServerStatusSettings } from "./widgets/server-status";
 import { CurrentWeather, CurrentWeatherSettings } from "./widgets/weather/current";
 import { DaysWeather, DaysWeatherSettings } from "./widgets/weather/days";
@@ -27,6 +28,12 @@ export const widgetRegistry: WidgetRegistry = {
         settingsType: ClockSettings,
         defaultSize: { w: 500, h: 200 },
     },
+    influxTable: {
+        factory: InfluxTable,
+        title: "Influx table",
+        settingsType: InfluxTableSettings,
+        defaultSize: {w: 300, h: 150},       
+    },
     currentWeather: {
         factory: CurrentWeather,
         title: "Weather / current",
@@ -44,5 +51,5 @@ export const widgetRegistry: WidgetRegistry = {
         title: "Server status",
         settingsType: ServerStatusSettings,
         defaultSize: { w: 400, h: 200 },
-    },
+    },    
 };
