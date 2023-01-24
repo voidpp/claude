@@ -22,7 +22,7 @@ import { v4 as uuid } from "uuid";
 import { copyObject } from "../tools";
 import { Fieldset } from "../widgets";
 
-export type FieldType = "string" | "list" | "boolean" | "select" | "checkboxList";
+export type FieldType = "string" | "list" | "boolean" | "select" | "checkboxList" | "multiLineString";
 
 export interface FormFieldDescriptor {
     name: string;
@@ -148,6 +148,25 @@ type FieldGeneratorCallbackType = (
 
 type CheckboxListValue = { [s: string]: boolean };
 
+const getStringFieldFactory =
+    (multiline: boolean): FieldGeneratorCallbackType =>
+    (desc: FormFieldDescriptor, value: string, onChange: (val: string) => void) =>
+        (
+            <TextField
+                key={desc.name as string}
+                id={"widgetsettings_" + desc.name}
+                margin="dense"
+                label={desc.label}
+                type="text"
+                required={desc.required}
+                fullWidth
+                multiline={multiline}
+                value={value}
+                size={desc.small ? "small" : "medium"}
+                onChange={ev => onChange(ev.target.value)}
+            />
+        );
+
 const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
     checkboxList: (
         desc: FormCheckboxListFieldDescriptor,
@@ -195,22 +214,8 @@ const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
     list: (desc: FormListFieldDescriptor, value: ListDataMap, onChange: (val: ListDataMap) => void) => {
         return <ListField desc={desc} data={value} onChange={onChange} key={desc.name as string} />;
     },
-    string: (desc: FormFieldDescriptor, value: string, onChange: (val: string) => void) => {
-        return (
-            <TextField
-                key={desc.name as string}
-                id={"widgetsettings_" + desc.name}
-                margin="dense"
-                label={desc.label}
-                type="text"
-                required={desc.required}
-                fullWidth
-                value={value}
-                size={desc.small ? "small" : "medium"}
-                onChange={ev => onChange(ev.target.value)}
-            />
-        );
-    },
+    string: getStringFieldFactory(false),
+    multiLineString: getStringFieldFactory(true),
     boolean: (desc: FormFieldDescriptor, value: boolean, onChange: (val: boolean) => void) => {
         return (
             <FormControlLabel
