@@ -2,6 +2,7 @@ from graphene import Field, ObjectType, ResolveInfo, String
 
 from claude.api.nodes.server_status import ServerStatusNode
 from claude.api.nodes.settings import SettingsNode
+from claude.api.nodes.sunset_sunrise import SunriseSunsetNode
 from claude.components.graphene.tools import create_nested_field
 
 from .nodes.weather.current import CurrentWeatherNode
@@ -24,5 +25,5 @@ class Query(ObjectType):
 
     weather = create_nested_field(Weather)
     server_status = ServerStatusNode.field()
-
     settings = SettingsNode.field()
+    sunrise_sunset = SunriseSunsetNode.field()

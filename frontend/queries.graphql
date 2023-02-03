@@ -60,6 +60,13 @@ query ServerStatus($ip: String!, $statusServerPort: Int!) {
     }
 }
 
+query SunriseSunset($city: String!) {
+    sunriseSunset(city: $city) {
+        sunrise
+        sunset
+    }
+}
+
 mutation SaveSpecialDays($specialDays: [SpecialDayInput]!) {
     saveSpecialDays(specialDays: $specialDays)
 }

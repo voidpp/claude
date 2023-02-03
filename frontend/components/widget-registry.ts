@@ -4,6 +4,7 @@ import { Clock, ClockSettings } from "./widgets/clock";
 import { Gallery, GallerySettings } from "./widgets/gallery";
 import { InfluxTable, InfluxTableSettings } from "./widgets/influx-table";
 import { ServerStatus } from "./widgets/server-status";
+import { SunriseSunset, SunriseSunsetSettings } from "./widgets/sunrise-sunset";
 import { CurrentWeather, CurrentWeatherSettings } from "./widgets/weather/current";
 import { DaysWeather, DaysWeatherSettings } from "./widgets/weather/days";
 import { HoursWeather, HoursWeatherSettings } from "./widgets/weather/hours";
@@ -65,5 +66,11 @@ export const widgetRegistry: WidgetRegistry = {
         title: "Server status",
         settingsType: HoursWeatherSettings,
         defaultSize: { w: 400, h: 200 },
+    },
+    sunriseSunset: {
+        factory: SunriseSunset,
+        title: "Sunrise-sunset",
+        settingsType: SunriseSunsetSettings,
+        defaultSize: {w: 200, h: 100},
     },
 };
