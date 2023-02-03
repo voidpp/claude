@@ -27,5 +27,5 @@ class DayForecast(BaseModel):
 class HourForecast(BaseModel):
     hour: int
     image: str
-    temperature: int
+    temperature: float
     precipitation: Precipitation

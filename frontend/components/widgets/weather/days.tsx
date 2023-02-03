@@ -13,8 +13,6 @@ import { RndFrame, useRnd } from "../../rnd";
 import { WidgetMenu } from "../../widget-menu";
 import { FormCheckboxListFieldDescriptor, FormSelectFieldDescriptor } from "../../widget-settings-dialog";
 
-// TODO: color saturdays, sundays, special days, etc
-
 export type ShowableRows =
     | "dayNumber"
     | "dayText"
@@ -184,7 +182,7 @@ export const DaysWeather = (props: DaysWeatherProps) => {
                     },
                     {
                         name: "pollInterval",
-                        label: "Interval",
+                        label: "Interval (seconds)",
                     },
                     {
                         type: "checkboxList",

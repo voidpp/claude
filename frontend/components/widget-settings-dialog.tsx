@@ -270,7 +270,7 @@ export const WidgetSettingsDialog = (props: WidgetSettingsDialogProps) => {
         const fieldType = desc.type || typeof data[desc.name];
         const generator = fieldGenerator[fieldType];
         if (!generator) {
-            console.error("Undefined type:", fieldType, desc);
+            console.error("Undefined type:", fieldType, desc, desc.name, data);
             return null;
         }
 

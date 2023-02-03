@@ -3,9 +3,10 @@ import { Buck, BuckSettings } from "./widgets/buck/buck";
 import { Clock, ClockSettings } from "./widgets/clock";
 import { Gallery, GallerySettings } from "./widgets/gallery";
 import { InfluxTable, InfluxTableSettings } from "./widgets/influx-table";
-import { ServerStatus, ServerStatusSettings } from "./widgets/server-status";
+import { ServerStatus } from "./widgets/server-status";
 import { CurrentWeather, CurrentWeatherSettings } from "./widgets/weather/current";
 import { DaysWeather, DaysWeatherSettings } from "./widgets/weather/days";
+import { HoursWeather, HoursWeatherSettings } from "./widgets/weather/hours";
 
 export type WidgetRegistry = {
     [s: string]: {
@@ -50,13 +51,19 @@ export const widgetRegistry: WidgetRegistry = {
     daysWeather: {
         factory: DaysWeather,
         title: "Weather / days",
-        settingsType: DaysWeatherSettings,
+        settingsType: DaysWeatherSettings,      
         defaultSize: { w: 400, h: 200 },
     },
+    hoursWeather: {
+        factory: HoursWeather,
+        title: "Weather / hours",
+        settingsType: HoursWeatherSettings,
+        defaultSize: { w: 400, h: 200 },
+    },    
     serverStatus: {
         factory: ServerStatus,
         title: "Server status",
-        settingsType: ServerStatusSettings,
+        settingsType: HoursWeatherSettings,
         defaultSize: { w: 400, h: 200 },
     },
 };

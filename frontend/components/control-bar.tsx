@@ -3,8 +3,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { Box, Divider, Drawer, IconButton, Typography } from "@mui/material";
 import * as React from "react";
 import { useAppConfig } from "../config";
-import { useBoolState } from "../hooks";
-import { useAppSettings } from "../settings";
+import { useBoolState, useCurrentDashboard } from "../hooks";
 import { copyObject } from "../tools";
 import { Link } from "../widgets";
 import { AddWidgetButton } from "./add-widget-button";
@@ -13,10 +12,9 @@ import { DashboardFormDialog } from "./dashboard-form-dialog";
 
 const CurrentDashboardItem = () => {
     const { selectedDashboard } = useAppConfig();
-    const { settings } = useAppSettings();
     const [isDialogOpen, openDialog, closeDialog] = useBoolState();
 
-    const currentDashboard = settings?.dashboards.filter(db => db.id === selectedDashboard.value)[0];
+    const currentDashboard = useCurrentDashboard();
 
     if (!selectedDashboard.value) return <Typography sx={{ fontStyle: "italic" }}>No dashboard selected</Typography>;
 

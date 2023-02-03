@@ -14,9 +14,9 @@ class HoursForecastWeatherNode(NodeBase[WeatherNodeValidator]):
     config = NodeConfig(
         result_type=List(object_type_from_pydantic(HourForecast)),
         input_validator=WeatherNodeValidator,
-        cache_expiry_time=timedelta(minutes=30),
+        cache_expiry_time=timedelta(minutes=10),
     )
 
     async def resolve(self):
-        provider: WeatherProvider = self.load_plugin(self.args.provider_id)
+        provider: WeatherProvider = await self.load_plugin(self.args.provider_id)
         return await provider.get_hours(self.args.city)

@@ -24,6 +24,16 @@ query DaysWeather($city: String!, $providerId: UUID!) {
     }
 }
 
+query HoursWeather($city: String!, $providerId: UUID!) {
+    weather {
+        hours(city: $city, providerId: $providerId) {
+            hour
+            image
+            temperature
+        }
+    }
+}
+
 query SpecialDays {
     settings {
         specialDays {

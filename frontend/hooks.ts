@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FormSelectFieldDescriptor } from "./components/widget-settings-dialog";
 import { useAppConfig } from "./config";
-import { PluginType } from "./graphql-types-and-hooks";
+import { Dashboard, PluginType } from "./graphql-types-and-hooks";
 import { useAppSettings } from "./settings";
 
 export function useInterval(callback: () => void, delay: number, enabled: boolean = true) {
@@ -44,3 +44,10 @@ export const useCurrentLocale = () => {
 
     return settings.dashboards.filter(d => d.id === selectedDashboard.value)[0]?.locale ?? "en";
 };
+
+export const useCurrentDashboard = (): Dashboard => {
+    const { selectedDashboard } = useAppConfig();
+    const { settings } = useAppSettings();
+
+    return settings?.dashboards.filter(db => db.id === selectedDashboard.value)[0];
+}
