@@ -5,11 +5,13 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { DraggableEvent } from "react-draggable";
 import { DraggableData, Position, Props, ResizableDelta, Rnd } from "react-rnd";
+import { useCurrentDashboard } from "../hooks";
 import { useAppSettings } from "../settings";
 import { WidgetConfig } from "../types";
 
-export const useRnd = (config: WidgetConfig, stepSize: number): Props => {
+export const useRnd = (config: WidgetConfig): Props => {
     const { saveWidget } = useAppSettings();
+    const currentDashboard = useCurrentDashboard();
     const [position, setPosition] = useState({
         x: config.x,
         y: config.y,
@@ -99,8 +101,8 @@ export const useRnd = (config: WidgetConfig, stepSize: number): Props => {
             width: size.width,
             height: size.height,
         },
-        dragGrid: [stepSize, stepSize],
-        resizeGrid: [stepSize, stepSize],
+        dragGrid: [currentDashboard.stepSize, currentDashboard.stepSize],
+        resizeGrid: [currentDashboard.stepSize, currentDashboard.stepSize],
         onDragStop,
         onResizeStop,
         onDrag,

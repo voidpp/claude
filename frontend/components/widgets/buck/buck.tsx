@@ -145,7 +145,7 @@ const ActiveAlarms = ({
 
 export const Buck = ({ config }: BuckProps) => {
     const client = useBuckApolloClient(config.settings.host, config.settings.port);
-    const rndProps = useRnd(config, 10);
+    const rndProps = useRnd(config);
     const [activeAlarms, setActiveAlarms] = React.useState<TimerEventsSubscription_timerEvents_timer[]>([]);
     const { data } = useSubscription<RunningTimersSubscription>(runningTimersSubscription, { client });
     useSubscription<TimerEventsSubscription>(timerEventsSubscription, {

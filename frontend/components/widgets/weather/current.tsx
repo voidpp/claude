@@ -18,7 +18,7 @@ export type CurrentWeatherProps = CommonWidgetProps<CurrentWeatherSettings>;
 
 export const CurrentWeather = (props: CurrentWeatherProps) => {
     const { config } = props;
-    const rndProps = useRnd(config, 10);
+    const rndProps = useRnd(config);
     const providerOptions = usePluginOptions(PluginType.Weather);
 
     const { data, refetch } = useCurrentWeatherQuery({

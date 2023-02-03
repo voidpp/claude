@@ -59,7 +59,7 @@ const styles = {
 
 export const InfluxTable = ({ config }: CommonWidgetProps<InfluxTableSettings>) => {
     const [data, setData] = useState([]);
-    const rndProps = useRnd(config, 10);
+    const rndProps = useRnd(config);
 
     const fetchData = async (settings: InfluxTableSettings = config.settings) => {
         if (!settings.url) return;

@@ -41,7 +41,7 @@ function HourInfoCell({ data }: { data: HourForecast }) {
 
 export const HoursWeather = (props: HoursWeatherProps) => {
     const { config } = props;
-    const rndProps = useRnd(config, 10);
+    const rndProps = useRnd(config);
     const providerOptions = usePluginOptions(PluginType.Weather);
 
     const { data, refetch } = useHoursWeatherQuery({

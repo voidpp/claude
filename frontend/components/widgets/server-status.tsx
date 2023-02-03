@@ -146,7 +146,7 @@ const StatusRow = ({ config, settings }: { config: ServerConfig; settings: Serve
 export const ServerStatus = (props: ServerStatusProps) => {
     const { config } = props;
     const { settings } = config;
-    const rndProps = useRnd(config, 10);
+    const rndProps = useRnd(config);
 
     const onBeforeSettingsSubmit = (data: ServerStatusSettings) => {};
 

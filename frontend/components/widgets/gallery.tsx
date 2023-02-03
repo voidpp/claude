@@ -54,7 +54,7 @@ const styles = {
 
 export const Gallery = ({ config }: GalleryProps) => {
     const { settings } = config;
-    const rndProps = useRnd(config, 10);
+    const rndProps = useRnd(config);
     const [currentIndex, setCurrentIndex] = React.useState(0);
     const imageUrls = React.useMemo(
         () =>

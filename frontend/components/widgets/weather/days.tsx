@@ -113,7 +113,7 @@ const headerStyle: SxProps = {
 export const DaysWeather = (props: DaysWeatherProps) => {
     const { config } = props;
     const { rowsToShow } = config.settings;
-    const rndProps = useRnd(config, 10);
+    const rndProps = useRnd(config);
     const providerOptions = usePluginOptions(PluginType.Weather);
 
     const { data, refetch } = useDaysWeatherQuery({

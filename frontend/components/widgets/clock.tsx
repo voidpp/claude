@@ -47,7 +47,7 @@ const DateDisplay = ({ height, format }: { height: number; format: string }) => 
 export const Clock = (props: ClockProps) => {
     const { config } = props;
     const [time, setTime] = useState(getTimeString(config.settings.timeFormat));
-    const rndProps = useRnd(config, 10);
+    const rndProps = useRnd(config);
 
     useInterval(() => {
         setTime(getTimeString(config.settings.timeFormat));

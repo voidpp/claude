@@ -17,7 +17,7 @@ export type SunriseSunsetProps = CommonWidgetProps<SunriseSunsetSettings>;
 
 export const SunriseSunset = (props: SunriseSunsetProps) => {
     const { config } = props;
-    const rndProps = useRnd(config, 10);
+    const rndProps = useRnd(config);
 
     const { data, refetch } = useSunriseSunsetQuery({ variables: { city: config.settings.city } });
 
