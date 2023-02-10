@@ -9,7 +9,9 @@ import { useCurrentDashboard } from "../hooks";
 import { useAppSettings } from "../settings";
 import { WidgetConfig } from "../types";
 
-export const useRnd = (config: WidgetConfig): Props => {
+export type RndProps = Omit<Props, "size"> & { size: { width: number; height: number } };
+
+export const useRnd = (config: WidgetConfig): RndProps => {
     const { saveWidget } = useAppSettings();
     const currentDashboard = useCurrentDashboard();
     const [position, setPosition] = useState({

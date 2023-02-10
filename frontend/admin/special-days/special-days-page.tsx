@@ -6,6 +6,7 @@ import {
     useSaveSpecialDaysMutation,
     useSpecialDaysQuery,
 } from "@/graphql-types-and-hooks";
+import { useSpecialDaysMap } from "@/hooks";
 import { Locales } from "@/types";
 import { IfComp } from "@/widgets";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
@@ -13,7 +14,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Box, IconButton, Menu, MenuItem, Select, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import * as React from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { PageTitle } from "../widgets";
 
 export const SpecialDaysPage = () => {
@@ -24,14 +25,7 @@ export const SpecialDaysPage = () => {
     const [selectedDate, setSelectedDate] = useState<Date>();
     const [saveSpecialDays] = useSaveSpecialDaysMutation();
     const [removeSpecialDays] = useRemoveSpecialDaysMutation();
-    const specialDaysMap = useMemo(() => {
-        return data?.settings.specialDays
-            .filter(sd => dayjs(sd.date).year() == year && sd.locale == locale)
-            .reduce((curr, prev) => {
-                curr[dayjs(prev.date).format("YYYY-MM-DD")] = prev.type;
-                return curr;
-            }, {} as Record<string, SpecialDayType>);
-    }, [data?.settings.specialDays, year, locale]);
+    const specialDaysMap = useSpecialDaysMap(locale, year);
 
     const onSelectDate = (date: Date, container: HTMLDivElement) => {
         setMenuAnchor(container);

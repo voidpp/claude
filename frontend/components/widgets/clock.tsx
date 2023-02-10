@@ -53,7 +53,7 @@ export const Clock = (props: ClockProps) => {
         setTime(getTimeString(config.settings.timeFormat));
     }, 1000);
 
-    const height = rndProps.size.height as number;
+    const height = rndProps.size.height;
 
     return (
         <RndFrame rndProps={rndProps}>

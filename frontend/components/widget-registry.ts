@@ -1,5 +1,6 @@
 import { BaseWidgetSettings } from "../types";
 import { Buck, BuckSettings } from "./widgets/buck/buck";
+import { Calendar, CalendarSettings } from "./widgets/calendar";
 import { Clock, ClockSettings } from "./widgets/clock";
 import { Gallery, GallerySettings } from "./widgets/gallery";
 import { InfluxTable, InfluxTableSettings } from "./widgets/influx-table";
@@ -24,6 +25,12 @@ export const widgetRegistry: WidgetRegistry = {
         title: "Buck",
         settingsType: BuckSettings,
         defaultSize: { w: 500, h: 200 },
+    },
+    calendar: {
+        factory: Calendar,
+        title: "Calendar",
+        settingsType: CalendarSettings,
+        defaultSize: {w: 250, h: 250},
     },
     clock: {
         factory: Clock,
