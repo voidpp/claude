@@ -1,6 +1,6 @@
 import { countries } from "@/countries";
 import { ServerStatusQueryResult, useServerStatusQuery } from "@/graphql-types-and-hooks";
-import { CommonWidgetProps } from "@/types";
+import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
 import { FlagIcon, IfComp } from "@/widgets";
 import { Box, SxProps } from "@mui/material";
 import * as React from "react";
@@ -67,7 +67,7 @@ export type ServerConfig = {
 
 type ServerConfigMap = { [s: string]: ServerConfig };
 
-export class ServerStatusSettings {
+export class ServerStatusSettings extends BaseWidgetSettings {
     servers: ServerConfigMap = {};
     columns: { [key in Column]: boolean } = { load: true, memory: true, name: true, ping: true, uptime: true };
     pollInterval: number = 60;

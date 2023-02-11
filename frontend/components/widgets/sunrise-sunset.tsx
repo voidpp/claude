@@ -1,8 +1,8 @@
+import { SunriseSunset as SunriseSunsetType, useSunriseSunsetQuery } from "@/graphql-types-and-hooks";
 import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
 import { Box } from "@mui/system";
 import dayjs from "dayjs";
 import * as React from "react";
-import { useSunriseSunsetQuery } from "../../graphql-types-and-hooks";
 import { useInterval } from "../../hooks";
 import { RndFrame, useRnd } from "../rnd";
 import { WidgetMenu } from "../widget-menu";
@@ -14,6 +14,19 @@ export class SunriseSunsetSettings extends BaseWidgetSettings {
 const dayInMsecs = 1000 * 60 * 60 * 24;
 
 export type SunriseSunsetProps = CommonWidgetProps<SunriseSunsetSettings>;
+
+const labels: Record<keyof Omit<SunriseSunsetType, "__typename">, string> = {
+    sunrise: "Sunrise",
+    sunset: "Snset",
+    solarNoon: "Solar noon",
+    dayLength: "Day length",
+    civilTwilightBegin: "Civil twilight begin",
+    civilTwilightEnd: "Civil twilight end",
+    nauticalTwilightBegin: "Nautical twilight begin",
+    nauticalTwilightEnd: "Nautical twilight end",
+    astronomicalTwilightBegin: "Astronomical twilight begin",
+    astronomicalTwilightEnd: "Astronomical twilight end",
+};
 
 export const SunriseSunset = (props: SunriseSunsetProps) => {
     const { config } = props;

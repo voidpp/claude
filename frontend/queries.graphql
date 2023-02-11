@@ -64,6 +64,14 @@ query SunriseSunset($city: String!) {
     sunriseSunset(city: $city) {
         sunrise
         sunset
+        solarNoon
+        dayLength
+        civilTwilightBegin
+        civilTwilightEnd
+        nauticalTwilightBegin
+        nauticalTwilightEnd
+        astronomicalTwilightBegin
+        astronomicalTwilightEnd
     }
 }
 
