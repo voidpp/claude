@@ -1,4 +1,4 @@
-import { Box, SxProps } from "@mui/material";
+import { Box, SxProps, Theme } from "@mui/material";
 import deepEqual from "deep-equal";
 import { ResizeDirection } from "re-resizable";
 import * as React from "react";
@@ -9,7 +9,7 @@ import { useCurrentDashboard } from "../hooks";
 import { useAppSettings } from "../settings";
 import { WidgetConfig } from "../types";
 
-export type RndProps = Omit<Props, "size"> & { size: { width: number; height: number } };
+export type RndProps = Omit<Props, "size"> & { size: { width: number; height: number }; isChange: boolean };
 
 export const useRnd = (config: WidgetConfig): RndProps => {
     const { saveWidget } = useAppSettings();
@@ -18,6 +18,7 @@ export const useRnd = (config: WidgetConfig): RndProps => {
         x: config.x,
         y: config.y,
     });
+    const [isChange, setIsChange] = useState(false);
 
     // config vars can be changed from an other client
     useEffect(() => {
@@ -41,6 +42,7 @@ export const useRnd = (config: WidgetConfig): RndProps => {
     };
 
     const onDragStop = (e: DraggableEvent, data: DraggableData) => {
+        setIsChange(false);
         if (config.x == data.lastX && config.y == data.lastY) return;
         updatePosition({
             x: data.lastX,
@@ -67,6 +69,7 @@ export const useRnd = (config: WidgetConfig): RndProps => {
         delta: ResizableDelta,
         newPosition: Position
     ) => {
+        setIsChange(false);
         onResize(e, dir, elementRef, delta, newPosition);
         saveWidget({
             ...config,
@@ -111,29 +114,68 @@ export const useRnd = (config: WidgetConfig): RndProps => {
         onResize,
         style: { userSelect: "none" },
         enableUserSelectHack: false,
+        isChange,
+        onDragStart: () => setIsChange(true),
+        onResizeStart: () => setIsChange(true),
     };
 };
 
-const bodyStyle: SxProps = {
-    borderRadius: 2,
-    height: "100%",
-    position: "relative",
-    overflow: "hidden",
-    backdropFilter: "blur(3px)",
-    backgroundColor: "rgba(0,0,0,0.4)",
-};
+const styles = {
+    body: {
+        borderRadius: 2,
+        height: "100%",
+        position: "relative",
+        overflow: "hidden",
+        backdropFilter: "blur(3px)",
+        backgroundColor: "rgba(0,0,0,0.4)",
+    },
+    rndInfo: {
+        position: "absolute",
+        top: -60,
+        backdropFilter: "blur(3px)",
+        backgroundColor: "rgba(0,0,0,0.4)",
+        borderRadius: 2,
+        px: 1,
+        py: 0.5,
+        transition: theme => theme.transitions.create("opacity"),
+    },
+} satisfies Record<string, SxProps<Theme>>;
 
 export type RndFrameProps = {
-    rndProps: Props;
+    rndProps: RndProps;
     children: React.ReactNode;
     style?: React.CSSProperties;
     sx?: SxProps;
 };
 
-export const RndFrame = ({ rndProps, children, style, sx }: RndFrameProps) => (
-    <Rnd {...rndProps}>
-        <Box style={{ ...style }} sx={{ ...bodyStyle, ...sx }}>
-            {children}
+const RndInfoBox = ({ rndProps, visible }: { rndProps: RndProps; visible: boolean }) => {
+    const container = React.useRef<HTMLDivElement>();
+
+    useEffect(() => {
+        const left = (rndProps.size.width - container.current.clientWidth) / 2;
+        container.current.style.left = `${left}px`;
+    });
+
+    return (
+        <Box sx={{ ...styles.rndInfo, opacity: visible ? 1 : 0 }} ref={container}>
+            <Box>
+                Size: {rndProps.size.width} x {rndProps.size.height}
+            </Box>
+            <Box>
+                Pos: {rndProps.position.x} x {rndProps.position.y}
+            </Box>
         </Box>
-    </Rnd>
-);
+    );
+};
+
+export const RndFrame = ({ rndProps, children, style, sx }: RndFrameProps) => {
+    const { isChange, ...propsForRnd } = rndProps;
+    return (
+        <Rnd {...propsForRnd}>
+            <Box style={{ ...style }} sx={{ ...styles.body, ...sx }}>
+                {children}
+            </Box>
+            <RndInfoBox rndProps={rndProps} visible={isChange} />
+        </Rnd>
+    );
+};

@@ -16,13 +16,18 @@ import {
     Select,
     TextField,
 } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { Dayjs } from "dayjs";
 import * as React from "react";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
+import { useCurrentDashboard } from "../hooks";
 import { copyObject } from "../tools";
 import { Fieldset } from "../widgets";
 
-export type FieldType = "string" | "list" | "boolean" | "select" | "checkboxList" | "multiLineString";
+export type FieldType = "string" | "list" | "boolean" | "select" | "checkboxList" | "multiLineString" | "date";
 
 export interface FormFieldDescriptor {
     name: string;
@@ -168,6 +173,25 @@ const getStringFieldFactory =
         );
 
 const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
+    date: (desc: FormSelectFieldDescriptor, value: Dayjs, onChange: (val: Dayjs) => void) => {
+        const currentDashboard = useCurrentDashboard();
+        return (
+            <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale={currentDashboard.locale ?? "en"}
+                key={desc.name}
+            >
+                <DatePicker
+                    label={desc.label}
+                    value={value}
+                    onChange={newValue => onChange(newValue)}
+                    renderInput={params => (
+                        <TextField {...params} fullWidth size={desc.small ? "small" : "medium"} margin="dense" />
+                    )}
+                />
+            </LocalizationProvider>
+        );
+    },
     checkboxList: (
         desc: FormCheckboxListFieldDescriptor,
         value: CheckboxListValue,

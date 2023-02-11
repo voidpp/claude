@@ -2,6 +2,7 @@ import { BaseWidgetSettings } from "../types";
 import { Buck, BuckSettings } from "./widgets/buck/buck";
 import { Calendar, CalendarSettings } from "./widgets/calendar";
 import { Clock, ClockSettings } from "./widgets/clock";
+import { DayCounter, DayCounterSettings } from "./widgets/day-counter";
 import { Gallery, GallerySettings } from "./widgets/gallery";
 import { InfluxTable, InfluxTableSettings } from "./widgets/influx-table";
 import { ServerStatus } from "./widgets/server-status";
@@ -37,6 +38,12 @@ export const widgetRegistry: WidgetRegistry = {
         title: "Clock",
         settingsType: ClockSettings,
         defaultSize: { w: 500, h: 200 },
+    },
+    dayCounter: {
+        factory: DayCounter,
+        title: "Day counter",
+        settingsType: DayCounterSettings,
+        defaultSize: { w: 200, h: 200 },
     },
     gallery: {
         factory: Gallery,
