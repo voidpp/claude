@@ -5,6 +5,7 @@ description = ""
 authors = ["Lajos Santa <santa.lajos@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+include = ["claude/static/bundle.js"]
 
 [tool.poetry.dependencies]
 python = "^3.10"

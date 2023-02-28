@@ -21,4 +21,5 @@ htmlcov
 config.yaml
 settings.json
 claude/static/bundle.js
+claude/static/bundle.js.LICENSE.txt
 graphql-types-and-hooks.tsx

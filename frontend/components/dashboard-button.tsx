@@ -31,13 +31,7 @@ export const DashbardButton = () => {
     return (
         <div>
             <DashboardFormDialog isOpen={isDialogOpen} close={closeDialog} />
-            <Button
-                variant="contained"
-                sx={{ marginLeft: 1 }}
-                onClick={openMenu}
-                ref={buttonRef}
-                disabled={settings?.dashboards.length == 0}
-            >
+            <Button variant="contained" sx={{ marginLeft: 1 }} onClick={openMenu} ref={buttonRef}>
                 dashboards
                 <ArrowDropDownIcon style={{ marginRight: -10 }} />
             </Button>
@@ -48,7 +42,7 @@ export const DashbardButton = () => {
                     </ListItemIcon>
                     <ListItemText>Create</ListItemText>
                 </MenuItem>
-                <Divider />
+                {settings?.dashboards.length > 0 && <Divider />}
                 {sortedDashboards.map(dasboard => (
                     <MenuItem
                         key={dasboard.id}

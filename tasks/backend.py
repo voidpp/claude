@@ -43,12 +43,9 @@ def format(c):
 
 @task
 def generate_graphql_schema(c):
-    from claude.api.schema import create_api_schema
-    from claude.components.folders import Folders
+    from .tools import generate_graphql_schema
 
-    path = Folders.frontend / "schema.graphql"
-    path.write_text(str(create_api_schema()))
-    print(f"{path.relative_to(Folders.project_root)} has been written!")
+    generate_graphql_schema()
 
 
 redis = Collection("redis")

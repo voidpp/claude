@@ -1,9 +1,9 @@
 from invoke import Collection
 
-from tasks import backend, frontend
+from tasks import backend, frontend, top
 from tasks.backend import redis
 
-ns = Collection()
+ns = Collection.from_module(top)
 
 backend_collection = Collection.from_module(backend)
 backend_collection.add_collection(redis)
