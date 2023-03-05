@@ -29,13 +29,13 @@ export const Link = (props: LinkProps) => (
     </MUILink>
 );
 
-export const FlagIcon = ({ name }: { name: string }) => {
+export const FlagIcon = ({ name, size = 16 }: { name: string; size?: number }) => {
     let src = "";
 
     if (name.length > 2) src = `/static/pics/${name}.png`;
     else src = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/flags/4x3/${name}.svg`;
 
-    return <img style={{ width: 16 }} src={src} />;
+    return <img style={{ width: size }} src={src} />;
 };
 
 export const Fieldset = ({ label, children, sx }: { label: string; children: React.ReactNode; sx?: SxProps }) => (

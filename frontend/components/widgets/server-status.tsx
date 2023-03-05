@@ -4,7 +4,7 @@ import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
 import { FlagIcon, IfComp } from "@/widgets";
 import { Box, SxProps } from "@mui/material";
 import * as React from "react";
-import { RndFrame, useRnd } from "../rnd";
+import { RndFrame, RndProps, useRnd } from "../rnd";
 import { WidgetMenu } from "../widget-menu";
 import {
     FormCheckboxListFieldDescriptor,
@@ -13,33 +13,37 @@ import {
     FormSelectFieldDescriptor,
 } from "../widget-settings-dialog";
 
+import { useCurrentDashboard } from "@/hooks";
 import { entries } from "@/tools";
+import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import HelpIcon from "@mui/icons-material/Help";
-import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import dayjs from "dayjs";
 
 export type Column = "name" | "ping" | "load" | "memory" | "uptime";
 
 type ServerStatusProps = CommonWidgetProps<ServerStatusSettings>;
 
-const colRatioRef: { [key in Column]: (props: ServerStatusProps) => number } = {
-    name: p => 0.85 - (Math.max(...Object.values(p.config.settings.servers).map(s => s.name.length)) - 7) / 70,
-    ping: p => 0.95,
-    load: p => 0.75,
-    memory: p => 0.95,
-    uptime: p => 0.9,
+const colRatioRef: { [key in Column]: (settings: ServerStatusSettings) => number } = {
+    name: settings => 0.85 - (Math.max(...Object.values(settings.servers).map(s => s.name.length)) - 7) / 70,
+    ping: settings => 0.95,
+    load: settings => 0.75,
+    memory: settings => 0.95,
+    uptime: settings => 0.9,
 };
 
-const getBodyStyle = (props: ServerStatusProps): SxProps => ({
-    fontSize: () => {
-        let baseSize = props.config.width * 0.062;
-        for (let [col, enabled] of entries(props.config.settings.columns)) {
-            if (enabled) baseSize *= colRatioRef[col](props);
-        }
+const calcFontSize = (settings: ServerStatusSettings, width: number) => {
+    let baseSize = width * 0.062;
+    for (let [col, enabled] of entries(settings.columns)) {
+        if (enabled) baseSize *= colRatioRef[col](settings);
+    }
 
-        return baseSize > 100 ? 16 : baseSize < 5 ? 10 : baseSize;
-    },
+    return baseSize > 100 ? 16 : baseSize < 5 ? 10 : baseSize;
+};
+
+const getBodyStyle = (settings: ServerStatusSettings, width: number): SxProps => ({
+    fontSize: () => calcFontSize(settings, width),
     padding: "0.5em",
     "& table": {
         borderSpacing: 0,
@@ -73,42 +77,52 @@ export class ServerStatusSettings extends BaseWidgetSettings {
     pollInterval: number = 60;
 }
 
-const Status = ({ ip, data }: { ip: string; data: ServerStatusQueryResult["data"]["serverStatus"] }) => {
+const StatusIcon = ({ data }: { data: ServerStatusQueryResult["data"]["serverStatus"] }) => {
     let Icon = HelpIcon;
     let color = "unset";
 
     if (data) {
         if (data.ping == null) {
-            Icon = RemoveCircleIcon;
+            Icon = CancelIcon;
             color = "#d40303";
         } else {
-            Icon = data.status.load ? CheckCircleIcon : ErrorIcon;
-            color = data.status.load ? "#37a702" : "#d46703";
+            Icon = data.status?.load ? CheckCircleIcon : ErrorIcon;
+            color = data.status?.load ? "#37a702" : "#d46703";
         }
     }
 
-    return <Icon sx={{ color }} fontSize="small" />;
+    return <Icon sx={{ color, marginBottom: "-3px" }} fontSize="inherit" />;
 };
 
 const loadColStyle: React.CSSProperties = {
     textAlign: "right",
 };
 
-const StatusRow = ({ config, settings }: { config: ServerConfig; settings: ServerStatusSettings }) => {
+const StatusRow = ({
+    config,
+    settings,
+    widgetSize,
+}: {
+    config: ServerConfig;
+    settings: ServerStatusSettings;
+    widgetSize: RndProps["size"];
+}) => {
     const { data } = useServerStatusQuery({
         variables: { ip: config.ip, statusServerPort: config.systemStatusServerPort },
     });
+    const { locale } = useCurrentDashboard();
 
     const info = data?.serverStatus;
+    const flagSize = calcFontSize(settings, widgetSize.width);
 
     const baseCols = (
         <IfComp cond={settings.columns.name}>
             <td>
-                <Status ip={config.ip} data={info} />
+                <StatusIcon data={info} />
             </td>
             <td>{config.name}</td>
-            <td style={{ maxWidth: 30 }}>
-                <FlagIcon name={config.location} />
+            <td style={{ maxWidth: flagSize * 1.5 }}>
+                <FlagIcon name={config.location} size={flagSize} />
             </td>
         </IfComp>
     );
@@ -121,23 +135,30 @@ const StatusRow = ({ config, settings }: { config: ServerConfig; settings: Serve
         );
 
     return (
-        <tr key={config.name}>
+        <tr>
             {baseCols}
             <IfComp cond={settings.columns.ping}>
                 <td style={{ textAlign: "right" }}>{info.ping != null ? `${info.ping} ms` : null}</td>
             </IfComp>
             <IfComp cond={settings.columns.load}>
-                <td style={loadColStyle}>{info.status.load ? info.status.load[0].toFixed(2) : null}</td>
-                <td style={loadColStyle}>{info.status.load ? info.status.load[1].toFixed(2) : null}</td>
-                <td style={loadColStyle}>{info.status.load ? info.status.load[2].toFixed(2) : null}</td>
+                <td style={loadColStyle}>{info.status ? info.status.load[0].toFixed(2) : null}</td>
+                <td style={loadColStyle}>{info.status ? info.status.load[1].toFixed(2) : null}</td>
+                <td style={loadColStyle}>{info.status ? info.status.load[2].toFixed(2) : null}</td>
             </IfComp>
             <IfComp cond={settings.columns.memory}>
                 <td style={{ textAlign: "right" }}>
-                    {info.status.memory ? `${info.status.memory.percent.toFixed(1)}%` : null}
+                    {info.status ? `${info.status.memory.percent.toFixed(1)}%` : null}
                 </td>
             </IfComp>
             <IfComp cond={settings.columns.uptime}>
-                <td>{info.status.uptime}</td>
+                <td>
+                    {info.status?.uptime
+                        ? dayjs
+                              .duration(info.status?.uptime * 1000)
+                              .locale(locale)
+                              .humanize()
+                        : ""}
+                </td>
             </IfComp>
         </tr>
     );
@@ -152,7 +173,7 @@ export const ServerStatus = (props: ServerStatusProps) => {
 
     return (
         <RndFrame rndProps={rndProps}>
-            <Box sx={getBodyStyle(props)}>
+            <Box sx={getBodyStyle(settings, rndProps.size.width)}>
                 <table>
                     <thead>
                         <tr>
@@ -177,7 +198,12 @@ export const ServerStatus = (props: ServerStatusProps) => {
                         {Object.values(settings.servers)
                             .sort((s1, s2) => s1.rank - s2.rank)
                             .map(server => (
-                                <StatusRow config={server} settings={settings} />
+                                <StatusRow
+                                    config={server}
+                                    settings={settings}
+                                    key={server.name}
+                                    widgetSize={rndProps.size}
+                                />
                             ))}
                     </tbody>
                 </table>
