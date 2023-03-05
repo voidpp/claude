@@ -37,19 +37,19 @@ const CurrentDashboardItem = () => {
 };
 
 export const ControlBar = () => {
-    const [isOpen, open, close] = useBoolState();
+    const [isOpen, open, close, toggle] = useBoolState();
 
     const openDrawer = isOpen;
 
     return (
         <>
-            <div style={{ position: "absolute" }}>
-                <IconButton sx={{ margin: 1 }} onClick={open}>
+            <Box sx={{ position: "absolute", zIndex: theme => theme.zIndex.drawer + 1 }}>
+                <IconButton sx={{ margin: 1 }} onClick={toggle}>
                     <MenuIcon />
                 </IconButton>
-            </div>
+            </Box>
             <Drawer anchor="top" open={openDrawer} onClose={close}>
-                <Box style={{ display: "flex", alignItems: "center", padding: 10 }}>
+                <Box style={{ display: "flex", alignItems: "center", padding: 10, marginLeft: 45 }}>
                     <span style={{ paddingRight: 10 }}>Zsomapell Klod!</span>
                     <DashbardButton />
                     <Divider orientation="vertical" flexItem sx={{ marginLeft: 2, marginRight: 2 }} />
