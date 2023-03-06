@@ -1,5 +1,5 @@
 import { SunriseSunset as SunriseSunsetType, useSunriseSunsetQuery } from "@/graphql-types-and-hooks";
-import { useInterval } from "@/hooks";
+import { useCurrentDashboard, useInterval } from "@/hooks";
 import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
 import { Box } from "@mui/system";
 import dayjs from "dayjs";
@@ -10,10 +10,14 @@ import { FormCheckboxListFieldDescriptor } from "../widget-settings-dialog";
 
 type SunriseSunsetKeys = keyof Omit<SunriseSunsetType, "__typename">;
 
+type FormatterContex = {
+    locale: string;
+};
+
 type ValueDescriptor = {
     label: string;
     showDefault: boolean;
-    formatter: (value: any) => string;
+    formatter: (value: any, context: FormatterContex) => string;
 };
 
 const timeFormmatter = (value: string) => dayjs(value).format("HH:mm");
@@ -37,7 +41,7 @@ const valuesDescriptors: Record<SunriseSunsetKeys, ValueDescriptor> = {
     dayLength: {
         label: "Day length",
         showDefault: false,
-        formatter: timeFormmatter,
+        formatter: (value: number, { locale }) => dayjs.duration(value, "s").locale(locale).humanize(),
     },
     civilTwilightBegin: {
         label: "Civil twilight begin",
@@ -88,6 +92,7 @@ export type SunriseSunsetProps = CommonWidgetProps<SunriseSunsetSettings>;
 export const SunriseSunset = (props: SunriseSunsetProps) => {
     const { config } = props;
     const rndProps = useRnd(config);
+    const { locale } = useCurrentDashboard();
 
     const { data, refetch } = useSunriseSunsetQuery({ variables: { city: config.settings.city } });
 
@@ -106,7 +111,11 @@ export const SunriseSunset = (props: SunriseSunsetProps) => {
                             return (
                                 <tr key={propName}>
                                     <td>{valuesDescriptors[propName].label}:</td>
-                                    <td>{valuesDescriptors[propName].formatter(data?.sunriseSunset[propName])}</td>
+                                    <td>
+                                        {valuesDescriptors[propName].formatter(data?.sunriseSunset[propName], {
+                                            locale,
+                                        })}
+                                    </td>
                                 </tr>
                             );
                         })}
