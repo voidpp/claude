@@ -112,7 +112,7 @@ export const useRnd = (config: WidgetConfig): RndProps => {
         onResizeStop,
         onDrag,
         onResize,
-        style: { userSelect: "none" },
+        style: { userSelect: "none", zIndex: isChange ? 1000 : "unset" },
         enableUserSelectHack: false,
         isChange,
         onDragStart: () => setIsChange(true),
