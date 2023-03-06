@@ -37,3 +37,7 @@ export type Entries<T> = {
 export function entries<T>(data: T): Entries<T> {
     return Object.entries(data) as Entries<T>;
 }
+
+export const sleep = (time: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, time));
+}

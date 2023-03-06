@@ -3,8 +3,9 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CheckIcon from "@mui/icons-material/Check";
 import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppConfig } from "../config";
+import { DashboardInput } from "../graphql-types-and-hooks";
 import { useBoolState } from "../hooks";
 import { useAppSettings } from "../settings";
 import { DashboardFormDialog } from "./dashboard-form-dialog";
@@ -15,6 +16,7 @@ export const DashbardButton = () => {
     const buttonRef = useRef(null);
     const config = useAppConfig();
     const { settings } = useAppSettings();
+    const [lastCreatedDashboardId, setLastCreatedDashboardId] = useState<string | null>(null);
 
     const onSelectDashboard = (id: string) => {
         config.selectedDashboard.setValue(id);
@@ -26,11 +28,26 @@ export const DashbardButton = () => {
         closeMenu();
     };
 
+    useEffect(() => {
+        if (!lastCreatedDashboardId) return;
+
+        console.log(settings?.dashboards, lastCreatedDashboardId);
+
+        if (settings?.dashboards.filter(d => d.id === lastCreatedDashboardId).length) {
+            config.selectedDashboard.setValue(lastCreatedDashboardId);
+            setLastCreatedDashboardId(null);
+        }
+    }, [settings?.dashboards.length, lastCreatedDashboardId]);
+
     const sortedDashboards = [...(settings?.dashboards ?? [])].sort((a, b) => a.name.localeCompare(b.name));
+
+    const onDashboardCreated = (data: DashboardInput) => {
+        setLastCreatedDashboardId(data.id);
+    };
 
     return (
         <div>
-            <DashboardFormDialog isOpen={isDialogOpen} close={closeDialog} />
+            <DashboardFormDialog isOpen={isDialogOpen} close={closeDialog} onSubmit={onDashboardCreated} />
             <Button variant="contained" sx={{ marginLeft: 1 }} onClick={openMenu} ref={buttonRef}>
                 dashboards
                 <ArrowDropDownIcon style={{ marginRight: -10 }} />

@@ -88,9 +88,9 @@ class SettingsManager:
         await self._redis.publish(SETTINGS_PUBSUB_CHANNEL_NAME, "42")
 
     async def save_setting(self, key: SettingsKey, data: Any):
-        await self.publish_change()
         await key.value.save_data(self._redis, data)
+        await self.publish_change()
 
     async def delete_setting(self, key: SettingsKey, data: Any = None):
-        await self.publish_change()
         await key.value.delete_data(self._redis, data)
+        await self.publish_change()

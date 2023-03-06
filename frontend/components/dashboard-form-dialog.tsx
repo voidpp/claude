@@ -23,6 +23,7 @@ type Props = {
     isOpen: boolean;
     close: () => void;
     initialData?: DashboardInput;
+    onSubmit?: (data: DashboardInput) => void;
 };
 
 const createDefaultValues = (): DashboardInput => ({
@@ -34,7 +35,7 @@ const createDefaultValues = (): DashboardInput => ({
     locale: Locales.English,
 });
 
-export const DashboardFormDialog = ({ isOpen, close, initialData }: Props) => {
+export const DashboardFormDialog = ({ isOpen, close, initialData, onSubmit: onSubmitProp }: Props) => {
     const { saveDashboard } = useAppSettings();
     const [data, setData] = useState<DashboardInput>(initialData ?? createDefaultValues);
     const { showNotification } = useNotifications();
@@ -53,6 +54,8 @@ export const DashboardFormDialog = ({ isOpen, close, initialData }: Props) => {
         await saveDashboard(data);
         close();
         showNotification("Dashboard saved");
+        onSubmitProp?.(data);
+        setData(createDefaultValues());
     };
 
     return (

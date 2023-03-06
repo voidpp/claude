@@ -1,14 +1,18 @@
 import { useAppConfig } from "@/config";
+import { useNotifications } from "@/notifications";
 import { useAppSettings } from "@/settings";
 import { IfComp, Link } from "@/widgets";
 import CheckIcon from "@mui/icons-material/Check";
-import { Box, Table, TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import * as React from "react";
 import { PageTitle } from "../widgets";
 
 export const DashboardsPage = () => {
-    const { settings } = useAppSettings();
+    const { settings, removeDashboard } = useAppSettings();
     const { selectedDashboard } = useAppConfig();
+    const { showNotification } = useNotifications();
+
     return (
         <Box>
             <PageTitle title="Dashboards" />
@@ -20,6 +24,7 @@ export const DashboardsPage = () => {
                         <TableCell>Locale</TableCell>
                         <TableCell>Step size</TableCell>
                         <TableCell>Widgets</TableCell>
+                        <TableCell />
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -41,6 +46,18 @@ export const DashboardsPage = () => {
                                 <TableCell>{dashboard.stepSize}</TableCell>
                                 <TableCell>
                                     {settings?.widgets.filter(w => w.dashboardId === dashboard.id).length}
+                                </TableCell>
+                                <TableCell>
+                                    <IconButton
+                                        onClick={async () => {
+                                            await removeDashboard(dashboard.id);
+                                            showNotification("Dashboard has been removed");
+                                        }}
+                                    >
+                                        <Tooltip title="Delete">
+                                            <DeleteIcon />
+                                        </Tooltip>
+                                    </IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}
