@@ -1,6 +1,7 @@
+import { useInterval } from "@/hooks";
 import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
 import { IfComp } from "@/widgets";
-import { ApolloClient, useMutation, useSubscription } from "@apollo/client";
+import { ApolloClient, gql, useMutation, useSubscription } from "@apollo/client";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import PlayCircleOutline from "@mui/icons-material/PlayCircleOutline";
@@ -143,6 +144,72 @@ const ActiveAlarms = ({
     );
 };
 
+const pingQuery = gql`
+    {
+        ping
+    }
+`;
+
+enum ConnectionStatus {
+    loading = "loading",
+    connected = "connected",
+    error = "error",
+}
+
+type ConnectionStatusDesc = {
+    color: React.CSSProperties["color"];
+    text: string;
+};
+
+const connectionStatuses: Record<ConnectionStatus, ConnectionStatusDesc> = {
+    [ConnectionStatus.loading]: {
+        color: "grey",
+        text: "Loading...",
+    },
+    [ConnectionStatus.connected]: {
+        color: "green",
+        text: "Connected",
+    },
+    [ConnectionStatus.error]: {
+        color: "red",
+        text: "Error",
+    },
+};
+
+const ConnectionIndicator = ({ client, sx }: { client: ApolloClient<any>; sx?: SxProps }) => {
+    const size = 6;
+    const [status, setStatus] = React.useState<ConnectionStatus>(ConnectionStatus.loading);
+
+    useInterval(() => {
+        client
+            .query({
+                query: pingQuery,
+            })
+            .then(response => {
+                setStatus(ConnectionStatus.connected);
+            })
+            .catch(error => {
+                setStatus(ConnectionStatus.error);
+            });
+    }, 1000);
+
+    return (
+        <Box sx={{ display: "flex", margin: 1, alignItems: "center", ...sx }}>
+            <Box
+                sx={{
+                    width: size,
+                    height: size,
+                    borderRadius: "50%",
+                    backgroundColor: connectionStatuses[status].color,
+                    mx: 1,
+                    boxShadow: `0 0 6px 4px ${connectionStatuses[status].color}`,
+                }}
+            />
+            {connectionStatuses[status].text}
+        </Box>
+    );
+};
+
 export const Buck = ({ config }: BuckProps) => {
     const client = useBuckApolloClient(config.settings.host, config.settings.port);
     const rndProps = useRnd(config);
@@ -162,6 +229,9 @@ export const Buck = ({ config }: BuckProps) => {
     return (
         <RndFrame rndProps={rndProps} sx={{ ...(activeAlarms.length ? { backdropFilter: "unset" } : {}) }}>
             <Box sx={{ height: "100%" }}>
+                <Box sx={{ position: "absolute", top: 0 }}>
+                    <ConnectionIndicator client={client} sx={{ m: 1 }} />
+                </Box>
                 <IfComp cond={!data?.runningTimers.length}>
                     <Box
                         sx={{
@@ -176,9 +246,11 @@ export const Buck = ({ config }: BuckProps) => {
                         There are no running Buck timers.
                     </Box>
                 </IfComp>
-                {data?.runningTimers.map(timer => (
-                    <RunnningTimer timer={timer} key={timer.id} client={client} />
-                ))}
+                <Box sx={{ mt: 3 }}>
+                    {data?.runningTimers.map(timer => (
+                        <RunnningTimer timer={timer} key={timer.id} client={client} />
+                    ))}
+                </Box>
             </Box>
             <ActiveAlarms timers={activeAlarms} client={client} />
             <WidgetMenu
