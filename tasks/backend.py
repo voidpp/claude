@@ -1,4 +1,8 @@
+import os
+
 from invoke import task
+
+from claude.env import env_key
 
 from .tools import Collection
 
@@ -7,7 +11,9 @@ from .tools import Collection
 def start(c, port=9042, reload=True, workers=None, debug=True):
     from pathlib import Path
 
-    from claude.components.types import Environment
+    from claude.env import environment
+
+    env = environment()
 
     cmd_parts = [
         "uvicorn",
@@ -19,14 +25,14 @@ def start(c, port=9042, reload=True, workers=None, debug=True):
 
     if reload:
         cmd_parts.append("--reload")
-        if config_file := Environment.CONFIG_FILE.get():
+        if config_file := env.config_file:
             rel_path = Path(config_file).relative_to(Path(__file__).parent.parent)
             cmd_parts += ["--reload-include", str(rel_path)]
     elif workers:
         cmd_parts.append(f"--workers {workers}")
 
     if debug:
-        Environment.DEV_MODE.set("1")
+        os.environ[env_key("dev_mode")] = "1"
 
     c.run(" ".join(cmd_parts))
 

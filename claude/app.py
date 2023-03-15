@@ -18,8 +18,9 @@ from claude.components.logging import init_logger
 from claude.components.plugins import PluginManager
 from claude.components.request_context import RequestContext
 from claude.components.settings.manager import SettingsManager
-from claude.components.types import Environment, RequestScopeKeys
+from claude.components.types import RequestScopeKeys
 from claude.endpoints import index
+from claude.env import environment
 
 logger = logging.getLogger(__name__)
 
@@ -35,14 +36,16 @@ class LoggedGraphQLApp(GraphQLApp):
 
 
 def get_app(config: Config = None):
-    debug = Environment.DEV_MODE.get()
+    env = environment()
+
+    debug = env.dev_mode
 
     if config is None:
         config = load_config()
 
     init_logger(debug)
 
-    logger.info("Environment variables: %s", {key.value: key.get() for key in Environment})
+    logger.info("Environment variables: %s", env.dict())
     logger.info("Config data: %s", config.dict())
 
     redis_client = aioredis.from_url(config.redis)

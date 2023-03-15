@@ -2,9 +2,9 @@ import os
 from pathlib import Path
 
 import yaml
-from pydantic import BaseModel, FilePath
+from pydantic import BaseModel
 
-from claude.components.types import Environment
+from claude.env import env_key, environment
 
 
 class Config(BaseModel):
@@ -13,15 +13,16 @@ class Config(BaseModel):
 
 
 def load_config() -> Config:
-    filename = Environment.CONFIG_FILE.get()
+    env = environment()
+    filename = env.config_file
 
     if filename is None:
-        raise Exception(f"Set {Environment.CONFIG_FILE} for config file")
+        raise Exception(f"Set {env_key('config_file')} for config file")
 
     file = Path(filename)
 
     if not file.is_file:
-        raise Exception(f"Config file {file} from env:{Environment.CONFIG_FILE} is not exists or not a file")
+        raise Exception(f"Config file {file} from env:{env_key('config_file')} is not exists or not a file")
 
     data = yaml.safe_load(file.read_text())
 
