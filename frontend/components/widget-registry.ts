@@ -6,6 +6,7 @@ import { DayCounter, DayCounterSettings } from "./widgets/day-counter";
 import { Gallery, GallerySettings } from "./widgets/gallery";
 import { InfluxTable, InfluxTableSettings } from "./widgets/influx-table";
 import { ServerStatus, ServerStatusSettings } from "./widgets/server-status";
+import { StorageStatus, StorageStatusSettings } from "./widgets/storage-status";
 import { SunriseSunset, SunriseSunsetSettings } from "./widgets/sunrise-sunset";
 import { CurrentWeather, CurrentWeatherSettings } from "./widgets/weather/current";
 import { DaysWeather, DaysWeatherSettings } from "./widgets/weather/days";
@@ -86,5 +87,11 @@ export const widgetRegistry: WidgetRegistry = {
         title: "Sunrise-sunset",
         settingsType: SunriseSunsetSettings,
         defaultSize: {w: 200, h: 100},
+    },
+    storageStatus: {
+        factory: StorageStatus,
+        title: "Storage status",
+        settingsType: StorageStatusSettings,
+        defaultSize: {w: 400, h: 200},
     },
 };
