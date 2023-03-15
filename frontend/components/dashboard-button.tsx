@@ -1,4 +1,4 @@
-import AddIcon from "@mui/icons-material/Add";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CheckIcon from "@mui/icons-material/Check";
 import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
@@ -55,7 +55,7 @@ export const DashbardButton = () => {
             <Menu anchorEl={buttonRef.current} open={isMenuOpen} onClose={closeMenu}>
                 <MenuItem onClick={onClickOpenDialog}>
                     <ListItemIcon>
-                        <AddIcon />
+                        <AddBoxIcon />
                     </ListItemIcon>
                     <ListItemText>Create</ListItemText>
                 </MenuItem>

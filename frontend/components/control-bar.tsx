@@ -1,6 +1,7 @@
 import MenuIcon from "@mui/icons-material/Menu";
+import ReplayCircleFilledIcon from "@mui/icons-material/ReplayCircleFilled";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Box, Divider, Drawer, IconButton, Typography } from "@mui/material";
+import { Box, Button, Divider, Drawer, IconButton, Typography } from "@mui/material";
 import * as React from "react";
 import { useAppConfig } from "../config";
 import { useBoolState, useCurrentDashboard } from "../hooks";
@@ -54,6 +55,11 @@ export const ControlBar = () => {
                     <DashbardButton />
                     <Divider orientation="vertical" flexItem sx={{ marginLeft: 2, marginRight: 2 }} />
                     <CurrentDashboardItem />
+                    <Divider orientation="vertical" flexItem sx={{ marginLeft: 2, marginRight: 2 }} />
+                    <Button onClick={() => window.location.reload()}>
+                        <ReplayCircleFilledIcon sx={{ mr: 1 }} />
+                        reload
+                    </Button>
                     <Box sx={{ flex: 1, textAlign: "right" }}>
                         <Link to="/admin">Admin</Link>
                     </Box>
