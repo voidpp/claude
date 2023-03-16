@@ -31,3 +31,13 @@ export enum Locales {
     Hungarian = "hu",
     English = "en",
 }
+
+export type CurrencyDesc = {
+    symbol: string;
+    name: string;
+    symbol_native: string;
+    decimal_digits: number;
+    rounding: number;
+    code: string;
+    name_plural: string;
+}

@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 from claude.components.settings.types import (
     Dashboard,
+    FreeCurrencyAPIAccount,
     Plugin,
     Settings,
     SpecialDay,
@@ -72,6 +73,9 @@ class SettingsKeys(Enum):
     widgets = MultiSettingsKey("widget", Widget, lambda item: item.id)
     plugins = MultiSettingsKey("plugin", Plugin, lambda item: item.id)
     special_days = MultiSettingsKey("special_day", SpecialDay, lambda item: get_special_day_id(item))
+    free_currency_api_accounts = MultiSettingsKey(
+        "free_currency_api_account", FreeCurrencyAPIAccount, lambda item: item.id
+    )
 
 
 class SettingsManager:

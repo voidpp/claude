@@ -95,6 +95,10 @@ mutation RemovePlugin($id: UUID!) {
     removePlugin(id: $id)
 }
 
+mutation RemoveFreeCurrencyApiAccount($id: UUID!) {
+    removeFreeCurrencyApiAccount(id: $id)
+}
+
 mutation SaveDashboard($data: DashboardInput!) {
     saveDashboard(dashboard: $data)
 }
@@ -107,6 +111,10 @@ mutation SavePlugin($id: UUID!, $file: String!, $name: String!, $type: PluginTyp
     savePlugin(id: $id, file: $file, name: $name, type: $type, className: $className) {
         error
     }
+}
+
+mutation SaveFreeCurrencyApiAccount($data: FreeCurrencyAPIAccountInput!) {
+    saveFreeCurrencyApiAccount(freeCurrencyApiAccount: $data)
 }
 
 subscription LiveSettings {
@@ -133,6 +141,11 @@ subscription LiveSettings {
             id
             name
             type
+        }
+        freeCurrencyApiAccounts {
+            id
+            name
+            apiKey
         }
     }
 }

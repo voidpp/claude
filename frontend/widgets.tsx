@@ -38,7 +38,15 @@ export const FlagIcon = ({ name, size = 16 }: { name: string; size?: number }) =
     return <img style={{ width: size }} src={src} />;
 };
 
-export const Fieldset = ({ label, children, sx }: { label: string; children: React.ReactNode; sx?: SxProps }) => (
+export const Fieldset = ({
+    label,
+    children,
+    sx,
+}: {
+    label: React.ReactNode;
+    children: React.ReactNode;
+    sx?: SxProps;
+}) => (
     <Box
         component="fieldset"
         sx={{ borderRadius: 1, borderWidth: 1, borderColor: "rgba(255, 255, 255, 0.23)", margin: 0, ...sx }}

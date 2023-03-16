@@ -1,3 +1,4 @@
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
     Button,
@@ -15,6 +16,7 @@ import {
     MenuItem,
     Select,
     TextField,
+    Tooltip,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -49,6 +51,7 @@ export interface FormListFieldDescriptor extends FormFieldDescriptor {
 
 export interface FormSelectFieldDescriptor extends FormFieldDescriptor {
     options: Array<{ value: string; label: string }>;
+    multiple?: boolean;
 }
 
 export interface FormCheckboxListFieldDescriptor extends FormSelectFieldDescriptor {}
@@ -64,10 +67,12 @@ export type WidgetSettingsDialogProps = {
     maxWidth?: DialogProps["maxWidth"];
 };
 
-type ListData = {
+export type ListDataBase = {
     id: string;
     rank: number;
-} & Record<string, any>;
+};
+
+type ListData = ListDataBase & Record<string, any>;
 
 type ListDataMap = Record<string, ListData>;
 
@@ -129,11 +134,19 @@ function ListField(props: ListFieldProps) {
         );
     };
 
+    const label = (
+        <>
+            {desc.label}
+            <Tooltip title="Add new item">
+                <IconButton size="small" onClick={addRow} sx={{ ml: 0.5 }}>
+                    <AddBoxIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
+        </>
+    );
+
     return (
-        <Fieldset label={desc.label} sx={{ mb: 2 }}>
-            <Button variant="contained" size="small" onClick={addRow}>
-                Add
-            </Button>
+        <Fieldset label={label} sx={{ mb: 2 }}>
             <table>
                 <tbody>
                     {Object.values(data)
@@ -225,6 +238,7 @@ const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
                     onChange={v => onChange(v.target.value as string)}
                     label={desc.label}
                     size={desc.small ? "small" : "medium"}
+                    multiple={desc.multiple}
                 >
                     {desc.options.map(op => (
                         <MenuItem key={op.value} value={op.value}>

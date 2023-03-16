@@ -2,6 +2,7 @@ import { BaseWidgetSettings } from "../types";
 import { Buck, BuckSettings } from "./widgets/buck/buck";
 import { Calendar, CalendarSettings } from "./widgets/calendar";
 import { Clock, ClockSettings } from "./widgets/clock";
+import { Currencies, CurrenciesSettings } from "./widgets/currencies";
 import { DayCounter, DayCounterSettings } from "./widgets/day-counter";
 import { Gallery, GallerySettings } from "./widgets/gallery";
 import { InfluxTable, InfluxTableSettings } from "./widgets/influx-table";
@@ -63,6 +64,12 @@ export const widgetRegistry: WidgetRegistry = {
         title: "Weather / current",
         settingsType: CurrentWeatherSettings,
         defaultSize: { w: 220, h: 280 },
+    },
+    currencies: {
+        factory: Currencies,
+        title: "Currencies",
+        settingsType: CurrenciesSettings,
+        defaultSize: { w: 300, h: 200 },
     },
     daysWeather: {
         factory: DaysWeather,

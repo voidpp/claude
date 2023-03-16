@@ -1,5 +1,6 @@
 from datetime import date
 from enum import Enum
+from turtle import st
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -55,8 +56,15 @@ def get_special_day_id(data: SpecialDayId):
     return data.date.isoformat() + data.locale
 
 
+class FreeCurrencyAPIAccount(BaseModel):
+    id: UUID
+    name: str
+    api_key: str
+
+
 class Settings(BaseModel):
     dashboards: list[Dashboard] = None
     widgets: list[Widget] = None
     plugins: list[Plugin] = None
     special_days: list[SpecialDay] = None
+    free_currency_api_accounts: list[FreeCurrencyAPIAccount] = None

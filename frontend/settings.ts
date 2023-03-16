@@ -1,11 +1,13 @@
 import { createContext, useContext, useState } from "react";
 import {
     DashboardInput,
+    FreeCurrencyApiAccountInput,
     LiveSettingsSubscription,
     PluginType, useLiveSettingsSubscription, useRemoveDashboardMutation,
-    useRemovePluginMutation,
-    useRemoveWidgetMutation,
+    useRemoveFreeCurrencyApiAccountMutation,
+    useRemovePluginMutation, useRemoveWidgetMutation,
     useSaveDashboardMutation,
+    useSaveFreeCurrencyApiAccountMutation,
     useSavePluginMutation,
     useSaveWidgetMutation, Widget,
     WidgetInput
@@ -17,8 +19,10 @@ const useAppSettingsData = () => {
     const [saveWidget] = useSaveWidgetMutation();
     const [removeWidget] = useRemoveWidgetMutation();
     const [savePlugin] = useSavePluginMutation();
+    const [saveFreeCurrencyApiAccount] = useSaveFreeCurrencyApiAccountMutation();
     const [removeDashboard] = useRemoveDashboardMutation();
     const [removePlugin] = useRemovePluginMutation();
+    const [removeFreeCurrencyApiAccount] = useRemoveFreeCurrencyApiAccountMutation();
     const [settings, setSettings] = useState<LiveSettingsSubscription["settings"]>(null);
 
     useLiveSettingsSubscription({onData: (options) => {
@@ -39,10 +43,18 @@ const useAppSettingsData = () => {
             const result = await removePlugin({ variables: { id } });
             return result.data.removePlugin;
         },
+        removeFreeCurrencyApiAccount: async (id: string) => {
+            const result = await removeFreeCurrencyApiAccount({ variables: { id } });
+            return result.data.removeFreeCurrencyApiAccount;
+        },        
         saveDashboard: async (data: DashboardInput) => {
             const result = await saveDashboard({ variables: { data } });
             return result.data.saveDashboard;
         },
+        saveFreeCurrencyApiAccount: async (data: FreeCurrencyApiAccountInput) => {
+            const result = await saveFreeCurrencyApiAccount({ variables: { data } });
+            return result.data.saveFreeCurrencyApiAccount;
+        },        
         saveWidget: async (data: WidgetInput) => {
             const result = await saveWidget({
                 variables: { data: { ...data, settings: JSON.stringify(data.settings) } },

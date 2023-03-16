@@ -29,6 +29,7 @@ export const Admin = () => {
                     <List>
                         <ListLink path="/admin/plugins" label="Plugins" />
                         <ListLink path="/admin/dashboards" label="Dashboards" />
+                        <ListLink path="/admin/free-currency-api-accounts" label="Free Currency API Accounts" />
                         <ListLink path="/admin/special-days" label="Special days" />
                         <ListLink path="/admin/housekeeping" label="Housekeeping" />
                     </List>
