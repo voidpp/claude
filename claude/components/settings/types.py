@@ -1,6 +1,5 @@
 from datetime import date
 from enum import Enum
-from turtle import st
 from uuid import UUID
 
 from pydantic import BaseModel

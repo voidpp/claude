@@ -35,11 +35,13 @@ export const AddWidgetButton = () => {
                 Add widget
             </Button>
             <Menu anchorEl={buttonRef.current} open={isMenuOpen} onClose={closeMenu}>
-                {Object.entries(widgetRegistry).map(([key, desc]) => (
-                    <MenuItem key={key} onClick={addWidget(key)}>
-                        {desc.title}
-                    </MenuItem>
-                ))}
+                {Object.entries(widgetRegistry)
+                    .sort(([key1, desc1], [key2, desc2]) => desc1.title.localeCompare(desc2.title))
+                    .map(([key, desc]) => (
+                        <MenuItem key={key} onClick={addWidget(key)}>
+                            {desc.title}
+                        </MenuItem>
+                    ))}
             </Menu>
         </>
     );
