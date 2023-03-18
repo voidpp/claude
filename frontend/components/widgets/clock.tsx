@@ -1,6 +1,6 @@
 import { useInterval } from "@/hooks";
 import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
-import { Box, SxProps } from "@mui/material";
+import { Box, SxProps, Theme } from "@mui/material";
 import dayjs from "dayjs";
 import * as React from "react";
 import { useState } from "react";
@@ -13,7 +13,7 @@ export class ClockSettings extends BaseWidgetSettings {
     dateFormat: string = "YYYY. MMMM D. dddd";
 }
 
-// Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) Raspbian Chromium/74.0.3729.157 Chrome/74.0.3729.157 Safari/537.36
+const isRapberry = window.navigator.userAgent.search("Raspbian") !== -1;
 
 export type ClockProps = CommonWidgetProps<ClockSettings>;
 
@@ -24,14 +24,6 @@ const bodyStyle: SxProps = {
     justifyContent: "center",
     overflow: "hidden",
 };
-
-const getClockStyle = (height: number): SxProps => ({
-    textAlign: "center",
-    lineHeight: "90%",
-    fontFamily: "Digital7",
-    marginTop: 0,
-    fontSize: height * 0.8,
-});
 
 const getDateStyle = (height: number): SxProps => ({
     textAlign: "center",
@@ -57,10 +49,20 @@ export const Clock = (props: ClockProps) => {
 
     const height = rndProps.size.height;
 
+    const clockStyle: SxProps<Theme> = {
+        textAlign: "center",
+        lineHeight: "90%",
+        fontFamily: "Digital7",
+        marginTop: 0,
+        fontSize: height * 0.8,
+    };
+
+    if (isRapberry) Object.assign(clockStyle, { lineHeight: 1.2, marginTop: `${height * -0.24}px` } as SxProps<Theme>);
+
     return (
         <RndFrame rndProps={rndProps}>
             <Box sx={bodyStyle}>
-                <Box sx={getClockStyle(height)}>{time}</Box>
+                <Box sx={clockStyle}>{time}</Box>
                 {props.config.settings.showDate && <DateDisplay height={height} format={config.settings.dateFormat} />}
             </Box>
             <WidgetMenu
