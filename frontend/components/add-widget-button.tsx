@@ -1,4 +1,4 @@
-import AddBoxIcon from "@mui/icons-material/AddBox";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Button, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
 import { useRef } from "react";
@@ -30,9 +30,9 @@ export const AddWidgetButton = () => {
 
     return (
         <>
-            <Button onClick={openMenu} ref={buttonRef}>
-                <AddBoxIcon sx={{ mr: 1 }} />
-                Add widget
+            <Button onClick={openMenu} ref={buttonRef} variant="contained">
+                widgets
+                <ArrowDropDownIcon style={{ marginRight: -10 }} />
             </Button>
             <Menu anchorEl={buttonRef.current} open={isMenuOpen} onClose={closeMenu}>
                 {Object.entries(widgetRegistry)

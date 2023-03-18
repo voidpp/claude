@@ -3,11 +3,13 @@ import ReplayCircleFilledIcon from "@mui/icons-material/ReplayCircleFilled";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Box, Button, Divider, Drawer, IconButton, Typography } from "@mui/material";
 import * as React from "react";
+import { mainSubscriptionClient } from "../client";
 import { useAppConfig } from "../config";
 import { useBoolState, useCurrentDashboard } from "../hooks";
 import { copyObject } from "../tools";
 import { Link } from "../widgets";
 import { AddWidgetButton } from "./add-widget-button";
+import { ConnectionIndicator } from "./connection-indicator";
 import { DashbardButton } from "./dashboard-button";
 import { DashboardFormDialog } from "./dashboard-form-dialog";
 
@@ -37,6 +39,8 @@ const CurrentDashboardItem = () => {
     );
 };
 
+const BarDivider = () => <Divider orientation="vertical" flexItem sx={{ marginLeft: 2, marginRight: 2 }} />;
+
 export const ControlBar = () => {
     const [isOpen, open, close, toggle] = useBoolState();
 
@@ -53,13 +57,15 @@ export const ControlBar = () => {
                 <Box style={{ display: "flex", alignItems: "center", padding: 10, marginLeft: 45 }}>
                     <span style={{ paddingRight: 10 }}>Zsomapell Klod!</span>
                     <DashbardButton />
-                    <Divider orientation="vertical" flexItem sx={{ marginLeft: 2, marginRight: 2 }} />
+                    <BarDivider />
                     <CurrentDashboardItem />
-                    <Divider orientation="vertical" flexItem sx={{ marginLeft: 2, marginRight: 2 }} />
+                    <BarDivider />
                     <Button onClick={() => window.location.reload()}>
                         <ReplayCircleFilledIcon sx={{ mr: 1 }} />
                         reload
                     </Button>
+                    <BarDivider />
+                    <ConnectionIndicator client={mainSubscriptionClient} />
                     <Box sx={{ flex: 1, textAlign: "right" }}>
                         <Link to="/admin">Admin</Link>
                     </Box>

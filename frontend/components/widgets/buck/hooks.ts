@@ -4,10 +4,15 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { useMemo } from "react";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 
+class BuckApolloClient<T> extends ApolloClient<T> {
+    public subscriptionClient: SubscriptionClient;
+}
+
 export const useBuckClient = (host: string, port: number) => {
     return useMemo(() => {
         if (!host) return;
-        const wsLink = new WebSocketLink(new SubscriptionClient(`ws://${host}:${port}/api/subscribe`));
+        const subscriptionClient = new SubscriptionClient(`ws://${host}:${port}/api/subscribe`, {reconnect: true});
+        const wsLink = new WebSocketLink(subscriptionClient);
         const httpLink = new HttpLink({
             uri: `http://${host}:${port}/api/graphql`,
         });
@@ -19,11 +24,13 @@ export const useBuckClient = (host: string, port: number) => {
             wsLink,
             httpLink
         );
-        return new ApolloClient({
+        const client = new BuckApolloClient({
             link: splitLink,
             cache: new InMemoryCache({
                 addTypename: false,
             }),
         });
+        client.subscriptionClient = subscriptionClient;
+        return client;
     }, [host, port]);
 };

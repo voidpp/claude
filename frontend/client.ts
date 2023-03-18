@@ -4,7 +4,9 @@ import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 
-const wsLink = new WebSocketLink(new SubscriptionClient(`ws://${window.location.host}/api/`));
+export const mainSubscriptionClient = new SubscriptionClient(`ws://${window.location.host}/api/`, {reconnect: true});
+
+const wsLink = new WebSocketLink(mainSubscriptionClient);
 
 const httpLink = new HttpLink({
     uri: "/api/",
