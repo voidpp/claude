@@ -1,4 +1,4 @@
-import { useInterval } from "@/hooks";
+import { useCurrentDashboard, useInterval } from "@/hooks";
 import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
 import { Box, SxProps, Theme } from "@mui/material";
 import dayjs from "dayjs";
@@ -34,9 +34,10 @@ const getDateStyle = (height: number): SxProps => ({
 
 const getTimeString = (timeFormat: string) => dayjs().format(timeFormat);
 
-const DateDisplay = ({ height, format }: { height: number; format: string }) => (
-    <Box sx={getDateStyle(height)}>{dayjs().format(format)}</Box>
-);
+const DateDisplay = ({ height, format }: { height: number; format: string }) => {
+    const { locale } = useCurrentDashboard();
+    return <Box sx={getDateStyle(height)}>{dayjs().locale(locale).format(format)}</Box>;
+};
 
 export const Clock = (props: ClockProps) => {
     const { config } = props;
