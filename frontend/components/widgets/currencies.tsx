@@ -58,7 +58,7 @@ export const Currencies = (props: CurrenciesProps) => {
         () => {
             fetchData();
         },
-        config.settings.pollInterval,
+        config.settings.pollInterval * 1000,
         !!account
     );
 
