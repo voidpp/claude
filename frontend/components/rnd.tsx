@@ -128,6 +128,10 @@ const styles = {
         overflow: "hidden",
         backdropFilter: "blur(3px)",
         backgroundColor: "rgba(0,0,0,0.4)",
+        "& img": {
+            WebkitUserDrag: "none",
+            MozUserDrag: "none",
+        },
     },
     rndInfo: {
         position: "absolute",
