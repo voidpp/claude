@@ -55,7 +55,7 @@ export const DashboardFormDialog = ({ isOpen, close, initialData, onSubmit: onSu
         close();
         showNotification("Dashboard saved");
         onSubmitProp?.(data);
-        setData(createDefaultValues());
+        if (!initialData) setData(createDefaultValues());
     };
 
     return (
