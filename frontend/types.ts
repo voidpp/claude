@@ -44,4 +44,5 @@ export type CurrencyDesc = {
 
 declare global {
     const appVersion: string;
+    const isDebugMode: boolean;
 }

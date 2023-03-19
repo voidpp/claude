@@ -1,9 +1,11 @@
 from graphene import Field, ObjectType, ResolveInfo, String
+from starlette.requests import Request
 
 from claude.api.nodes.server_status import ServerStatusNode
 from claude.api.nodes.settings import SettingsNode
 from claude.api.nodes.sunset_sunrise import SunriseSunsetNode
 from claude.components.graphene.tools import create_nested_field
+from claude.components.tools import app_version
 
 from .nodes.weather.current import CurrentWeatherNode
 from .nodes.weather.days import DaysForecastWeatherNode
@@ -12,6 +14,11 @@ from .nodes.weather.hours import HoursForecastWeatherNode
 
 async def ping(root, info: ResolveInfo):
     return "pong"
+
+
+async def version(root, info: ResolveInfo):
+    request: Request = info.context["request"]
+    return app_version(request.app.debug)
 
 
 class Weather(ObjectType):
@@ -27,3 +34,5 @@ class Query(ObjectType):
     server_status = ServerStatusNode.field()
     settings = SettingsNode.field()
     sunrise_sunset = SunriseSunsetNode.field()
+
+    version = Field(String, resolver=version)

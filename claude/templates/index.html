@@ -30,6 +30,7 @@
 
     <script>
       const appVersion = "{{version}}";
+      const isDebugMode = {{ 'true' if dev_mode else 'false' }};
     </script>
 
     <script src="/static/bundle.js?v={{version}}"></script>
