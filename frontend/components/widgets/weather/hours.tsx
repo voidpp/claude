@@ -23,14 +23,26 @@ const CustomizedLabel = ({ x, y, value }: LabelProps) => (
     </text>
 );
 
-function HourInfoCell({ data }: { data: HourForecast }) {
-    const rootStyle: SxProps = {
+const hourInfoCellStyles = {
+    root: {
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
-    };
+        flexGrow: 1,
+        position: "relative",
+    },
+    separator: {
+        borderLeft: "1px solid rgba(255,255,255,0.2)",
+        position: "absolute",
+        left: 0,
+        top: 0,
+    },
+} satisfies Record<string, SxProps>;
+
+function HourInfoCell({ data, widgetHeight }: { data: HourForecast; widgetHeight: number }) {
     return (
-        <Box sx={rootStyle}>
+        <Box sx={hourInfoCellStyles.root}>
+            {data.hour == 0 && <Box sx={{ ...hourInfoCellStyles.separator, height: widgetHeight - 20 }} />}
             <Box sx={{ fontSize: "0.8em" }}>{data.hour}:00</Box>
             <Box>
                 <img style={{ width: "2.5em" }} src={data.image} />
@@ -56,12 +68,14 @@ export const HoursWeather = (props: HoursWeatherProps) => {
 
     const displayData = data?.weather.hours.slice(0, config.settings.hours) ?? [];
 
+    const margin = config.width / (config.settings.hours * 2);
+
     return (
         <RndFrame rndProps={rndProps}>
             <Box>
-                <Box sx={{ paddingTop: "0.6em", display: "flex", justifyContent: "space-around" }}>
+                <Box sx={{ paddingTop: "0.6em", display: "flex" }}>
                     {displayData.map((data, idx) => (
-                        <HourInfoCell key={idx} data={data} />
+                        <HourInfoCell key={idx} data={data} widgetHeight={rndProps.size.height} />
                     ))}
                 </Box>
                 <LineChart
@@ -70,9 +84,9 @@ export const HoursWeather = (props: HoursWeatherProps) => {
                     height={config.height - 70}
                     margin={{
                         top: 30,
-                        right: 20,
+                        right: margin,
                         bottom: 20,
-                        left: 20,
+                        left: margin,
                     }}
                 >
                     <YAxis type="number" domain={["dataMin", "dataMax"]} hide />
