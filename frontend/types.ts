@@ -41,3 +41,7 @@ export type CurrencyDesc = {
     code: string;
     name_plural: string;
 }
+
+declare global {
+    const appVersion: string;
+}

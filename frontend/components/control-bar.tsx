@@ -66,6 +66,7 @@ export const ControlBar = () => {
                     </Button>
                     <BarDivider />
                     <ConnectionIndicator client={mainSubscriptionClient} />
+                    <BarDivider />v{appVersion}
                     <Box sx={{ flex: 1, textAlign: "right" }}>
                         <Link to="/admin">Admin</Link>
                     </Box>

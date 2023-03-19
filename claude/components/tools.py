@@ -1,9 +1,11 @@
 import asyncio
 import logging
 import re
+from time import time
 from typing import Any, Awaitable
 from xml.etree.ElementTree import Element, ElementTree
 
+import pkg_resources
 from graphene import ObjectType
 from lxml.cssselect import CSSSelector
 from pydantic import BaseModel
@@ -13,6 +15,10 @@ from claude.components.exceptions import CannotParseNumber, SelectorNotFoundInTr
 logger = logging.getLogger(__name__)
 
 NUMBER_PATTERN = re.compile(r"([\d+\-]+)")
+
+
+def app_version(debug: bool) -> str:
+    return str(time()) if debug else pkg_resources.get_distribution("claude").version
 
 
 def parse_number(number: str) -> int | None:
