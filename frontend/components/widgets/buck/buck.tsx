@@ -166,7 +166,7 @@ export const Buck = ({ config }: BuckProps) => {
                 <Box sx={{ position: "absolute", top: 0, left: 10 }}>
                     <ConnectionIndicator client={client?.subscriptionClient} />
                 </Box>
-                <IfComp cond={!data?.runningTimers.length}>
+                <IfComp cond={!data?.runningTimers.length && !activeAlarms.length}>
                     <Box
                         sx={{
                             display: "flex",
