@@ -1,7 +1,7 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Box, Menu, MenuItem, SxProps } from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useBoolState } from "../hooks";
 import { useAppSettings } from "../settings";
 import { FormFieldDescriptor, WidgetSettingsDialog, WidgetSettingsDialogProps } from "./widget-settings-dialog";
@@ -32,6 +32,10 @@ export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
     const [isSettingsDialogShown, showSettingDialog, hideSettingDialog] = useBoolState(props.defaultOpen);
     const { settingsFormFields = [], settings } = props;
     const { removeWidget, saveWidget, getWidgetById } = useAppSettings();
+
+    useEffect(() => {
+        if (!props.defaultOpen && isSettingsDialogShown) hideSettingDialog();
+    }, [props.defaultOpen]);
 
     const submitSettings = (data: SettingsType) => {
         if (props.onBeforeSubmit) props.onBeforeSubmit(data);
