@@ -8,6 +8,7 @@ import { NotificationContextProvider } from "../notifications";
 import { AppSettingsContextProvider } from "../settings";
 import { MainFrame } from "./main-frame";
 import { theme } from "./theme";
+import { Tranlations } from "./tranlations";
 
 const apolloClient = createApolloClient();
 
@@ -17,10 +18,12 @@ export const App = () => {
             <ThemeProvider theme={theme}>
                 <AppConfigContextProvider>
                     <AppSettingsContextProvider>
-                        <NotificationContextProvider>
-                            <CssBaseline />
-                            <MainFrame />
-                        </NotificationContextProvider>
+                        <Tranlations>
+                            <NotificationContextProvider>
+                                <CssBaseline />
+                                <MainFrame />
+                            </NotificationContextProvider>
+                        </Tranlations>
                     </AppSettingsContextProvider>
                 </AppConfigContextProvider>
             </ThemeProvider>
