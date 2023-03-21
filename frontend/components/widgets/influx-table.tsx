@@ -138,7 +138,7 @@ export const InfluxTable = ({ config }: CommonWidgetProps<InfluxTableSettings>) 
                     { name: "url", label: "URL" },
                     { name: "query", label: "Query" },
                     { name: "columns", label: "Columns" },
-                    { name: "interval", label: "Interval" },
+                    { name: "interval", label: "Refresh interval", type: "duration" },
                 ]}
             />
         </RndFrame>

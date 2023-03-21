@@ -4,7 +4,8 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useBoolState } from "../hooks";
 import { useAppSettings } from "../settings";
-import { FormFieldDescriptor, WidgetSettingsDialog, WidgetSettingsDialogProps } from "./widget-settings-dialog";
+import { FormFieldDescriptor } from "./widget-settings/types";
+import { WidgetSettingsDialog, WidgetSettingsDialogProps } from "./widget-settings/widget-settings-dialog";
 
 const bodyStyle: SxProps = {
     position: "absolute",

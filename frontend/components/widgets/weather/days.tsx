@@ -11,7 +11,7 @@ import { LabelProps, Line, LineChart, YAxis } from "recharts";
 import { specialDayTypeColors } from "../../calendar/tools";
 import { RndFrame, useRnd } from "../../rnd";
 import { WidgetMenu } from "../../widget-menu";
-import { FormCheckboxListFieldDescriptor, FormSelectFieldDescriptor } from "../../widget-settings-dialog";
+import { FormCheckboxListFieldDescriptor, FormSelectFieldDescriptor } from "../../widget-settings/types";
 
 export type ShowableRows =
     | "dayNumber"
@@ -182,7 +182,8 @@ export const DaysWeather = (props: DaysWeatherProps) => {
                     },
                     {
                         name: "pollInterval",
-                        label: "Interval (seconds)",
+                        label: "Refresh interval",
+                        type: "duration",
                     },
                     {
                         type: "checkboxList",

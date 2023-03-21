@@ -5,7 +5,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { RndFrame, useRnd } from "../rnd";
 import { WidgetMenu } from "../widget-menu";
-import { FormSelectFieldDescriptor } from "../widget-settings-dialog";
+import { FormSelectFieldDescriptor } from "../widget-settings/types";
 
 type StorageInfo = {
     device: string;
@@ -122,6 +122,7 @@ export const StorageStatus = (props: StorageStatusProps) => {
                     {
                         name: "pollInterval",
                         label: "Poll interval",
+                        type: "duration",
                     },
                     {
                         name: "sortBy",

@@ -10,7 +10,7 @@ import * as React from "react";
 import { ConnectionIndicator } from "../../connection-indicator";
 import { RndFrame, useRnd } from "../../rnd";
 import { WidgetMenu } from "../../widget-menu";
-import { FormNumberFieldDescriptor } from "../../widget-settings-dialog";
+import { FormNumberFieldDescriptor } from "../../widget-settings/types";
 import { useBuckClient as useBuckApolloClient } from "./hooks";
 import {
     runningTimersSubscription,

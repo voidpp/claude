@@ -6,7 +6,7 @@ import * as React from "react";
 import { LabelProps, Line, LineChart, YAxis } from "recharts";
 import { RndFrame, useRnd } from "../../rnd";
 import { WidgetMenu } from "../../widget-menu";
-import { FormNumberFieldDescriptor, FormSelectFieldDescriptor } from "../../widget-settings-dialog";
+import { FormNumberFieldDescriptor, FormSelectFieldDescriptor } from "../../widget-settings/types";
 
 export class HoursWeatherSettings extends BaseWidgetSettings {
     city: string = "Budapest";
@@ -124,7 +124,8 @@ export const HoursWeather = (props: HoursWeatherProps) => {
                     } as FormNumberFieldDescriptor,
                     {
                         name: "pollInterval",
-                        label: "Interval (seconds)",
+                        label: "Refresh interval",
+                        type: "duration",
                     },
                 ]}
             />

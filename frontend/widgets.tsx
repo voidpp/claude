@@ -52,7 +52,7 @@ export const Fieldset = ({
         sx={{ borderRadius: 1, borderWidth: 1, borderColor: "rgba(255, 255, 255, 0.23)", margin: 0, ...sx }}
     >
         <Box component="legend">
-            <Typography variant="caption" sx={{ mx: 0.5 }}>
+            <Typography variant="caption" sx={{ mx: 0.5, color: "text.secondary" }}>
                 {label}
             </Typography>
         </Box>

@@ -6,7 +6,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { RndFrame, RndProps, useRnd } from "../rnd";
 import { WidgetMenu } from "../widget-menu";
-import { FormSelectFieldDescriptor } from "../widget-settings-dialog";
+import { FormSelectFieldDescriptor } from "../widget-settings/types";
 
 export class CalendarSettings extends BaseWidgetSettings {
     months: "fixed" | "rolling" = "fixed";

@@ -9,9 +9,9 @@ import { WidgetMenu } from "../widget-menu";
 import {
     FormCheckboxListFieldDescriptor,
     FormListFieldDescriptor,
-    FormNumberFieldDescriptor,
     FormSelectFieldDescriptor,
-} from "../widget-settings-dialog";
+    ListDataBase,
+} from "../widget-settings/types";
 
 import { useCurrentDashboard } from "@/hooks";
 import { entries } from "@/tools";
@@ -61,13 +61,11 @@ const getBodyStyle = (settings: ServerStatusSettings, width: number): SxProps =>
 });
 
 export type ServerConfig = {
-    id: string;
     ip: string;
     name: string;
     location: string;
     systemStatusServerPort?: number;
-    rank: number;
-};
+} & ListDataBase;
 
 type ServerConfigMap = { [s: string]: ServerConfig };
 
@@ -218,9 +216,8 @@ export const ServerStatus = (props: ServerStatusProps) => {
                     {
                         name: "pollInterval",
                         label: "Polling interval",
-                        min: 0,
-                        max: 65565,
-                    } as FormNumberFieldDescriptor,
+                        type: "duration",
+                    },
                     {
                         type: "list",
                         label: "Servers",

@@ -5,7 +5,7 @@ import { Box } from "@mui/material";
 import * as React from "react";
 import { RndFrame, useRnd } from "../../rnd";
 import { WidgetMenu } from "../../widget-menu";
-import { FormSelectFieldDescriptor } from "../../widget-settings-dialog";
+import { FormSelectFieldDescriptor } from "../../widget-settings/types";
 
 export class CurrentWeatherSettings extends BaseWidgetSettings {
     city: string = "Budapest";
@@ -67,7 +67,8 @@ export const CurrentWeather = (props: CurrentWeatherProps) => {
                     },
                     {
                         name: "pollInterval",
-                        label: "Interval",
+                        label: "Refresh interval",
+                        type: "duration",
                     },
                     {
                         name: "showCity",

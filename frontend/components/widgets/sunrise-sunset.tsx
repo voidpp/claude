@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import * as React from "react";
 import { RndFrame, useRnd } from "../rnd";
 import { WidgetMenu } from "../widget-menu";
-import { FormCheckboxListFieldDescriptor } from "../widget-settings-dialog";
+import { FormCheckboxListFieldDescriptor } from "../widget-settings/types";
 
 type SunriseSunsetKeys = keyof Omit<SunriseSunsetType, "__typename">;
 

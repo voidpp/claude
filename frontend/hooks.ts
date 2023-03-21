@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useRef, useState } from "react";
 import { specialDayTypeColors } from "./components/calendar/tools";
-import { FormSelectFieldDescriptor } from "./components/widget-settings-dialog";
+import { FormSelectFieldDescriptor } from "./components/widget-settings/types";
 import { useAppConfig } from "./config";
 import { Dashboard, PluginType, SpecialDayType, useSpecialDaysQuery } from "./graphql-types-and-hooks";
 import { useAppSettings } from "./settings";

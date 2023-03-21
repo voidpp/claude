@@ -5,7 +5,7 @@ import { useInterval } from "../../hooks";
 import { IfComp } from "../../widgets";
 import { RndFrame, useRnd } from "../rnd";
 import { WidgetMenu } from "../widget-menu";
-import { FormNumberFieldDescriptor } from "../widget-settings-dialog";
+import { FormNumberFieldDescriptor } from "../widget-settings/types";
 
 export class GallerySettings extends BaseWidgetSettings {
     imageUrls: string = "";
@@ -109,10 +109,9 @@ export const Gallery = ({ config }: GalleryProps) => {
                     },
                     {
                         name: "interval",
-                        label: "Interval in seconds",
-                        min: 0,
-                        max: 600,
-                    } as FormNumberFieldDescriptor,
+                        label: "Change interval",
+                        type: "duration",
+                    },
                     {
                         name: "showUrl",
                         label: "Show URL",
@@ -120,7 +119,7 @@ export const Gallery = ({ config }: GalleryProps) => {
                     },
                     {
                         name: "fadeTime",
-                        label: "Fade time",
+                        label: "Fade time in ms",
                         min: 0,
                         max: 10000,
                     } as FormNumberFieldDescriptor,

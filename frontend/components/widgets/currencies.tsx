@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useInterval } from "../../hooks";
 import { RndFrame, useRnd } from "../rnd";
 import { WidgetMenu } from "../widget-menu";
-import { FormSelectFieldDescriptor } from "../widget-settings-dialog";
+import { FormSelectFieldDescriptor } from "../widget-settings/types";
 
 type CurrencyKey = keyof typeof currencies.data;
 
@@ -102,7 +102,8 @@ export const Currencies = (props: CurrenciesProps) => {
                     } as FormSelectFieldDescriptor,
                     {
                         name: "pollInterval",
-                        label: "Interval (seconds)",
+                        label: "Refresh interval",
+                        type: "duration",
                     },
                     {
                         name: "base",
