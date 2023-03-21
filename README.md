@@ -40,6 +40,10 @@ invoke --list
 
 https://github.com/voidpp/claude/wiki
 
+## For plugins see:
+
+https://github.com/voidpp/claude-plugins
+
 ## Example dashboard
 
 ![image](https://user-images.githubusercontent.com/6121328/226597258-bc605161-f13a-4947-921b-cf7eaae39ba5.png)
