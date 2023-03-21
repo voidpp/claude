@@ -1,5 +1,5 @@
-import { SpecialDayType } from "@/graphql-types-and-hooks";
 import dayjs from "dayjs";
+import { SpecialDayType } from "../../graphql-types-and-hooks";
 
 export function generateMonthlyDayMatrix(year: number, month: number, locale = "en"): number[][] {
     const result: number[][] = [];

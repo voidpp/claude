@@ -99,12 +99,13 @@ export const Calendar = (props: CalendarProps) => {
     });
 
     const currentMomentDate = dayjs(currentDate).locale(currentDashboard.locale);
+    const firstDayOfWeek = currentMomentDate.localeData().firstDayOfWeek();
 
     const dayPadding = config.settings.months == "rolling" ? calcDayPadding(rndProps.size) : 0;
 
     const firstDayOfWeekForMonth = parseInt(currentMomentDate.startOf("month").format("d"));
 
-    let cyc = currentMomentDate.startOf("month").subtract(firstDayOfWeekForMonth - 1 + dayPadding, "d");
+    let cyc = currentMomentDate.startOf("month").subtract(firstDayOfWeekForMonth - firstDayOfWeek + dayPadding, "d");
 
     let days: Dayjs[] = [];
 
@@ -120,17 +121,22 @@ export const Calendar = (props: CalendarProps) => {
 
     const currentMonth = currentMomentDate.format("M");
 
+    const localizedWeekDayNames = React.useMemo(() => {
+        const names = [...currentMomentDate.localeData().weekdaysShort()];
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            names.push(names.shift());
+        }
+        return names;
+    }, [currentMomentDate.toString(), currentDashboard.locale]);
+
     return (
         <RndFrame rndProps={rndProps}>
             <Box sx={{ ...styles.body, fontSize: rndProps.size.width * 0.06 }}>
                 <Box sx={styles.currentDateRow}>{currentMomentDate.format("MMMM")}</Box>
                 <Box sx={styles.weekRow}>
-                    {currentMomentDate
-                        .localeData()
-                        .weekdaysShort()
-                        .map((name, idx) => (
-                            <div key={idx}>{name}</div>
-                        ))}
+                    {localizedWeekDayNames.map((name, idx) => (
+                        <div key={idx}>{name}</div>
+                    ))}
                 </Box>
                 <Box sx={styles.daysGridContainer} ref={daysGridContainerElement}>
                     <Box
