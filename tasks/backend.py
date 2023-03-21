@@ -9,6 +9,7 @@ from .tools import Collection
 
 @task
 def start(c, port=9042, reload=True, workers=None, debug=True):
+    """Start the API server"""
     from pathlib import Path
 
     from claude.env import environment
@@ -39,16 +40,19 @@ def start(c, port=9042, reload=True, workers=None, debug=True):
 
 @task
 def test(c, watch=False):
+    """Run the tests"""
     c.run("ptw" if watch else "pytest")
 
 
 @task
 def format(c):
+    """Format the backend code"""
     c.run("pre-commit run --all-files --verbose")
 
 
 @task
 def generate_graphql_schema(c):
+    """Generate the API GraphQL schame file"""
     from .tools import generate_graphql_schema
 
     generate_graphql_schema()
@@ -68,6 +72,7 @@ def get_redis_client():
 
 @redis.task()
 def list(c, filter="*"):
+    """List redis keys"""
     import asyncio
 
     from tabulate import tabulate
@@ -91,6 +96,7 @@ def list(c, filter="*"):
 
 @redis.task()
 def delete(c, key):
+    """Delete a redis value by a key name"""
     import asyncio
 
     redis_client = get_redis_client()
@@ -107,6 +113,7 @@ def delete(c, key):
 
 @redis.task()
 def show(c, key):
+    """View redis value by a key name"""
     import asyncio
     import json
 
