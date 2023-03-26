@@ -1,6 +1,7 @@
 from graphene import Field, ObjectType, ResolveInfo, String
 from starlette.requests import Request
 
+from claude.api.nodes.cache import RequestCacheNode
 from claude.api.nodes.server_status import ServerStatusNode
 from claude.api.nodes.settings import SettingsNode
 from claude.api.nodes.sunset_sunrise import SunriseSunsetNode
@@ -36,3 +37,5 @@ class Query(ObjectType):
     sunrise_sunset = SunriseSunsetNode.field()
 
     version = Field(String, resolver=version)
+
+    request_cache = RequestCacheNode.field()

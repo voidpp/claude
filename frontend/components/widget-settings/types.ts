@@ -22,6 +22,10 @@ export interface FormNumberFieldDescriptor extends FormFieldDescriptor {
     max?: number;
 }
 
+export interface FormDurationFieldDescriptor extends FormFieldDescriptor {
+    showEnableButton?: boolean;
+}
+
 export interface FormListFieldDescriptor extends FormFieldDescriptor {
     fields: Array<FormFieldDescriptor>;
 }

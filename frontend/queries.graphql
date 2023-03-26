@@ -149,3 +149,10 @@ subscription LiveSettings {
         }
     }
 }
+
+query RequestCache($url: String!, $method: String, $cacheSeconds: Int!, $headers: [Header]) {
+    requestCache(url: $url, method: $method, cacheSeconds: $cacheSeconds, headers: $headers) {
+        content
+        code
+    }
+}

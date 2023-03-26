@@ -12,6 +12,7 @@ import {
     CheckboxListValue,
     FieldGeneratorCallbackType,
     FormCheckboxListFieldDescriptor,
+    FormDurationFieldDescriptor,
     FormFieldDescriptor,
     FormListFieldDescriptor,
     FormNumberFieldDescriptor,
@@ -58,13 +59,16 @@ export const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
             </LocalizationProvider>
         );
     },
-    duration: (desc: FormFieldDescriptor, value: number, onChange: (val: number) => void) => {
-        return (
-            <Fieldset label={desc.label} key={desc.name as string}>
-                <DurationField value={value} onChange={onChange} />
-            </Fieldset>
-        );
-    },
+    duration: (desc: FormDurationFieldDescriptor, value: number, onChange: (val: number) => void) => (
+        <Fieldset label={desc.label} key={desc.name as string} sx={{ mb: 2 }}>
+            <DurationField
+                value={value}
+                onChange={onChange}
+                showEnableButton={desc.showEnableButton}
+                default={desc.default}
+            />
+        </Fieldset>
+    ),
     checkboxList: (
         desc: FormCheckboxListFieldDescriptor,
         value: CheckboxListValue,

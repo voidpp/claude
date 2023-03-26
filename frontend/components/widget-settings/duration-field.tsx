@@ -1,4 +1,4 @@
-import { InputAdornment, SxProps, TextField } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, InputAdornment, SxProps, TextField } from "@mui/material";
 import * as React from "react";
 
 const minMax = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
@@ -10,6 +10,7 @@ const DurationNumberField = ({
     min = -Infinity,
     max = Infinity,
     sx,
+    disabled,
 }: {
     value: number;
     onChange: (value: number) => void;
@@ -17,6 +18,7 @@ const DurationNumberField = ({
     min?: number;
     max?: number;
     sx?: SxProps;
+    disabled?: boolean;
 }) => (
     <TextField
         value={value}
@@ -27,6 +29,7 @@ const DurationNumberField = ({
         variant="standard"
         margin="none"
         size="small"
+        disabled={disabled}
         InputProps={{
             endAdornment: (
                 <InputAdornment position="end" sx={{ ml: 0.5, mb: "2px" }}>
@@ -43,17 +46,39 @@ const DurationNumberField = ({
     />
 );
 
-export const DurationField = ({ value, onChange }: { value: number; onChange: (value: number) => void }) => {
-    const hours = Math.floor(value / 3600);
-    const minutes = Math.floor((value % 3600) / 60);
-    const seconds = value % 60;
+type DurationFieldProps = {
+    value: number;
+    onChange: (value: number) => void;
+    showEnableButton: boolean;
+    default: number;
+};
+
+export const DurationField = ({ value, onChange, showEnableButton, default: defaultValue }: DurationFieldProps) => {
+    const enabled = value > 0;
+    const hours = Math.floor(Math.abs(value) / 3600);
+    const minutes = Math.floor((Math.abs(value) % 3600) / 60);
+    const seconds = Math.abs(value) % 60;
     return (
-        <>
+        <Box sx={{ display: "flex", gap: 2 }}>
+            {showEnableButton && (
+                <FormControlLabel
+                    sx={{ m: 0 }}
+                    control={
+                        <Checkbox
+                            checked={enabled}
+                            onChange={() => onChange(value === 0 ? defaultValue : value * -1)}
+                            sx={{ my: -1, ml: -1, mr: -0.5 }}
+                        />
+                    }
+                    label="Enable"
+                />
+            )}
             <DurationNumberField
                 value={hours}
                 onChange={newValue => onChange(newValue * 3600 + minutes * 60 + seconds)}
                 min={0}
                 postfix="h"
+                disabled={!enabled}
             />
             <DurationNumberField
                 value={minutes}
@@ -61,7 +86,7 @@ export const DurationField = ({ value, onChange }: { value: number; onChange: (v
                 min={0}
                 max={59}
                 postfix="m"
-                sx={{ ml: 2 }}
+                disabled={!enabled}
             />
             <DurationNumberField
                 value={seconds}
@@ -69,8 +94,8 @@ export const DurationField = ({ value, onChange }: { value: number; onChange: (v
                 min={0}
                 max={59}
                 postfix="s"
-                sx={{ ml: 2 }}
+                disabled={!enabled}
             />
-        </>
+        </Box>
     );
 };
