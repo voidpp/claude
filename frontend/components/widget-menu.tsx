@@ -1,9 +1,9 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Box, Menu, MenuItem, SxProps } from "@mui/material";
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { useBoolState } from "../hooks";
+import { useContext, useEffect, useState } from "react";
 import { useAppSettings } from "../settings";
+import { RndContext } from "./rnd";
 import { FormFieldDescriptor } from "./widget-settings/types";
 import { WidgetSettingsDialog, WidgetSettingsDialogProps } from "./widget-settings/widget-settings-dialog";
 
@@ -30,12 +30,13 @@ export interface WidgetMenuProps<SettingsType> {
 
 export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
     const [menuAnchorEl, setMenuAnchorEl] = useState();
-    const [isSettingsDialogShown, showSettingDialog, hideSettingDialog] = useBoolState(props.defaultOpen);
+    const [settingsDialogOpen, setSettingsDialogOpen] = useState(props.defaultOpen ?? false);
     const { settingsFormFields = [], settings } = props;
     const { removeWidget, saveWidget, getWidgetById } = useAppSettings();
+    const { disableDragging } = useContext(RndContext);
 
     useEffect(() => {
-        if (!props.defaultOpen && isSettingsDialogShown) hideSettingDialog();
+        if (!props.defaultOpen && settingsDialogOpen) closeSettingsDialog();
     }, [props.defaultOpen]);
 
     const submitSettings = (data: SettingsType) => {
@@ -54,9 +55,15 @@ export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
         setMenuAnchorEl(null);
     }
 
+    const closeSettingsDialog = () => {
+        setSettingsDialogOpen(false);
+        disableDragging(false);
+    };
+
     function openDialog() {
-        showSettingDialog();
+        setSettingsDialogOpen(true);
         closeMenu();
+        disableDragging(true);
     }
 
     return (
@@ -71,8 +78,8 @@ export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
 
             <WidgetSettingsDialog
                 data={settings}
-                show={isSettingsDialogShown}
-                onClose={hideSettingDialog}
+                show={settingsDialogOpen}
+                onClose={closeSettingsDialog}
                 submit={submitSettings}
                 fields={settingsFormFields}
                 title={props.dialogTitle}

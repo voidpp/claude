@@ -2,7 +2,7 @@ import { Box, SxProps, Theme } from "@mui/material";
 import deepEqual from "deep-equal";
 import { ResizeDirection } from "re-resizable";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { DraggableEvent } from "react-draggable";
 import { DraggableData, Position, Props, ResizableDelta, Rnd } from "react-rnd";
 import { useCurrentDashboard } from "../hooks";
@@ -172,12 +172,20 @@ const RndInfoBox = ({ rndProps, visible }: { rndProps: RndProps; visible: boolea
     );
 };
 
+type RndContextType = {
+    disableDragging: (disable: boolean) => void;
+};
+
+export const RndContext = createContext<RndContextType>({ disableDragging: _ => {} });
+
 export const RndFrame = ({ rndProps, children, style, sx }: RndFrameProps) => {
     const { isChange, ...propsForRnd } = rndProps;
+    const [disableDragging, setDisableDragging] = useState(false);
+
     return (
-        <Rnd {...propsForRnd}>
+        <Rnd {...propsForRnd} disableDragging={disableDragging}>
             <Box style={{ ...style }} sx={{ ...styles.body, ...sx }}>
-                {children}
+                <RndContext.Provider value={{ disableDragging: setDisableDragging }}>{children}</RndContext.Provider>
             </Box>
             <RndInfoBox rndProps={rndProps} visible={isChange} />
         </Rnd>
