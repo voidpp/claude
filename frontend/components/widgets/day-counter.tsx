@@ -1,8 +1,10 @@
+import { useInterval } from "@/hooks";
 import { useAppSettings } from "@/settings";
 import { BaseWidgetSettings, CommonWidgetProps } from "@/types";
 import { Box, SxProps, Theme, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
 import * as React from "react";
+import { useEffect, useState } from "react";
 import { RndFrame, useRnd } from "../rnd";
 import { WidgetMenu } from "../widget-menu";
 
@@ -33,12 +35,13 @@ const styles = {
     },
 } satisfies Record<string, SxProps<Theme>>;
 
+const calcDayCount = (target: string) => Math.ceil(dayjs.duration(dayjs(target).diff()).asDays());
+
 export const DayCounter = (props: DayCounterProps) => {
     const { config } = props;
     const rndProps = useRnd(config);
     const { saveWidget, getWidgetById } = useAppSettings();
-
-    const days = Math.ceil(dayjs.duration(dayjs(config.settings.target).diff()).asDays());
+    const [days, setDays] = useState(calcDayCount(config.settings.target));
 
     const height = rndProps.size.height;
 
@@ -51,6 +54,14 @@ export const DayCounter = (props: DayCounterProps) => {
             },
         });
     };
+
+    useInterval(() => {
+        setDays(calcDayCount(config.settings.target));
+    }, 1000 * 60 * 60);
+
+    useEffect(() => {
+        setDays(calcDayCount(config.settings.target));
+    }, [config.settings.target]);
 
     return (
         <RndFrame rndProps={rndProps}>
