@@ -3,8 +3,8 @@ from enum import Enum
 from typing import Any, Callable, Generic, TypeVar
 
 import orjson
-from aioredis import Redis
 from pydantic import BaseModel
+from redis.asyncio import Redis
 
 from claude.components.settings.types import (
     Dashboard,

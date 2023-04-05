@@ -23,6 +23,7 @@ export const CurrentWeather = (props: CurrentWeatherProps) => {
 
     const { data, refetch } = useCurrentWeatherQuery({
         variables: { city: config.settings.city, providerId: config.settings.providerId },
+        fetchPolicy: config.settings.providerId.length > 0 ? "cache-and-network" : "standby",
     });
 
     useInterval(refetch, config.settings.pollInterval * 1000);

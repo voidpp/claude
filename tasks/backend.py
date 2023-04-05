@@ -65,7 +65,7 @@ def get_redis_client():
     from claude.components.config import load_config
 
     config = load_config()
-    import aioredis
+    from redis import asyncio as aioredis
 
     return aioredis.from_url(config.redis)
 

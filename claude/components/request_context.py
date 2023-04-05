@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from aioredis import Redis
+from redis.asyncio import Redis
 
 from claude.components.config import Config
 from claude.components.plugins import PluginManager

@@ -1,7 +1,7 @@
 import logging
 from time import time
 
-import aioredis
+from redis import asyncio as aioredis
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.requests import Request
