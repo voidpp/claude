@@ -54,7 +54,7 @@ type DurationFieldProps = {
 };
 
 export const DurationField = ({ value, onChange, showEnableButton, default: defaultValue }: DurationFieldProps) => {
-    const enabled = value > 0;
+    const enabled = value > 0 || !showEnableButton;
     const hours = Math.floor(Math.abs(value) / 3600);
     const minutes = Math.floor((Math.abs(value) % 3600) / 60);
     const seconds = Math.abs(value) % 60;
