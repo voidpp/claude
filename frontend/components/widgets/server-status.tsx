@@ -13,7 +13,7 @@ import {
     ListDataBase,
 } from "../widget-settings/types";
 
-import { useCurrentDashboard } from "@/hooks";
+import { useCurrentDashboard, useInterval } from "@/hooks";
 import { entries } from "@/tools";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -105,13 +105,17 @@ const StatusRow = ({
     settings: ServerStatusSettings;
     widgetSize: RndProps["size"];
 }) => {
-    const { data } = useServerStatusQuery({
+    const { data, refetch } = useServerStatusQuery({
         variables: { ip: config.ip, statusServerPort: config.systemStatusServerPort },
     });
     const { locale } = useCurrentDashboard();
 
     const info = data?.serverStatus;
     const flagSize = calcFontSize(settings, widgetSize.width);
+
+    useInterval(() => {
+        refetch();
+    }, settings.pollInterval * 1000);
 
     const baseCols = (
         <IfComp cond={settings.columns.name}>
