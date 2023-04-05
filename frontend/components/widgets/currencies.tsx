@@ -61,6 +61,7 @@ export const Currencies = (props: CurrenciesProps) => {
                     cacheSeconds: config.settings.cacheExpiryTime,
                     headers: [{ name: "apikey", value: account.apiKey }],
                 },
+                fetchPolicy: "cache-and-network",
             });
             result = JSON.parse(response.data.requestCache.content);
             responseStatusCode = response.data.requestCache.code;
