@@ -120,18 +120,20 @@ export const fieldGenerator: { [s: string]: FieldGeneratorCallbackType } = {
     multiLineString: getStringFieldFactory(true),
     boolean: (desc: FormFieldDescriptor, value: boolean, onChange: (val: boolean) => void) => {
         return (
-            <FormControlLabel
-                label={desc.label}
-                key={desc.name as string}
-                control={
-                    <Checkbox
-                        checked={value}
-                        onChange={ev => onChange(ev.target.checked)}
-                        color="primary"
-                        inputProps={{ "aria-label": "secondary checkbox" }}
-                    />
-                }
-            />
+            <Fieldset label={desc.label} key={desc.name as string} sx={{ py: 0, mb: 2 }}>
+                <FormControlLabel
+                    label={desc.label}
+                    key={desc.name as string}
+                    control={
+                        <Checkbox
+                            checked={value}
+                            onChange={ev => onChange(ev.target.checked)}
+                            color="primary"
+                            inputProps={{ "aria-label": "secondary checkbox" }}
+                        />
+                    }
+                />
+            </Fieldset>
         );
     },
     number: (desc: FormNumberFieldDescriptor, value: number, onChange: (val: number) => void) => {
