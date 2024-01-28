@@ -90,7 +90,11 @@ class NodeBase(Generic[InputType], metaclass=_NodeConfigChecker):
         if not plugin:
             raise Exception("Unknown plugin id")
 
-        return self.request_context.plugin_manager.load_plugin_class(id, plugin.class_name)()
+        return self.plugin_manager.load_plugin_class(id, plugin.class_name)()
+
+    @property
+    def plugin_manager(self):
+        return self.request_context.plugin_manager
 
     @property
     def request_context(self) -> RequestContext:

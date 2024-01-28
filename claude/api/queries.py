@@ -7,6 +7,7 @@ from claude.api.nodes.settings import SettingsNode
 from claude.api.nodes.sunset_sunrise import SunriseSunsetNode
 from claude.components.graphene.tools import create_nested_field
 from claude.components.tools import app_version
+from .nodes.plugin_data import PluginDataNode
 
 from .nodes.weather.current import CurrentWeatherNode
 from .nodes.weather.days import DaysForecastWeatherNode
@@ -39,3 +40,5 @@ class Query(ObjectType):
     version = Field(String, resolver=version)
 
     request_cache = RequestCacheNode.field()
+
+    plugin_data = PluginDataNode.field()

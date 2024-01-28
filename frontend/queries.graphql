@@ -156,3 +156,14 @@ query RequestCache($url: String!, $method: String, $cacheSeconds: Int!, $headers
         code
     }
 }
+
+query PluginData($id: String!) {
+    pluginData(id: $id) {
+        metadata {
+            name
+            className
+            type
+        }
+        content
+    }
+}

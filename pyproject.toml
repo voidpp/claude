@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "claude"
-version = "0.5.1"
+version = "0.7.0"
 description = ""
 authors = ["Lajos Santa <santa.lajos@gmail.com>"]
 license = "MIT"
@@ -13,7 +13,7 @@ starlette = "^0.21.0"
 graphene = "^3.1.1"
 starlette-graphene3 = "^0.6.0"
 pydantic = "^1.10.2"
-uvicorn = {extras = ["standard"], version = "^0.18.3"}
+uvicorn = { extras = ["standard"], version = "^0.18.3" }
 httpx = "^0.23.0"
 lxml = "^4.9.1"
 cssselect = "^1.1.0"

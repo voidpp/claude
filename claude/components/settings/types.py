@@ -67,3 +67,8 @@ class Settings(BaseModel):
     plugins: list[Plugin] = None
     special_days: list[SpecialDay] = None
     free_currency_api_accounts: list[FreeCurrencyAPIAccount] = None
+
+
+class PluginData(BaseModel):
+    metadata: Plugin
+    content: str
