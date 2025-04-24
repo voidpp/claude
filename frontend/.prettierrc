@@ -1,6 +1,6 @@
 {
-    "tabWidth": 4,
-    "printWidth": 120,
-    "arrowParens": "avoid",
-    "useTabs": false
+  "tabWidth": 2,
+  "printWidth": 120,
+  "arrowParens": "avoid",
+  "useTabs": false
 }

@@ -1,7 +1,6 @@
 import logging
 import traceback
-from pathlib import Path
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from pydantic import BaseModel
 

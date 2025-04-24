@@ -5,13 +5,13 @@ import { messages } from "../translations";
 import { Locales } from "../types";
 
 export const Tranlations = ({ children }: { children: React.ReactNode }) => {
-    const dashboard = useCurrentDashboard();
-    const locale = dashboard?.locale ?? "en";
-    const localizedMessages = messages[locale as Locales];
+  const dashboard = useCurrentDashboard();
+  const locale = dashboard?.locale ?? "en";
+  const localizedMessages = messages[locale as Locales];
 
-    return (
-        <IntlProvider locale={locale} messages={localizedMessages}>
-            {children}
-        </IntlProvider>
-    );
+  return (
+    <IntlProvider locale={locale} messages={localizedMessages}>
+      {children}
+    </IntlProvider>
+  );
 };

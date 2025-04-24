@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>zsomapell klod</title>
@@ -26,17 +26,8 @@
         font-family: Futura;
       }
     </style>
+
     <div id="body"></div>
-
-    <script>
-      const appVersion = "{{version}}";
-      const isDebugMode = {{ 'true' if dev_mode else 'false' }};
-    </script>
-
-    <script src="/static/bundle.js?v={{version}}"></script>
-
-    {% if dev_mode: %}
-    <script src="http://{{request.url.hostname}}:35729/livereload.js"></script>
-    {% endif %}
+    <script type="module" src="/frontend/index.tsx"></script>
   </body>
 </html>

@@ -7,7 +7,7 @@ import weekday from "dayjs/plugin/weekday";
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./components/app";
-require("dayjs/locale/hu");
+import "dayjs/locale/hu";
 
 dayjs.extend(localeData);
 dayjs.extend(utc);

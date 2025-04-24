@@ -6,12 +6,8 @@ from claude.components.settings.manager import SettingsKeys
 from claude.components.settings.types import FreeCurrencyAPIAccount
 
 
-class FreeCurrencyAPIAccountInput(FreeCurrencyAPIAccount):
-    pass
-
-
 class SaveFreeCurrencyAPIAccountValidator(BaseModel):
-    free_currency_api_account: FreeCurrencyAPIAccountInput
+    free_currency_api_account: FreeCurrencyAPIAccount
 
 
 class SaveFreeCurrencyAPIAccountNode(NodeBase[SaveFreeCurrencyAPIAccountValidator]):

@@ -9,24 +9,31 @@ import { AppSettingsContextProvider } from "../settings";
 import { MainFrame } from "./main-frame";
 import { theme } from "./theme";
 import { Tranlations } from "./tranlations";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HASSWebsocketProvider } from "@/home-assistant/websocket-context-provider";
 
 const apolloClient = createApolloClient();
+const queryClient = new QueryClient();
 
 export const App = () => {
-    return (
-        <ApolloProvider client={apolloClient}>
-            <ThemeProvider theme={theme}>
-                <AppConfigContextProvider>
-                    <AppSettingsContextProvider>
-                        <Tranlations>
-                            <NotificationContextProvider>
-                                <CssBaseline />
-                                <MainFrame />
-                            </NotificationContextProvider>
-                        </Tranlations>
-                    </AppSettingsContextProvider>
-                </AppConfigContextProvider>
-            </ThemeProvider>
-        </ApolloProvider>
-    );
+  return (
+    <ApolloProvider client={apolloClient}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <AppConfigContextProvider>
+            <AppSettingsContextProvider>
+              <Tranlations>
+                <NotificationContextProvider>
+                  <CssBaseline />
+                  <HASSWebsocketProvider>
+                    <MainFrame />
+                  </HASSWebsocketProvider>
+                </NotificationContextProvider>
+              </Tranlations>
+            </AppSettingsContextProvider>
+          </AppConfigContextProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ApolloProvider>
+  );
 };

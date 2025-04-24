@@ -6,12 +6,8 @@ from claude.components.settings.manager import SettingsKeys
 from claude.components.settings.types import Widget
 
 
-class WidgetInput(Widget):
-    pass
-
-
 class SaveWidgetValidator(BaseModel):
-    widget: WidgetInput
+    widget: Widget
 
 
 class SaveWidgetNode(NodeBase[SaveWidgetValidator]):

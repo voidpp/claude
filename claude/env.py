@@ -10,7 +10,7 @@ class EnvironmentSchema(BaseModel):
 
 def environment() -> EnvironmentSchema:
     data = {}
-    for name, field in EnvironmentSchema.__fields__.items():
+    for name, field in EnvironmentSchema.model_fields.items():
         env_key_name = env_key(name)
         data[name] = os.environ.get(env_key_name, field.default)
 
@@ -18,5 +18,5 @@ def environment() -> EnvironmentSchema:
 
 
 def env_key(name: str) -> str:
-    assert name in EnvironmentSchema.__fields__
+    assert name in EnvironmentSchema.model_fields
     return f"claude_{name}".upper()

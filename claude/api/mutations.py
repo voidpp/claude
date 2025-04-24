@@ -11,6 +11,7 @@ from claude.api.nodes.save_dashboard import SaveDashboardNode
 from claude.api.nodes.save_free_currency_api_account import (
     SaveFreeCurrencyAPIAccountNode,
 )
+from claude.api.nodes.save_home_assistant_server import SaveHomeAssitantServerNode
 from claude.api.nodes.save_plugin import SavePluginNode
 from claude.api.nodes.save_special_days import SaveSpecialDaysNode
 from claude.api.nodes.save_widget import SaveWidgetNode
@@ -22,6 +23,7 @@ class Mutation(ObjectType):
     save_special_days = SaveSpecialDaysNode.field()
     save_widget = SaveWidgetNode.field()
     save_free_currency_api_account = SaveFreeCurrencyAPIAccountNode.field()
+    save_home_assistant_server = SaveHomeAssitantServerNode.field()
 
     remove_dashboard = RemoveDashboardNode.field()
     remove_plugin = RemovePluginNode.field()

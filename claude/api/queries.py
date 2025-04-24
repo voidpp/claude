@@ -1,5 +1,4 @@
 from graphene import Field, ObjectType, ResolveInfo, String
-from starlette.requests import Request
 
 from claude.api.nodes.cache import RequestCacheNode
 from claude.api.nodes.server_status import ServerStatusNode
@@ -19,8 +18,7 @@ async def ping(root, info: ResolveInfo):
 
 
 async def version(root, info: ResolveInfo):
-    request: Request = info.context["request"]
-    return app_version(request.app.debug)
+    return app_version()
 
 
 class Weather(ObjectType):

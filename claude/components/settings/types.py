@@ -61,12 +61,19 @@ class FreeCurrencyAPIAccount(BaseModel):
     api_key: str
 
 
+class HomeAssitantServer(BaseModel):
+    enabled: bool
+    url: str
+    api_token: str
+
+
 class Settings(BaseModel):
     dashboards: list[Dashboard] = None
     widgets: list[Widget] = None
     plugins: list[Plugin] = None
     special_days: list[SpecialDay] = None
     free_currency_api_accounts: list[FreeCurrencyAPIAccount] = None
+    home_assistant_server: HomeAssitantServer | None = None
 
 
 class PluginData(BaseModel):

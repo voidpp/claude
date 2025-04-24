@@ -8,9 +8,12 @@ def query_type_definitions(c):
 
 
 @task()
-def compile(c, watch=False):
-    """Run webpack to create bundle.js"""
-    commands = ["npx", "webpack"]
-    if watch:
-        commands.append("-w")
-    c.run(" ".join(commands))
+def build(c):
+    """Build the frontend"""
+    c.run("npm run build")
+
+
+@task()
+def start(c):
+    """Run the frontend in development mode"""
+    c.run("npm run dev")

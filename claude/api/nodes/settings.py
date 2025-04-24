@@ -1,6 +1,5 @@
 from claude.api.types import Settings
 from claude.components.graphene.node_base import NodeBase, NodeConfig
-from claude.components.graphene.pydantic import object_type_from_pydantic
 from claude.components.settings.manager import SettingsKeys
 
 

@@ -1,169 +1,182 @@
 query CurrentWeather($city: String!, $providerId: UUID!) {
-    weather {
-        current(city: $city, providerId: $providerId) {
-            image
-            temperature
-        }
+  weather {
+    current(city: $city, providerId: $providerId) {
+      image
+      temperature
     }
+  }
 }
 
 query DaysWeather($city: String!, $providerId: UUID!) {
-    weather {
-        days(city: $city, providerId: $providerId) {
-            day
-            date
-            image
-            precipitation {
-                value
-            }
-            temperature {
-                min
-                max
-            }
-        }
+  weather {
+    days(city: $city, providerId: $providerId) {
+      day
+      date
+      image
+      precipitation {
+        value
+      }
+      temperature {
+        min
+        max
+      }
     }
+  }
 }
 
 query HoursWeather($city: String!, $providerId: UUID!) {
-    weather {
-        hours(city: $city, providerId: $providerId) {
-            hour
-            image
-            temperature
-        }
+  weather {
+    hours(city: $city, providerId: $providerId) {
+      hour
+      image
+      temperature
     }
+  }
 }
 
 query SpecialDays {
-    settings {
-        specialDays {
-            date
-            type
-            locale
-        }
+  settings {
+    specialDays {
+      date
+      type
+      locale
     }
+  }
 }
 
 query ServerStatus($ip: String!, $statusServerPort: Int!) {
-    serverStatus(ip: $ip, statusServerPort: $statusServerPort) {
-        ping
-        status {
-            cpu {
-                cores
-            }
-            load
-            memory {
-                percent
-            }
-            uptime
-        }
+  serverStatus(ip: $ip, statusServerPort: $statusServerPort) {
+    ping
+    status {
+      cpu {
+        cores
+      }
+      load
+      memory {
+        percent
+      }
+      uptime
     }
+  }
 }
 
 query SunriseSunset($city: String!) {
-    sunriseSunset(city: $city) {
-        sunrise
-        sunset
-        solarNoon
-        dayLength
-        civilTwilightBegin
-        civilTwilightEnd
-        nauticalTwilightBegin
-        nauticalTwilightEnd
-        astronomicalTwilightBegin
-        astronomicalTwilightEnd
-    }
+  sunriseSunset(city: $city) {
+    sunrise
+    sunset
+    solarNoon
+    dayLength
+    civilTwilightBegin
+    civilTwilightEnd
+    nauticalTwilightBegin
+    nauticalTwilightEnd
+    astronomicalTwilightBegin
+    astronomicalTwilightEnd
+  }
 }
 
-mutation SaveSpecialDays($specialDays: [SpecialDayInput]!) {
-    saveSpecialDays(specialDays: $specialDays)
+mutation SaveSpecialDays($specialDays: [SpecialDayInputInput!]!) {
+  saveSpecialDays(specialDays: $specialDays)
 }
 
-mutation RemoveSpecialDays($ids: [SpecialDayId]!) {
-    removeSpeicalDays(ids: $ids)
+mutation RemoveSpecialDays($ids: [SpecialDayIdInput!]!) {
+  removeSpeicalDays(ids: $ids)
 }
 
 mutation RemoveWidget($id: UUID!) {
-    removeWidget(id: $id)
+  removeWidget(id: $id)
 }
 
 mutation RemoveDashboard($id: UUID!) {
-    removeDashboard(id: $id)
+  removeDashboard(id: $id)
 }
 
 mutation RemovePlugin($id: UUID!) {
-    removePlugin(id: $id)
+  removePlugin(id: $id)
 }
 
 mutation RemoveFreeCurrencyApiAccount($id: UUID!) {
-    removeFreeCurrencyApiAccount(id: $id)
+  removeFreeCurrencyApiAccount(id: $id)
 }
 
 mutation SaveDashboard($data: DashboardInput!) {
-    saveDashboard(dashboard: $data)
+  saveDashboard(dashboard: $data)
 }
 
 mutation SaveWidget($data: WidgetInput) {
-    saveWidget(widget: $data)
+  saveWidget(widget: $data)
 }
 
 mutation SavePlugin($id: UUID!, $file: String!, $name: String!, $type: PluginType!, $className: String!) {
-    savePlugin(id: $id, file: $file, name: $name, type: $type, className: $className) {
-        error
-    }
+  savePlugin(id: $id, file: $file, name: $name, type: $type, className: $className) {
+    error
+  }
 }
 
 mutation SaveFreeCurrencyApiAccount($data: FreeCurrencyAPIAccountInput!) {
-    saveFreeCurrencyApiAccount(freeCurrencyApiAccount: $data)
+  saveFreeCurrencyApiAccount(freeCurrencyApiAccount: $data)
 }
 
 subscription LiveSettings {
-    settings {
-        dashboards {
-            id
-            name
-            stepSize
-            background
-            theme
-            locale
-        }
-        widgets {
-            id
-            dashboardId
-            type
-            x
-            y
-            width
-            height
-            settings
-        }
-        plugins {
-            id
-            name
-            type
-        }
-        freeCurrencyApiAccounts {
-            id
-            name
-            apiKey
-        }
+  settings {
+    dashboards {
+      id
+      name
+      stepSize
+      background
+      theme
+      locale
     }
+    widgets {
+      id
+      dashboardId
+      type
+      x
+      y
+      width
+      height
+      settings
+    }
+    plugins {
+      id
+      name
+      type
+    }
+    freeCurrencyApiAccounts {
+      id
+      name
+      apiKey
+    }
+    homeAssistantServer {
+      enabled
+      url
+      apiToken
+    }
+  }
 }
 
-query RequestCache($url: String!, $method: String, $cacheSeconds: Int!, $headers: [Header]) {
-    requestCache(url: $url, method: $method, cacheSeconds: $cacheSeconds, headers: $headers) {
-        content
-        code
-    }
+query RequestCache($url: String!, $method: String, $cacheSeconds: Int!, $headers: [HeaderInput!]) {
+  requestCache(url: $url, method: $method, cacheSeconds: $cacheSeconds, headers: $headers) {
+    content
+    code
+  }
 }
 
 query PluginData($id: String!) {
-    pluginData(id: $id) {
-        metadata {
-            name
-            className
-            type
-        }
-        content
+  pluginData(id: $id) {
+    metadata {
+      name
+      className
+      type
     }
+    content
+  }
+}
+
+mutation SaveHomeAssistantServer($data: HomeAssitantServerInput) {
+  saveHomeAssistantServer(homeAssistantServer: $data)
+}
+
+query Version {
+  version
 }

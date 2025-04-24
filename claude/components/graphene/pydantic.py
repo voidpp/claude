@@ -3,7 +3,8 @@ import inspect
 import uuid
 from datetime import date, datetime
 from ipaddress import IPv4Address
-from typing import Tuple, Type, Union, get_args, get_origin
+from typing import Tuple, Type, Union, get_args, get_origin, Annotated
+from pydantic import HttpUrl
 
 from graphene import (
     UUID,
@@ -19,9 +20,11 @@ from graphene import (
     List,
     ObjectType,
     String,
+    NonNull,
 )
 from graphene.types.base import BaseType
 from pydantic import BaseModel
+from pydantic_core import Url
 
 VALIDATOR_CLASS_NAME_PREFIX = "Validator"
 
@@ -48,6 +51,9 @@ def object_type_from_pydantic(
 ) -> type:
     model_name = name or model.__name__
 
+    if base_type == InputObjectType:
+        model_name += "Input"
+
     type_ = _graphene_type_registry.get(
         model_name,
         type(
@@ -67,6 +73,7 @@ def create_class_property_dict(
     sub_type: Type[BaseType] = ObjectType,
     ignored_fields: list[str] = None,
 ) -> dict:
+    # TODO: rewrite this stuff, the typing.Annotated stuff is messy
     properties = {}
     collector = AnnotationsCollector(model)
     collector.collect()
@@ -77,23 +84,35 @@ def create_class_property_dict(
         description = None
         required = False
 
-        if field := model.__fields__.get(property_name):
-            description = field.field_info.description
-            required = field.required
+        if field := model.model_fields.get(property_name):
+            description = field.description
+            required = field.is_required()
 
         if type_ in _TYPE_MAP_SCALARS:
             properties[property_name] = _TYPE_MAP_SCALARS[type_](required=required, description=description)
             continue
 
-        if type(type_) == enum.EnumMeta:
+        if type(type_) is enum.EnumMeta:
             graphene_enum_type = create_graphene_enum(type_)
             properties[property_name] = graphene_enum_type(required=required, description=description)
             continue
 
-        if get_origin(type_) == list:
+        type_origin = get_origin(type_)
+
+        if type_origin is list:
             list_item_class = _create_list_item_class(type_, sub_type)
-            properties[property_name] = List(list_item_class, required=required, description=description)
+            properties[property_name] = List(NonNull(list_item_class), required=required, description=description)
             continue
+
+        if type_origin == Annotated:
+            type_ = type_.__origin__
+        elif type_origin is not None:
+            # this is an insanely wild guess
+            type_ = get_args(type_)[0]
+
+        type_origin = get_origin(type_)
+        if type_origin == Annotated:
+            type_ = type_.__origin__
 
         type_base = get_base_scalar_type(type_)
         if type_base in _TYPE_MAP_SCALARS:
@@ -188,4 +207,6 @@ _TYPE_MAP_SCALARS = {
     date: Date,
     dict: JSONString,
     IPv4Address: String,
+    Url: String,
+    HttpUrl: String,
 }

@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from graphene import Boolean
 from pydantic import BaseModel
 
@@ -8,12 +6,8 @@ from claude.components.settings.manager import SettingsKeys
 from claude.components.settings.types import Dashboard
 
 
-class DashboardInput(Dashboard):
-    pass
-
-
 class SaveDashboardValidator(BaseModel):
-    dashboard: DashboardInput
+    dashboard: Dashboard
 
 
 class SaveDashboardNode(NodeBase[SaveDashboardValidator]):

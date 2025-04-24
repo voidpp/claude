@@ -4,6 +4,7 @@ from time import time
 from redis import asyncio as aioredis
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Mount, Route
@@ -45,8 +46,8 @@ def get_app(config: Config = None):
 
     init_logger(debug)
 
-    logger.info("Environment variables: %s", env.dict())
-    logger.info("Config data: %s", config.dict())
+    logger.info("Environment variables: %s", env.model_dump())
+    logger.info("Config data: %s", config.model_dump())
 
     redis_client = aioredis.from_url(config.redis)
     settings_manager = SettingsManager(redis_client)
@@ -58,11 +59,19 @@ def get_app(config: Config = None):
         debug,
         routes=[
             Mount("/static", app=StaticFiles(directory=Folders.static), name="static"),
+            Mount("/assets", app=StaticFiles(directory=Folders.static / "assets"), name="assets"),
             Mount("/api", LoggedGraphQLApp(create_api_schema(), on_get=make_graphiql_handler())),
+            Route("/", index),
             Route("/{path:path}", index),
         ],
         middleware=[
             Middleware(InjectionMiddleware, data={RequestScopeKeys.CONTEXT: request_context}),
+            Middleware(
+                CORSMiddleware,
+                allow_origins=["*"],
+                allow_methods=["*"],
+                allow_headers=["*"],
+            ),
         ],
     )
 

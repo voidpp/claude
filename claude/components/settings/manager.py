@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+import json
 from typing import Any, Callable, Generic, TypeVar
 
 import orjson
@@ -29,10 +30,11 @@ class SettingsKey:
         return f"{GENERAL_KEYS_PREFIX}_{self.name}"
 
     async def get_data(self, redis: Redis):
-        return await redis.get(self.key)
+        data = await redis.get(self.key)
+        return None if data is None else json.loads(data)
 
     async def save_data(self, redis: Redis, data: Any):
-        return await redis.set(self.key, data)
+        return await redis.set(self.key, json.dumps(data))
 
     async def delete_data(self, redis: Redis, data: Any = None):
         return await redis.delete(self.key)
@@ -43,7 +45,7 @@ SettingsItemType = TypeVar("SettingsItemType")
 
 def default(obj):
     if isinstance(obj, BaseModel):
-        return obj.dict()
+        return obj.model_dump()
     raise TypeError
 
 
@@ -76,6 +78,7 @@ class SettingsKeys(Enum):
     free_currency_api_accounts = MultiSettingsKey(
         "free_currency_api_account", FreeCurrencyAPIAccount, lambda item: item.id
     )
+    home_assistant_server = SettingsKey("home_assistant_server")
 
 
 class SettingsManager:
