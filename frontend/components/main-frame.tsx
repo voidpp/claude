@@ -2,7 +2,6 @@ import * as React from "react";
 import { Notification } from "@/notifications";
 import { Dashboard } from "./dashboard";
 
-import { gql, useApolloClient } from "@apollo/client";
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import { Admin } from "@/admin/admin";
 import { Housekeeping } from "@/admin/cache";
@@ -16,7 +15,7 @@ import { useSubscriptionClientStatus } from "@/subscription-client-tools";
 import { PluginEditPage } from "@/admin/plugins/edit-page";
 import { HomeAssistant } from "@/admin/home-assistant";
 import { useAppConfig } from "@/config";
-import { useVersionLazyQuery, useVersionQuery } from "@/graphql-types-and-hooks";
+import { useVersionLazyQuery } from "@/graphql-types-and-hooks";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,21 +35,18 @@ const router = createBrowserRouter(
   )
 );
 
-const versionQuery = gql`
-  query VersionQuery {
-    version
-  }
-`;
-
 const useAppVersionMatchForce = () => {
   const status = useSubscriptionClientStatus(mainSubscriptionClient);
   const { appVersion } = useAppConfig();
   const [fetchVersion] = useVersionLazyQuery();
 
   React.useEffect(() => {
+    console.log("subscription client status changed", status);
+
     if (status !== "connected") return;
 
-    fetchVersion().then(response => {
+    fetchVersion({ fetchPolicy: "no-cache" }).then(response => {
+      console.debug("Version response", response.data.version);
       if (response.data.version !== appVersion.value) {
         appVersion.setValue(response.data.version);
         window.location.reload();

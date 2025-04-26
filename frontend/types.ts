@@ -8,7 +8,15 @@ export type LocalStorageSchema = {
   appVersion: LocalStorageValue<string>;
 };
 
-export class BaseWidgetSettings {}
+export class BaseWidgetSettings {
+  load(data: Record<string, unknown>) {
+    Object.keys(data).forEach(key => {
+      if (key in this) {
+        (this as any)[key] = data[key];
+      }
+    });
+  }
+}
 
 export interface BaseWidgetConfig {
   x: number;

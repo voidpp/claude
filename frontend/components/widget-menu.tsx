@@ -1,5 +1,5 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { Box, Menu, MenuItem, SxProps } from "@mui/material";
+import { Box, Divider, Menu, MenuItem, SxProps } from "@mui/material";
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 import { useAppSettings } from "../settings";
@@ -26,6 +26,7 @@ export interface WidgetMenuProps<SettingsType> {
   onBeforeSubmit?: (data: SettingsType) => void;
   defaultOpen?: boolean;
   dialogMaxWidth?: WidgetSettingsDialogProps["maxWidth"];
+  extraItems?: { title: React.ReactNode; onClick: () => void }[];
 }
 
 export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
@@ -74,6 +75,12 @@ export function WidgetMenu<SettingsType>(props: WidgetMenuProps<SettingsType>) {
       <Menu id="widget-menu" anchorEl={menuAnchorEl} keepMounted open={Boolean(menuAnchorEl)} onClose={closeMenu}>
         {settingsFormFields.length ? <MenuItem onClick={openDialog}>Settings</MenuItem> : null}
         <MenuItem onClick={() => removeWidget(props.id)}>Remove</MenuItem>
+        {props.extraItems?.length > 0 && <Divider />}
+        {props.extraItems?.map((item, index) => (
+          <MenuItem key={index} onClick={item.onClick}>
+            {item.title}
+          </MenuItem>
+        ))}
       </Menu>
 
       <WidgetSettingsDialog

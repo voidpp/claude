@@ -1,18 +1,8 @@
-import {
-  Autocomplete,
-  Box,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Autocomplete, Box, Checkbox, FormControlLabel, TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import * as React from "react";
 import { useCurrentDashboard } from "../../hooks";
 import { Fieldset } from "../../widgets";
@@ -27,7 +17,6 @@ import {
   FormListFieldDescriptor,
   FormNumberFieldDescriptor,
   FormSelectFieldDescriptor,
-  FormSelectFieldDescriptor2,
   ListDataMap,
 } from "./types";
 
@@ -53,17 +42,19 @@ export const getStringFieldFactory =
 type SelectValue<TMultiple> = TMultiple extends true ? string[] : string;
 
 export const fieldGenerator: Record<string, FieldGeneratorCallbackType> = {
-  date: (desc: FormSelectFieldDescriptor, value: Dayjs, onChange: (val: Dayjs) => void) => {
+  date: (desc: FormSelectFieldDescriptor, value: Dayjs | string, onChange: (val: Dayjs) => void) => {
     const currentDashboard = useCurrentDashboard();
     return (
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={currentDashboard.locale ?? "en"} key={desc.name}>
         <DatePicker
           label={desc.label}
-          value={value}
+          value={dayjs(value)}
           onChange={newValue => onChange(newValue)}
-          renderInput={params => (
-            <TextField {...params} fullWidth size={desc.small ? "small" : "medium"} margin="dense" />
-          )}
+          slots={{
+            textField: params => (
+              <TextField {...params} fullWidth size={desc.small ? "small" : "medium"} margin="dense" />
+            ),
+          }}
         />
       </LocalizationProvider>
     );
@@ -103,90 +94,6 @@ export const fieldGenerator: Record<string, FieldGeneratorCallbackType> = {
     );
   },
   select: (desc: FormSelectFieldDescriptor, value: string | string[], onChange: (val: string | string[]) => void) => {
-    // select: <TMultiple extends boolean | undefined = false>(
-    //   desc: FormSelectFieldDescriptor2<TMultiple>,
-    //   value: SelectValue<TMultiple>,
-    //   onChange: (val: SelectValue<TMultiple>) => void
-    // ) => {
-    // const selectedOptions = React.useMemo(() => {
-    //   if (Array.isArray(value)) {
-    //     return desc.options.filter(option => value.includes(option.value));
-    //   }
-    //   return desc.options.find(option => option.value === value) || null;
-    // }, [desc.options, value]);
-    // return (
-    //   <Autocomplete<SelectValue<TMultiple>, TMultiple>
-    //     key={desc.name}
-    //     multiple={desc.multiple}
-    //     fullWidth
-    //     slotProps={{
-    //       popper: { style: { width: "fit-content" } },
-    //     }}
-    //     options={desc.options}
-    //     value={selectedOptions}
-    //     size={desc.small ? "small" : "medium"}
-    //     getOptionLabel={option => option.label}
-    //     renderOption={(props, option) => {
-    //       const { key, ...optionProps } = props;
-    //       return (
-    //         <Box key={option.value} component="li" {...optionProps}>
-    //           <Box sx={{ display: "flex", flexDirection: "column" }}>
-    //             {option.label}
-    //             {option.subLabel && <Box sx={{ opacity: 0.7, fontSize: "0.8em" }}>{option.subLabel}</Box>}
-    //           </Box>
-    //         </Box>
-    //       );
-    //     }}
-    //     onChange={(_, newValue) => {
-    //       if (Array.isArray(newValue)) {
-    //         onChange(newValue.map(option => option.value));
-    //       } else {
-    //         onChange(newValue?.value || "");
-    //       }
-    //     }}
-    //     renderInput={params => <TextField {...params} label={desc.label} />}
-    //   />
-    // );
-    // const selectedOptions = React.useMemo(() => {
-    //   if (Array.isArray(value)) {
-    //     return desc.options.filter(option => value.includes(option.value));
-    //   }
-    //   return desc.options.find(option => option.value === value) || null;
-    // }, [desc.options, value]);
-    // return (
-    //   <Autocomplete
-    //     key={desc.name}
-    //     multiple={desc.multiple}
-    //     fullWidth
-    //     slotProps={{
-    //       popper: { style: { width: "fit-content" } },
-    //     }}
-    //     options={desc.options}
-    //     value={selectedOptions}
-    //     size={desc.small ? "small" : "medium"}
-    //     getOptionLabel={option => option.label}
-    //     renderOption={(props, option) => {
-    //       const { key, ...optionProps } = props;
-    //       return (
-    //         <Box key={option.value} component="li" {...optionProps}>
-    //           <Box sx={{ display: "flex", flexDirection: "column" }}>
-    //             {option.label}
-    //             {option.subLabel && <Box sx={{ opacity: 0.7, fontSize: "0.8em" }}>{option.subLabel}</Box>}
-    //           </Box>
-    //         </Box>
-    //       );
-    //     }}
-    //     onChange={(_, newValue) => {
-    //       if (Array.isArray(newValue)) {
-    //         onChange(newValue.map(option => option.value));
-    //       } else {
-    //         onChange(newValue?.value || "");
-    //       }
-    //     }}
-    //     renderInput={params => <TextField {...params} label={desc.label} />}
-    //   />
-    // );
-    // FIXME: fucking Autocomplete.multiple ...
     if (desc.multiple) {
       return (
         <Autocomplete

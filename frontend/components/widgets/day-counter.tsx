@@ -17,6 +17,7 @@ export class DayCounterSettings extends BaseWidgetSettings {
   target: string;
   title: string = "";
   formatting: Format = "simple";
+  showTarget: boolean = true;
 }
 
 export type DayCounterProps = CommonWidgetProps<DayCounterSettings>;
@@ -30,14 +31,8 @@ const styles = {
     alignItems: "center",
   },
   target: {
-    cursor: "pointer",
-    transition: theme => theme.transitions.create("background-color"),
     px: 1,
     py: 0.3,
-    borderRadius: 2,
-    "&:hover": {
-      backgroundColor: "rgba(255,255,255,0.1)",
-    },
   },
 } satisfies Record<string, SxProps<Theme>>;
 
@@ -59,7 +54,7 @@ export const DayCounter = (props: DayCounterProps) => {
   const { saveWidget, getWidgetById } = useAppSettings();
   const [days, setDays] = useState(calcDayCount(config.settings.target));
 
-  const height = rndProps.size.height;
+  const sizeBase = rndProps.size.height * (config.settings.showTarget ? 1 : 1.2);
 
   const resetTarget = () => {
     saveWidget({
@@ -85,19 +80,25 @@ export const DayCounter = (props: DayCounterProps) => {
   return (
     <RndFrame rndProps={rndProps}>
       <Box sx={styles.container}>
-        <Box sx={{ fontSize: height * 0.1 }}>{config.settings.title}</Box>
-        <Box sx={{ fontSize: height * 0.4, lineHeight: "120%" }}>{displayData.value}</Box>
-        <Box sx={{ fontSize: height * 0.1, textAlign: "center" }}>{displayData.postfix}</Box>
-        <Tooltip title="Click to reset">
-          <Box sx={{ ...styles.target, fontSize: height * 0.1 }} onClick={resetTarget}>
+        <Box sx={{ fontSize: sizeBase * 0.1 }}>{config.settings.title}</Box>
+        <Box sx={{ fontSize: sizeBase * 0.4, lineHeight: "120%" }}>{displayData.value}</Box>
+        <Box sx={{ fontSize: sizeBase * 0.1, textAlign: "center" }}>{displayData.postfix}</Box>
+        {config.settings.showTarget && (
+          <Box sx={{ ...styles.target, fontSize: sizeBase * 0.1 }}>
             {dayjs(config.settings.target).format("YYYY-MM-DD")}
           </Box>
-        </Tooltip>
+        )}
       </Box>
       <WidgetMenu
         id={config.id}
         settings={config.settings}
         defaultOpen={!config.settings.target}
+        extraItems={[
+          {
+            title: "Reset target",
+            onClick: resetTarget,
+          },
+        ]}
         settingsFormFields={[
           {
             name: "title",
@@ -116,6 +117,10 @@ export const DayCounter = (props: DayCounterProps) => {
             name: "target",
             type: "date",
             label: "Target date",
+          },
+          {
+            name: "showTarget",
+            label: "Show target date",
           },
         ]}
       />

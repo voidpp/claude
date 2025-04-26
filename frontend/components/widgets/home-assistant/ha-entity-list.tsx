@@ -6,6 +6,7 @@ import { useHomeAssistantStatesEx } from "@/home-assistant/client";
 import { FormListFieldDescriptor, FormSelectFieldDescriptor } from "@/components/widget-settings/types";
 import { useHAStatesSubscription } from "@/home-assistant/websocket-hooks";
 import { Box, useTheme } from "@mui/material";
+import dayjs from "dayjs";
 
 export type HEEntitySettings = {
   entityName: string;
@@ -19,6 +20,15 @@ export class HAEntityListSettings extends BaseWidgetSettings {
 }
 
 export type HAEntityListProps = CommonWidgetProps<HAEntityListSettings>;
+
+const formatValue = (value: string | undefined, deviceClass: string | undefined): string => {
+  if (value === undefined) return "";
+
+  if (deviceClass === "timestamp") {
+    return dayjs(value).format("HH:mm");
+  }
+  return value;
+};
 
 export const HAEntityList = (props: HAEntityListProps) => {
   const { config } = props;
@@ -56,6 +66,7 @@ export const HAEntityList = (props: HAEntityListProps) => {
       {Object.entries(config.settings.entities).map(([key, value]) => {
         const unit = value.unit || entityStates[value.entityName]?.attributes?.unit_of_measurement || "";
         const title = value.title || entityStates[value.entityName]?.attributes?.friendly_name || "";
+        const deviceClass = entityStates[value.entityName]?.attributes?.device_class;
 
         return (
           <Box
@@ -69,7 +80,7 @@ export const HAEntityList = (props: HAEntityListProps) => {
           >
             <Box>{title}</Box>
             <Box>
-              {states?.[value.entityName]}
+              {formatValue(states?.[value.entityName], deviceClass)}
               {unit}
             </Box>
           </Box>

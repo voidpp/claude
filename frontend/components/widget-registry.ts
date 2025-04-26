@@ -1,4 +1,4 @@
-import { BaseWidgetSettings } from "../types";
+import { BaseWidgetSettings, CommonWidgetProps } from "../types";
 import { Buck, BuckSettings } from "./widgets/buck/buck";
 import { Calendar, CalendarSettings } from "./widgets/calendar";
 import { Clock, ClockSettings } from "./widgets/clock";

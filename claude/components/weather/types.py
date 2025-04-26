@@ -13,7 +13,7 @@ class Range(BaseModel):
 
 class Precipitation(BaseModel):
     value: int
-    probability: int = None
+    probability: int | None = None
 
 
 class DayForecast(BaseModel):

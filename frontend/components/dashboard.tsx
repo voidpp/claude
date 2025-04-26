@@ -24,10 +24,13 @@ export const Dashboard = () => {
         {widgets
           .filter(w => w.dashboardId == selectedDashboard.value)
           .map(widget => {
-            const Widget = widgetRegistry[widget.type as WidgetType].factory;
+            const widgetDesc = widgetRegistry[widget.type as WidgetType];
+            const Widget = widgetDesc.factory;
+            const settingsInstance = new widgetDesc.settingsType();
+            settingsInstance.load(JSON.parse(widget.settings));
             const config = {
               ...widget,
-              settings: JSON.parse(widget.settings),
+              settings: settingsInstance,
             };
             return <Widget config={config} key={widget.id} />;
           })}

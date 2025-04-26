@@ -11,6 +11,7 @@ export class ClockSettings extends BaseWidgetSettings {
   showDate: boolean = true;
   timeFormat: string = "HH:mm";
   dateFormat: string = "YYYY. MMMM D. dddd";
+  timeYPosition: number = 0;
 }
 
 const isRapberry = window.navigator.userAgent.search("Raspbian") !== -1;
@@ -54,11 +55,10 @@ export const Clock = (props: ClockProps) => {
     textAlign: "center",
     lineHeight: "90%",
     fontFamily: "Digital7",
-    marginTop: 0,
+    top: `${config.settings.timeYPosition}px`,
+    position: "relative",
     fontSize: height * 0.8,
   };
-
-  if (isRapberry) Object.assign(clockStyle, { lineHeight: 1.2, marginTop: `${height * -0.24}px` } as SxProps<Theme>);
 
   return (
     <RndFrame rndProps={rndProps}>
@@ -81,6 +81,11 @@ export const Clock = (props: ClockProps) => {
           {
             name: "showDate",
             label: "Show date",
+          },
+          {
+            name: "timeYPosition",
+            label: "Time Y position",
+            default: 0,
           },
         ]}
       />
