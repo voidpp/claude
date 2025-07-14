@@ -33,4 +33,4 @@ class ServerStatusData(BaseModel):
 
 class ServerStatusResponse(BaseModel):
     ping: float = None
-    status: ServerStatusData = None
+    status: ServerStatusData | None = None

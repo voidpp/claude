@@ -10,6 +10,8 @@ import { Box, useTheme } from "@mui/material";
 import { gaugeClasses } from "@mui/x-charts";
 import { useMemo } from "react";
 
+import { format } from "d3-format";
+
 export class HAGaugeSettings extends BaseWidgetSettings {
   entityName: string = "";
   min: number = 0;
@@ -17,6 +19,7 @@ export class HAGaugeSettings extends BaseWidgetSettings {
   title: string = "";
   unit: string = "";
   errorValue: number = 100;
+  format: string = ".0f";
 }
 
 export type HAGaugeProps = CommonWidgetProps<HAGaugeSettings>;
@@ -32,6 +35,8 @@ export const HAGauge = (props: HAGaugeProps) => {
     () => stateList?.find(state => state.entity_id === config.settings.entityName),
     [stateList, config.settings.entityName]
   );
+
+  const numberFormatter = useMemo(() => format(config.settings.format), [config.settings.format]);
 
   const sizeBase = Math.min(rndProps.size.height, rndProps.size.width);
 
@@ -69,7 +74,7 @@ export const HAGauge = (props: HAGaugeProps) => {
                 fill: gaugeColor,
               },
             }}
-            text={`${value}${unit}`}
+            text={`${numberFormatter(numberValue)}${unit}`}
           />
           <Box sx={{ fontSize: sizeBase * 0.1 }}>{title}</Box>
         </Box>
@@ -109,6 +114,10 @@ export const HAGauge = (props: HAGaugeProps) => {
           {
             name: "errorValue",
             label: "Error value",
+          },
+          {
+            name: "format",
+            label: "Number format (d3-format)",
           },
         ]}
       />
