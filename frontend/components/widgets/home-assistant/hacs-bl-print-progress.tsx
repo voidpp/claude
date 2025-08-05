@@ -62,6 +62,14 @@ export const ProgressWidget = ({ printerName }: { printerName: string }) => {
     );
   }
 
+  if (states.currentStage === "offline") {
+    return (
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 20 }}>
+        The printer is offline
+      </Box>
+    );
+  }
+
   const isDrying = states.taskName.toLowerCase() === "filament_drying.gcode";
 
   return (
